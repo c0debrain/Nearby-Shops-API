@@ -3,6 +3,14 @@ Nearby Shops API (JSON based REST API)
 
 This is the server side component of the Nearby Shops e-commerce software. For more information about this project please visit https://nearbyshops.org
 
+A note to potential Contributors
+----------------------------------
+For those who are interested in contributing to this repo you are welcome ... but source code in this repository is due for some refactoring. Which will make it easy to understand and work upon. You may want to wait until the refactoring is done. 
+
+Until then feel free to review the code and suggest best technologies/ libraries to use in the backend side and how can we improve the code in this repository. 
+
+To give your suggestion ... you can create an Issue or also post on our forum ... 
+
 
 
 Screenshots
@@ -43,11 +51,9 @@ Get it from Google play store
 Get paid to Contribute
 -------------------------
 
-Developer time is valuable and its not fair to expect developers to contribute their time without being reasonably compensated. Therefore we have made a policy to compensate the developers, designers or any other contributor who help us with the project. We will make best efforts to Compensate the contibutors.
+Developer time is valuable and its not fair to expect developers to contribute their time without being reasonably compensated. 
 
-All the pull requests that gets accepted will be compensated. The compensation will be similar to how freelance developers, desginers get paid.
-
-To know how to contribute please visit https://forum.nearbyshops.org
+We may have some strategy / plan to compensate the contributors. 
 
 
 Community 
