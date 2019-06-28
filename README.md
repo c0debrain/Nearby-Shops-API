@@ -11,7 +11,7 @@ Until then feel free to review the code and suggest best technologies/ libraries
 
 If you're an experienced backend developer your inputs will be highly valuable to improve the project code !
 
-To give your suggestion ... you can create an Issue or also post on our forum ... 
+To give your suggestion ... you can create an Issue or also post on our forum at http://forum.nearbyshops.org ... 
 
 
 
