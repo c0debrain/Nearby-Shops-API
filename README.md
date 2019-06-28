@@ -9,6 +9,8 @@ For those who are interested in contributing to this repo you are welcome ... bu
 
 Until then feel free to review the code and suggest best technologies/ libraries to use in the backend side and how can we improve the code in this repository. 
 
+If you're an experienced backend developer your inputs will be highly valuable to improve the project code !
+
 To give your suggestion ... you can create an Issue or also post on our forum ... 
 
 
