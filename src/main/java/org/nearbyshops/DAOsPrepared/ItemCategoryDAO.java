@@ -529,6 +529,12 @@ public class ItemCategoryDAO {
 	}
 
 
+
+
+
+
+
+
 	public ItemCategoryEndPoint getItemCategoriesSimplePrepared(
 			Integer parentID,
 			Boolean parentIsNull,
@@ -588,6 +594,8 @@ public class ItemCategoryDAO {
 
 			}
 		}
+
+
 
 
 
@@ -705,6 +713,7 @@ public class ItemCategoryDAO {
 				statement.setObject(++i,limit);
 				statement.setObject(++i,offset);
 			}
+
 
 
 

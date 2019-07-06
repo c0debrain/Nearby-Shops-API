@@ -390,10 +390,13 @@ public class ShopItemByShopDAO {
 		queryJoin = queryJoin
 
 				+ " group by "
-				+ ShopItem.TABLE_NAME + "." + ShopItem.ITEM_ID + ","
-				+ ShopItem.TABLE_NAME + "." + ShopItem.SHOP_ID + ","
+				+ ShopItem.TABLE_NAME + "." + ShopItem.SHOP_ITEM_ID + ","
 				+ Item.TABLE_NAME + "." + Item.ITEM_ID ;
 
+
+
+//		+ ShopItem.TABLE_NAME + "." + ShopItem.ITEM_ID + ","
+//				+ ShopItem.TABLE_NAME + "." + ShopItem.SHOP_ID + ","
 
 
 
