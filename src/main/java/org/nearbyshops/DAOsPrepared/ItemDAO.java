@@ -759,6 +759,9 @@ public class ItemDAO {
 
 				statement = connection.prepareStatement(queryJoin);
 
+
+
+
 				rs = statement.executeQuery();
 
 				while (rs.next()) {

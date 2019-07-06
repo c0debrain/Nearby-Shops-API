@@ -391,12 +391,12 @@ public class ShopItemByShopDAO {
 
 				+ " group by "
 				+ ShopItem.TABLE_NAME + "." + ShopItem.SHOP_ITEM_ID + ","
+				+ ShopItem.TABLE_NAME + "." + ShopItem.ITEM_ID + ","
+				+ ShopItem.TABLE_NAME + "." + ShopItem.SHOP_ID + ","
 				+ Item.TABLE_NAME + "." + Item.ITEM_ID ;
 
 
 
-//		+ ShopItem.TABLE_NAME + "." + ShopItem.ITEM_ID + ","
-//				+ ShopItem.TABLE_NAME + "." + ShopItem.SHOP_ID + ","
 
 
 

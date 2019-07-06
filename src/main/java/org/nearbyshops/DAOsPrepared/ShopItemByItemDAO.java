@@ -421,7 +421,7 @@ public class ShopItemByItemDAO {
 		queryGroupBy = queryGroupBy
 
 				+ " group by "
-
+				+ ShopItem.TABLE_NAME + "." + ShopItem.SHOP_ITEM_ID + ","
 				+ ShopItem.TABLE_NAME + "." + ShopItem.ITEM_ID + ","
 				+ ShopItem.TABLE_NAME + "." + ShopItem.SHOP_ID + ","
 				+ Shop.TABLE_NAME + "." + Shop.SHOP_ID ;
