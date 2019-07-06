@@ -742,19 +742,10 @@ public class ItemCategoryDAO {
 			}
 
 
-
-			// cast to the pg extension interface
-			org.postgresql.PGStatement pgstmt = statement.unwrap(org.postgresql.PGStatement.class);
-			boolean usingServerPrepare = pgstmt.isUseServerPrepare();
-//			System.out.println("Used server side: " + usingServerPrepare + " | Prepare threshold : " + pgstmt.getPrepareThreshold());
-
-
 			if(rootRemoved && endPoint.getItemCount()!=0)
 			{
 				endPoint.setItemCount(endPoint.getItemCount()-1);
 			}
-
-//			System.out.println("Total itemCategories queried " + itemCategoryList.size());
 
 
 			endPoint.setResults(itemCategoryList);

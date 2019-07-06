@@ -129,6 +129,9 @@ public class ItemImageResource {
 
         }
 
+
+
+
         itemImage.setImageID(imageID);
 
         int rowCount = itemImagesDAO.updateItemImage(itemImage);
@@ -207,7 +210,7 @@ public class ItemImageResource {
 
 
 
-        if(itemImage !=null && rowCount>=1)
+        if(rowCount >= 1)
         {
             // delete successful delete the image also
 //            System.out.println("Image FIle : " + itemImage.getImageFilename());

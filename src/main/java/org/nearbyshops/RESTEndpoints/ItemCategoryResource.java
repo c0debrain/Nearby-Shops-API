@@ -76,26 +76,26 @@ public class ItemCategoryResource {
 	
 		int idOfInsertedRow = itemCategoryDAO.saveItemCategory(itemCategory,false);
 		itemCategory.setItemCategoryID(idOfInsertedRow);
-		
-		
+
+
+
 		if(idOfInsertedRow >=1)
 		{
 
+//						.location(URI.create("/api/ItemCategory/" + idOfInsertedRow))
 
 			return Response.status(Status.CREATED)
-					.location(URI.create("/api/ItemCategory/" + idOfInsertedRow))
 					.entity(itemCategory)
 					.build();
-			
-		}else if(idOfInsertedRow <= 0)
-		{
+
+
+		}else {
 
 			return Response.status(Status.NOT_MODIFIED)
 					.build();
 		}
 
 
-		return null;
 	}
 
 
@@ -447,7 +447,7 @@ public class ItemCategoryResource {
             @QueryParam("IsDetached")Boolean parentIsNull,
             @QueryParam("SearchString") String searchString,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit") Integer limit, @QueryParam("Offset") Integer offset,
+            @QueryParam("Limit") Integer limit, @QueryParam("Offset")int offset,
             @QueryParam("metadata_only")Boolean metaonly
 	)
 	{
@@ -461,10 +461,8 @@ public class ItemCategoryResource {
 				limit = max_limit;
 			}
 		}
-		else
-		{
-			limit = 30;
-		}
+
+
 
 
 		ItemCategoryEndPoint endPoint = itemCategoryDAO
@@ -478,18 +476,6 @@ public class ItemCategoryResource {
 		endPoint.setLimit(limit);
 		endPoint.setMax_limit(max_limit);
 		endPoint.setOffset(offset);
-
-//		if(endPoint.getItemCount()==null)
-//		{
-//			endPoint.setItemCount(0);
-//		}
-
-
-//		try {
-//			Thread.sleep(150);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
 
 
 
@@ -630,7 +616,7 @@ public class ItemCategoryResource {
 
 	// Image Utility Methods
 
-	boolean deleteImageFileInternal(String fileName)
+	private void deleteImageFileInternal(String fileName)
 	{
 		boolean deleteStatus = false;
 
@@ -652,7 +638,6 @@ public class ItemCategoryResource {
 		}
 
 
-		return deleteStatus;
 	}
 
 
@@ -688,7 +673,7 @@ public class ItemCategoryResource {
 
 
 
-	String uploadNewImage(InputStream in)
+	private String uploadNewImage(InputStream in)
 	{
 
 		File theDir = new File(BASE_DIR.toString());

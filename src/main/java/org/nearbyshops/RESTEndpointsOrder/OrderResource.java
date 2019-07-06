@@ -1,10 +1,9 @@
-package org.nearbyshops.RESTEndpointsOrderHD;
+package org.nearbyshops.RESTEndpointsOrder;
 
 import org.nearbyshops.DAOPushNotifications.DAOOneSignal;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Order;
-import org.nearbyshops.Model.Shop;
 import org.nearbyshops.ModelEndpoint.OrderEndPoint;
 import org.nearbyshops.ModelRoles.User;
 
@@ -15,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
-import java.util.List;
 
 import static org.nearbyshops.Globals.Globals.oneSignalNotifications;
 

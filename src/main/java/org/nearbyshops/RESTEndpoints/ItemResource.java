@@ -1,8 +1,5 @@
 package org.nearbyshops.RESTEndpoints;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import net.coobird.thumbnailator.Thumbnails;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,27 +11,23 @@ import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
 import org.nearbyshops.Model.Item;
 import org.nearbyshops.Model.ItemCategory;
+import org.nearbyshops.ModelEndpoint.ItemCategoryEndPoint;
 import org.nearbyshops.ModelEndpoint.ItemEndPoint;
 import org.nearbyshops.ModelRoles.StaffPermissions;
 import org.nearbyshops.ModelRoles.User;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.Suspended;
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -247,14 +240,12 @@ public class ItemResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		if(rowCount == 0)
 		{
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -440,7 +431,7 @@ public class ItemResource {
             @QueryParam("proximity")Double proximity,
             @QueryParam("SearchString")String searchString,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
+            @QueryParam("Limit")Integer limit, @QueryParam("Offset")int offset,
 			@QueryParam("GetRowCount")boolean getRowCount,
 			@QueryParam("MetadataOnly")boolean getOnlyMetaData)
 	{
@@ -449,33 +440,15 @@ public class ItemResource {
 		List<ItemCategory> subcategories;
 
 
-//		int set_limit = 30;
-//		int set_offset = 0;
-//		final int max_limit = 100;
-
-
 		if(limit!=null)
 		{
 			if(limit >= GlobalConstants.max_limit)
 			{
 				limit = GlobalConstants.max_limit;
 			}
-
-			if(offset==null)
-			{
-				offset = 0;
-			}
 		}
 
 
-
-
-//		ItemEndPoint endPoint = itemDAO.getEndPointMetadata(itemCategoryID,
-//				shopID,latCenter,lonCenter,deliveryRangeMin,deliveryRangeMax,proximity,searchString);
-
-//		endPoint.setLimit(set_limit);
-//		endPoint.setMax_limit(max_limit);
-//		endPoint.setOffset(set_offset);
 
 		ItemEndPoint endPoint  = itemDAO.getItems(
 											itemCategoryID,
@@ -523,19 +496,19 @@ public class ItemResource {
 		}
 
 
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+
+
 
 		//Marker
-
 		return Response.status(Status.OK)
                 .entity(endPoint)
                 .build();
 
 	}
+
+
+
+
 
 
 
@@ -549,15 +522,19 @@ public class ItemResource {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getItems(
             @QueryParam("ItemCategoryID")Integer itemCategoryID,
+			@QueryParam("GetSubcategories")boolean getSubcategories,
             @QueryParam("IsDetached")Boolean parentIsNull,
             @QueryParam("SearchString") String searchString,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
+            @QueryParam("Limit")Integer limit, @QueryParam("Offset")int offset,
             @QueryParam("metadata_only")Boolean metaonly)
 	{
 
-		int set_limit = 30;
-		int set_offset = 0;
+
+		List<ItemCategory> subcategories;
+
+
+
 		final int max_limit = 100;
 
 		if(limit!= null)
@@ -565,29 +542,19 @@ public class ItemResource {
 
 			if (limit >= max_limit) {
 
-				set_limit = max_limit;
+				limit = max_limit;
 			}
-			else
-			{
-
-				set_limit = limit;
-			}
-
 		}
 
-		if(offset!=null)
-		{
-			set_offset = offset;
-		}
 
 
 
 
 		ItemEndPoint endPoint = itemDAOJoinOuter.getEndPointMetadata(itemCategoryID,parentIsNull,searchString);
 
-		endPoint.setLimit(set_limit);
+		endPoint.setLimit(limit);
 		endPoint.setMax_limit(max_limit);
-		endPoint.setOffset(set_offset);
+		endPoint.setOffset(offset);
 
 		List<Item> list = null;
 
@@ -598,11 +565,31 @@ public class ItemResource {
 					itemDAOJoinOuter.getItems(
 							itemCategoryID,
 							parentIsNull,searchString,
-							sortBy,set_limit,set_offset
+							sortBy,limit,offset
 					);
 
 			endPoint.setResults(list);
 		}
+
+
+
+
+
+
+
+		if(getSubcategories)
+		{
+			ItemCategoryEndPoint endPointCat = itemCategoryDAO
+					.getItemCategoriesSimplePrepared(
+							itemCategoryID,
+							parentIsNull,
+							searchString,
+							sortBy,limit,offset);
+
+			endPoint.setSubcategories(endPointCat.getResults());
+		}
+
+
 
 
 //		try {
@@ -636,7 +623,7 @@ public class ItemResource {
 
 	// Image Utility Methods
 
-	boolean deleteImageFileInternal(String fileName)
+	private void deleteImageFileInternal(String fileName)
 	{
 		boolean deleteStatus = false;
 
@@ -658,7 +645,6 @@ public class ItemResource {
 		}
 
 
-		return deleteStatus;
 	}
 
 
@@ -694,7 +680,7 @@ public class ItemResource {
 
 
 
-	String uploadNewImage(InputStream in)
+	private String uploadNewImage(InputStream in)
 	{
 
 		File theDir = new File(BASE_DIR.toString());

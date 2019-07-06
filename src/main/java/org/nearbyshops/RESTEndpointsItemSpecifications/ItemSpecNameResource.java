@@ -1,15 +1,15 @@
-package org.nearbyshops.RESTEndpointsItemSpec;
+package org.nearbyshops.RESTEndpointsItemSpecifications;
 
 import net.coobird.thumbnailator.Thumbnails;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.nearbyshops.DAOPreparedItemSpecification.ItemSpecValueDAOJoinOuter;
-import org.nearbyshops.DAOPreparedItemSpecification.ItemSpecificationValueDAO;
+import org.nearbyshops.DAOPreparedItemSpecification.ItemSpecNameDAOOuterJoin;
+import org.nearbyshops.DAOPreparedItemSpecification.ItemSpecificationNameDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
-import org.nearbyshops.ModelItemSpecification.EndPoints.ItemSpecValueEndPoint;
-import org.nearbyshops.ModelItemSpecification.ItemSpecificationValue;
+import org.nearbyshops.ModelItemSpecification.EndPoints.ItemSpecNameEndPoint;
+import org.nearbyshops.ModelItemSpecification.ItemSpecificationName;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -30,13 +30,13 @@ import java.util.List;
 
 
 
-@Path("/api/v1/ItemSpecificationValue")
-public class ItemSpecValueResource {
+@Path("/api/v1/ItemSpecificationName")
+public class ItemSpecNameResource {
 
 //    private ItemImagesDAO itemImagesDAO = Globals.itemImagesDAO;
 
-    private ItemSpecValueDAOJoinOuter itemSpecValueDAOJoinOuter = Globals.itemSpecValueDAOJoinOuter;
-    private ItemSpecificationValueDAO itemSpecificationValueDAO = Globals.itemSpecificationValueDAO;
+    private ItemSpecNameDAOOuterJoin itemSpecNameDAOOuterJoin = Globals.itemSpecNameDAOOuterJoin;
+    private ItemSpecificationNameDAO itemSpecNameDAO = Globals.itemSpecNameDAO;
 
 
 
@@ -45,7 +45,7 @@ public class ItemSpecValueResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
-    public Response saveItemSpecValue(ItemSpecificationValue itemSpecValue)
+    public Response saveItemSpecName(ItemSpecificationName itemSpecName)
     {
         int idOfInsertedRow = -1;
 
@@ -54,16 +54,17 @@ public class ItemSpecValueResource {
 //
 //        }
 
-        idOfInsertedRow = itemSpecificationValueDAO.saveItemSpecValue(itemSpecValue);
+
+        idOfInsertedRow = itemSpecNameDAO.saveItemSpecName(itemSpecName);
 
 
 
         if(idOfInsertedRow >=1)
         {
-            itemSpecValue.setId(idOfInsertedRow);
+            itemSpecName.setId(idOfInsertedRow);
 
             return Response.status(Response.Status.CREATED)
-                    .entity(itemSpecValue)
+                    .entity(itemSpecName)
                     .build();
 
         }else if(idOfInsertedRow <= 0)
@@ -85,7 +86,7 @@ public class ItemSpecValueResource {
     @Path("/{ImageID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
-    public Response updateItemSpec(ItemSpecificationValue itemSpecValue, @PathParam("ImageID")int imageID)
+    public Response updateItemSpec(ItemSpecificationName itemSpecName, @PathParam("ImageID")int imageID)
     {
 
 
@@ -117,9 +118,9 @@ public class ItemSpecValueResource {
 
 
 
-        itemSpecValue.setId(imageID);
+        itemSpecName.setId(imageID);
 
-        int rowCount = itemSpecificationValueDAO.updateItemSpecName(itemSpecValue);
+        int rowCount = itemSpecNameDAO.updateItemSpecName(itemSpecName);
 
 
         if(rowCount >= 1)
@@ -149,16 +150,11 @@ public class ItemSpecValueResource {
     @Path("/{ItemSpecNameID}")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
-    public Response deleteItemSpecValue(@PathParam("ItemSpecNameID")int itemSpecNameID)
+    public Response deleteItemSpecName(@PathParam("ItemSpecNameID")int itemSpecNameID)
     {
 
 
-        ItemSpecificationValue itemSpecValue = itemSpecValueDAOJoinOuter.getItemSpecValueImageFilename(
-                itemSpecNameID
-        );
-
-
-
+        ItemSpecificationName itemSpecName = itemSpecNameDAOOuterJoin.getItemSpecNameGetFilename(itemSpecNameID);
 
 
 //        if(Globals.accountApproved instanceof Staff) {
@@ -193,17 +189,17 @@ public class ItemSpecValueResource {
 
 //        Item item = itemDAO.getItemImageURL(itemID);
 
-        int rowCount = itemSpecificationValueDAO.deleteItemSpecValue(itemSpecNameID);
+        int rowCount = itemSpecNameDAO.deleteItemSpecName(itemSpecNameID);
 
 //        System.out.println("Image FIle : " + itemImage.getImageFilename());
 
 
 
-        if(itemSpecValue !=null && rowCount>=1)
+        if(itemSpecName !=null && rowCount>=1)
         {
             // delete successful delete the image also
-//            System.out.println("Image FIle : " + itemSpecValue.getImageFilename());
-            deleteImageFileInternal(itemSpecValue.getImageFilename());
+//            System.out.println("Image FIle : " + itemSpecName.getImageFilename());
+            deleteImageFileInternal(itemSpecName.getImageFilename());
         }
 
 
@@ -229,13 +225,10 @@ public class ItemSpecValueResource {
 
 
 
-
-
     @GET
     @Path("/OuterJoin")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getItemSpecName(
-            @QueryParam("ItemSpecID")Integer itemSpecID,
             @QueryParam("ItemCatID")Integer itemCatID,
             @QueryParam("SortBy") String sortBy,
             @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
@@ -266,7 +259,7 @@ public class ItemSpecValueResource {
             set_offset = offset;
         }
 
-        ItemSpecValueEndPoint endPoint = new ItemSpecValueEndPoint();
+        ItemSpecNameEndPoint endPoint = new ItemSpecNameEndPoint();
 
         endPoint.setLimit(set_limit);
         endPoint.setMax_limit(max_limit);
@@ -274,11 +267,11 @@ public class ItemSpecValueResource {
 
         if(getRowCount!=null && getRowCount)
         {
-            endPoint.setItemCount(itemSpecValueDAOJoinOuter.getRowCount(itemSpecID,itemCatID));
+            endPoint.setItemCount(itemSpecNameDAOOuterJoin.getRowCount(itemCatID));
         }
 
 
-        endPoint.setResults(itemSpecValueDAOJoinOuter.getItemSpecValue(itemSpecID,itemCatID,sortBy,limit,offset));
+        endPoint.setResults(itemSpecNameDAOOuterJoin.getItemSpecName(itemCatID,sortBy,limit,offset));
 
 
 
@@ -300,10 +293,9 @@ public class ItemSpecValueResource {
 
 
     @GET
-    @Path("/SpecValuesForFilters")
+    @Path("/SpecsForFilters")
     @Produces(MediaType.APPLICATION_JSON)
     public Response getItemSpecsForFilters(
-            @QueryParam("ItemSpecID") Integer itemSpecID,
             @QueryParam("ItemCatID") Integer itemCatID,
             @QueryParam("ShopID") Integer shopID,
             @QueryParam("latCenter") Double latCenter, @QueryParam("lonCenter") Double lonCenter,
@@ -312,10 +304,9 @@ public class ItemSpecValueResource {
 
 
 
-        List<ItemSpecificationValue> list = Globals.itemSpecValueDAOInnerJoin.getItemSpecNameForFilters(
-                itemSpecID,itemCatID,shopID,latCenter,lonCenter,searchString,null,null,null
+        List<ItemSpecificationName> list = Globals.itemSpecNameDAOInnerJoin.getItemSpecNameForFilters(
+                itemCatID,shopID,latCenter,lonCenter,searchString,null,null,null
         );
-
 
 
 //		try {
@@ -333,6 +324,37 @@ public class ItemSpecValueResource {
     }
 
 
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getItemSpecName(
+            @QueryParam("ItemID") Integer itemID,
+            @QueryParam("ItemCatID") Integer itemCatID)
+    {
+
+
+
+        List<ItemSpecificationName> list = itemSpecNameDAO.getItemSpecName(
+                itemCatID,itemID,null,null,null
+        );
+
+
+
+
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+
+
+        //Marker
+
+        return Response.status(Response.Status.OK)
+                .entity(list)
+                .build();
+    }
 
 
 
@@ -371,12 +393,16 @@ public class ItemSpecValueResource {
     }
 
 
+    // Image Utility Methods
+
+
+
 
     public static String saveNewImage(String serviceURL,String imageID)
     {
         try
         {
-            serviceURL = serviceURL + "/api/v1/ItemSpecificationValue/Image/" + imageID;
+            serviceURL = serviceURL + "/api/v1/ItemSpecificationName/Image/" + imageID;
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -467,11 +493,9 @@ public class ItemSpecValueResource {
 
 
 
-
-
     // Image MEthods
 
-    private static final java.nio.file.Path BASE_DIR = Paths.get("./images/ItemSpecValue");
+    private static final java.nio.file.Path BASE_DIR = Paths.get("./images/ItemSpecName");
     private static final double MAX_IMAGE_SIZE_MB = 2;
 
 
@@ -544,7 +568,7 @@ public class ItemSpecValueResource {
 
 
 
-    static void createThumbnails(String filename)
+    public static void createThumbnails(String filename)
     {
         try {
 
@@ -635,5 +659,11 @@ public class ItemSpecValueResource {
 
         return response;
     }
+
+
+
+
+
+
 
 }

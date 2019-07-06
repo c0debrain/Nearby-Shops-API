@@ -13,11 +13,8 @@ public class ShopImageDAO {
 
     private HikariDataSource dataSource = Globals.getDataSource();
 
-    @Override
-    protected void finalize() throws Throwable {
-        // TODO Auto-generated method stub
-        super.finalize();
-    }
+
+
 
 
     public int saveShopImage(ShopImage shopImage, boolean getRowCount)
@@ -253,11 +250,6 @@ public class ShopImageDAO {
 
 
 
-
-
-
-
-
     public ShopImageEndPoint getShopImages(
             Integer shopID,
             String sortBy,
@@ -482,9 +474,6 @@ public class ShopImageDAO {
 
 
 
-
-
-
     public ShopImage getShopImageForImageID(
             Integer imageID
     ) {
@@ -573,11 +562,6 @@ public class ShopImageDAO {
 
         return shopImage;
     }
-
-
-
-
-
 
 
 

@@ -1,12 +1,10 @@
-package org.nearbyshops.RESTEndpointsOrderHD;
+package org.nearbyshops.RESTEndpointsOrder;
 
 import org.nearbyshops.DAOPushNotifications.DAOOneSignal;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Order;
 import org.nearbyshops.ModelEndpoint.OrderEndPoint;
-import org.nearbyshops.ModelOrderStatus.OrderStatusHomeDelivery;
-import org.nearbyshops.ModelRoles.User;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
@@ -15,9 +13,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
-import java.util.List;
-
-import static org.nearbyshops.Globals.Globals.oneSignalNotifications;
 
 
 @Singleton
@@ -87,15 +82,10 @@ public class OrderEndpointDeliveryGuySelf {
 			return Response.status(Status.OK)
 					.build();
 		}
-		if(rowCount <= 0)
-		{
-
-			return Response.status(Status.NOT_MODIFIED)
-					.build();
-		}
 
 
-		return null;
+		return Response.status(Status.NOT_MODIFIED)
+				.build();
 	}
 
 
@@ -121,15 +111,13 @@ public class OrderEndpointDeliveryGuySelf {
 			return Response.status(Status.OK)
 					.build();
 		}
-		if(rowCount <= 0)
-		{
-
-			return Response.status(Status.NOT_MODIFIED)
-					.build();
-		}
 
 
-		return null;
+
+		return Response.status(Status.NOT_MODIFIED)
+				.build();
+
+
 	}
 
 
@@ -185,15 +173,13 @@ public class OrderEndpointDeliveryGuySelf {
 			return Response.status(Status.OK)
 					.build();
 		}
-		if(rowCount <= 0)
-		{
-
-			return Response.status(Status.NOT_MODIFIED)
-					.build();
-		}
 
 
-		return null;
+
+		return Response.status(Status.NOT_MODIFIED)
+				.build();
+
+
 	}
 
 
@@ -258,12 +244,11 @@ public class OrderEndpointDeliveryGuySelf {
 			return Response.status(Status.OK)
 					.build();
 		}
-		if (rowCount <= 0) {
-			return Response.status(Status.NOT_MODIFIED)
-					.build();
-		}
 
-		return null;
+
+		return Response.status(Status.NOT_MODIFIED)
+				.build();
+
 	}
 
 

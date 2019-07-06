@@ -1,4 +1,4 @@
-package org.nearbyshops.RESTEndpointsItemSpec;
+package org.nearbyshops.RESTEndpointsItemSpecifications;
 
 
 import org.nearbyshops.DAOPreparedItemSpecification.ItemSpecificationItemDAO;

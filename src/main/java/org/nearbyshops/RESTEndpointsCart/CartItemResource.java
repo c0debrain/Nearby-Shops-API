@@ -95,7 +95,8 @@ public class CartItemResource {
 		return null;
 	}
 
-	
+
+
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateCartItem(CartItem cartItem,
@@ -146,23 +147,26 @@ public class CartItemResource {
 
 		if(rowCount >= 1)
 		{
-			Response response = Response.status(Status.OK)
-					.entity(null)
+
+			return Response.status(Status.OK)
 					.build();
-			
-			return response;
 		}
-		if(rowCount == 0)
+		else if(rowCount == 0)
 		{
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
+
+
 
 
 		return null;
 	}
+
+
+
+
 
 
 
@@ -218,7 +222,6 @@ public class CartItemResource {
 
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		
@@ -226,7 +229,6 @@ public class CartItemResource {
 		{
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 		
@@ -234,6 +236,7 @@ public class CartItemResource {
 		return null;
 	}
 	
+
 
 
 

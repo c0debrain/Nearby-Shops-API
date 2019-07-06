@@ -470,10 +470,6 @@ public class UserLoginRESTEndpoint {
 
 
 
-
-
-
-
     private static final String AUTHENTICATION_SCHEME = "Basic";
 
 
@@ -638,6 +634,9 @@ public class UserLoginRESTEndpoint {
 
 
 
+
+
+
     private void createThumbnails(String filename)
     {
         try {
@@ -663,6 +662,9 @@ public class UserLoginRESTEndpoint {
             e.printStackTrace();
         }
     }
+
+
+
 
 
 

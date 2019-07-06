@@ -20,6 +20,7 @@ public class ShopItem{
 
 
 	// column Names
+	public static final String SHOP_ITEM_ID = "SHOP_ITEM_ID";
 	public static final String SHOP_ID = "SHOP_ID";
 	public static final String ITEM_ID = "ITEM_ID";
 	public static final String AVAILABLE_ITEM_QUANTITY = "AVAILABLE_ITEM_QUANTITY";
@@ -39,9 +40,26 @@ public class ShopItem{
 
 
 
-	// create table statement
 
+	// create table statement
 	public static final String createTableShopItemPostgres = "CREATE TABLE IF NOT EXISTS " + ShopItem.TABLE_NAME + "("
+			+ " " + ShopItem.SHOP_ITEM_ID + " SERIAL PRIMARY KEY,"
+			+ " " + ShopItem.ITEM_ID + " INT,"
+			+ " " + ShopItem.SHOP_ID + " INT,"
+			+ " " + ShopItem.AVAILABLE_ITEM_QUANTITY + " FLOAT NOT NULL default 0,"
+			+ " " + ShopItem.ITEM_PRICE + " FLOAT NOT NULL default 0,"
+			+ " " + ShopItem.LAST_UPDATE_DATE_TIME + " timestamp with time zone,"
+			+ " " + ShopItem.EXTRA_DELIVERY_CHARGE + " FLOAT NOT NULL default 0,"
+			+ " " + ShopItem.DATE_TIME_ADDED + " timestamp with time zone NOT NULL DEFAULT now(),"
+			+ " FOREIGN KEY(" + ShopItem.SHOP_ID +") REFERENCES " + Shop.TABLE_NAME + "(" + Shop.SHOP_ID + ") ON DELETE CASCADE,"
+			+ " FOREIGN KEY(" + ShopItem.ITEM_ID +") REFERENCES " + Item.TABLE_NAME + "(" + Item.ITEM_ID + ") ON DELETE CASCADE,"
+			+ " UNIQUE (" + ShopItem.SHOP_ID + ", " + ShopItem.ITEM_ID + ")"
+			+ ")";
+
+
+
+
+	public static final String createTableBackup = "CREATE TABLE IF NOT EXISTS " + ShopItem.TABLE_NAME + "("
 			+ " " + ShopItem.ITEM_ID + " INT,"
 			+ " " + ShopItem.SHOP_ID + " INT,"
 			+ " " + ShopItem.AVAILABLE_ITEM_QUANTITY + " FLOAT NOT NULL default 0,"

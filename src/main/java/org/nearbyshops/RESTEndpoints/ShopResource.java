@@ -345,7 +345,9 @@ public class ShopResource {
 		return null;
 
 	}
-	
+
+
+
 
 
 //	@GET
@@ -691,7 +693,13 @@ public class ShopResource {
 	}
 
 
-	
+
+
+
+
+
+
+
 
 	@GET
 	@Path("/{ShopID}")

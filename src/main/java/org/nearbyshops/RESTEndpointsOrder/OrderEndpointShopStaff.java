@@ -1,4 +1,4 @@
-package org.nearbyshops.RESTEndpointsOrderHD;
+package org.nearbyshops.RESTEndpointsOrder;
 
 import org.nearbyshops.DAOPushNotifications.DAOOneSignal;
 import org.nearbyshops.Globals.GlobalConstants;
@@ -7,7 +7,6 @@ import org.nearbyshops.Globals.SendSMS;
 import org.nearbyshops.Model.Order;
 import org.nearbyshops.Model.Shop;
 import org.nearbyshops.ModelEndpoint.OrderEndPoint;
-import org.nearbyshops.ModelOrderStatus.OrderStatusHomeDelivery;
 import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
 import org.nearbyshops.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.ModelRoles.User;
@@ -20,7 +19,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.nearbyshops.Globals.Globals.getMailerInstance;

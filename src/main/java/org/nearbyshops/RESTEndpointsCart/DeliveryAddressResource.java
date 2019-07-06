@@ -45,8 +45,7 @@ public class DeliveryAddressResource {
 					.entity(address)
 					.build();
 			
-		}else if(idOfInsertedRow <=0)
-		{
+		}else {
 
 			//Response.status(Status.CREATED).location(arg0)
 			
@@ -54,9 +53,7 @@ public class DeliveryAddressResource {
 					.entity(null)
 					.build();
 		}
-		
-		return null;
-		
+
 	}
 
 	
@@ -73,19 +70,15 @@ public class DeliveryAddressResource {
 
 		if(rowCount >= 1)
 		{
-			Response response = Response.status(Status.OK)
-					.entity(null)
+
+			return Response.status(Status.OK)
 					.build();
-			
-			return response;
 		}
 		if(rowCount == 0)
 		{
-			Response response = Response.status(Status.NOT_MODIFIED)
-					.entity(null)
+
+			return Response.status(Status.NOT_MODIFIED)
 					.build();
-			
-			return response;
 		}
 
 
@@ -163,22 +156,20 @@ public class DeliveryAddressResource {
 		
 		if(deliveryAddress != null)
 		{
-			Response response = Response.status(Status.OK)
-			.entity(deliveryAddress)
-			.build();
-			
-			return response;
-			
-		} else 
-		{
-			
-			Response response = Response.status(Status.NO_CONTENT)
+
+			return Response.status(Status.OK)
 					.entity(deliveryAddress)
 					.build();
 			
-			return response;
+		} else 
+		{
+
+			return Response.status(Status.NO_CONTENT)
+					.build();
 			
 		}
 		
-	}	
+	}
+
+
 }
