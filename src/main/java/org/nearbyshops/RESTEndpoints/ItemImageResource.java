@@ -69,6 +69,9 @@ public class ItemImageResource {
 //        }
 
 
+
+
+
         idOfInsertedRow = itemImagesDAO.saveItemImage(itemImage,false);
 
 
@@ -89,10 +92,7 @@ public class ItemImageResource {
                     .build();
         }
 
-
-
     }
-
 
 
 
@@ -130,30 +130,25 @@ public class ItemImageResource {
         }
 
 
-
-
         itemImage.setImageID(imageID);
-
         int rowCount = itemImagesDAO.updateItemImage(itemImage);
+
 
 
         if(rowCount >= 1)
         {
 
             return Response.status(Response.Status.OK)
-                    .entity(null)
                     .build();
         }
         if(rowCount == 0)
         {
 
             return Response.status(Response.Status.NOT_MODIFIED)
-                    .entity(null)
                     .build();
         }
 
         return null;
-
     }
 
 
@@ -531,6 +526,12 @@ public class ItemImageResource {
 
         return Response.status(Response.Status.CREATED).location(URI.create("/api/Images/" + fileName)).entity(image).build();
     }
+
+
+
+
+
+
 
 
 

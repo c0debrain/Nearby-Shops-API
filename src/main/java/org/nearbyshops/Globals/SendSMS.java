@@ -27,7 +27,11 @@ public class SendSMS {
                 "&mobiles=" + phone +
                 "&message=Your one time password (OTP) for " + GlobalConstants.service_name_for_sms_value + " is " + otp +
                 "&sender=" + GlobalConstants.sender_id_for_sms_value +
-                "&route=4&country=" + GlobalConstants.default_country_code_value;
+                "&route=4&country=0";
+
+//        + GlobalConstants.default_country_code_value
+
+
 
 
 //        String urlOTP = "https://control.msg91.com/api/sendotp.php?authkey=" +
@@ -96,7 +100,12 @@ public class SendSMS {
                 + "&mobiles=" + phone
                 + "&message=" + message
                 + "&sender=" + GlobalConstants.sender_id_for_sms_value
-                + "&route=4&country=" + GlobalConstants.default_country_code_value;
+                + "&route=4&country=0";
+
+//        + GlobalConstants.default_country_code_value
+
+
+        
 
 
 //        String urlMessage = "http://api.msg91.com/api/sendhttp.php?authkey=" + GlobalConstants.MSG91_SMS_SERVICE_API_KEY
