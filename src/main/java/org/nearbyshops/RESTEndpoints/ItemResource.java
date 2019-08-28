@@ -11,6 +11,7 @@ import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
 import org.nearbyshops.Model.Item;
 import org.nearbyshops.Model.ItemCategory;
+import org.nearbyshops.Model.Shop;
 import org.nearbyshops.ModelEndpoint.ItemCategoryEndPoint;
 import org.nearbyshops.ModelEndpoint.ItemEndPoint;
 import org.nearbyshops.ModelRoles.StaffPermissions;
@@ -34,6 +35,8 @@ import java.util.List;
 @Path("/api/v1/Item")
 public class ItemResource {
 
+
+
 	private ItemDAO itemDAO = Globals.itemDAO;
 	private ItemDAOJoinOuter itemDAOJoinOuter = Globals.itemDAOJoinOuter;
 	private ItemCategoryDAO itemCategoryDAO = Globals.itemCategoryDAO;
@@ -43,7 +46,7 @@ public class ItemResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
+	@RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_SHOP_ADMIN})
 	public Response createItem(Item item)
 	{
 
@@ -61,6 +64,17 @@ public class ItemResource {
 				throw new ForbiddenException("Not Permitted");
 			}
 		}
+		else if (user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
+		{
+
+			Shop shop = Globals.shopDAO.getShopForShopAdmin(user.getUserID());
+
+			if(shop==null || !shop.getShopEnabled())
+			{
+				throw new ForbiddenException("Not Permitted");
+			}
+		}
+
 
 
 
@@ -79,13 +93,9 @@ public class ItemResource {
 		}else {
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
-
-
 	}
-
 
 
 
@@ -209,7 +219,7 @@ public class ItemResource {
 	@PUT
 	@Path("/{ItemID}")
 	@Consumes(MediaType.APPLICATION_JSON)
-	@RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
+	@RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_SHOP_ADMIN})
 	public Response updateItem(Item item, @PathParam("ItemID")int itemID)
 	{
 
@@ -226,9 +236,20 @@ public class ItemResource {
 				throw new ForbiddenException("Not Permitted");
 			}
 		}
+		else if (user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
+		{
+
+			Shop shop = Globals.shopDAO.getShopForShopAdmin(user.getUserID());
+
+			if(shop==null || !shop.getShopEnabled())
+			{
+				throw new ForbiddenException("Not Permitted");
+			}
+		}
 
 
-			
+
+
 		item.setItemID(itemID);
 	
 		//System.out.println("ItemCategoryID: " + itemCategoryID + " " + itemCategory.getCategoryName()
@@ -741,6 +762,8 @@ public class ItemResource {
 
 		return fileName;
 	}
+
+
 
 
 

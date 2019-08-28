@@ -85,9 +85,6 @@ public class Main {
 
 
 
-
-
-
     private static void createTables()
     {
 
@@ -365,7 +362,6 @@ public class Main {
 
 
 
-
     private static void upgradeTables()
     {
 
@@ -443,9 +439,6 @@ public class Main {
         }
 
     }
-
-
-
 
 }
 

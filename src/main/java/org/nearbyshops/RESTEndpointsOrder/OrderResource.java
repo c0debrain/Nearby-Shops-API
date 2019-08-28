@@ -67,9 +67,6 @@ public class OrderResource {
 
 //		Order orderResult = Globals.orderService.placeOrder(order,cartID);
 
-
-
-
 //		try
 //		{
 

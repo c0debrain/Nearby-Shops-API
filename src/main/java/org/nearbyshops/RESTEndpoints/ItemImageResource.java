@@ -40,7 +40,7 @@ public class ItemImageResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_SHOP_ADMIN})
     public Response saveItemImage(ItemImage itemImage)
     {
         int idOfInsertedRow = -1;
@@ -93,6 +93,9 @@ public class ItemImageResource {
         }
 
     }
+
+
+
 
 
 
@@ -461,8 +464,7 @@ public class ItemImageResource {
     @POST
     @Path("/Image")
     @Consumes({MediaType.APPLICATION_OCTET_STREAM})
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF,
-            GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_SHOP_STAFF})
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF, GlobalConstants.ROLE_SHOP_ADMIN})
     public Response uploadImage(InputStream in, @HeaderParam("Content-Length") long fileSize,
                                 @QueryParam("PreviousImageName") String previousImageName
     ) throws Exception
