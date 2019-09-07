@@ -1,4 +1,4 @@
-package org.nearbyshops.DAOPreparedOrders;
+package org.nearbyshops.DAOOrders;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
@@ -99,9 +99,6 @@ public class PlaceOrderDAO {
                         + OrderItem.ITEM_ID + ","
                         + OrderItem.ITEM_PRICE_AT_ORDER + ","
                         + OrderItem.ITEM_QUANTITY + ") " +
-
-
-
 
 
                         " select " + " ? " + ","

@@ -26,7 +26,7 @@ public class OrderItem {
             + " " + OrderItem.ITEM_ID + " INT,"
             + " " + OrderItem.ORDER_ID + " INT,"
             + " " + OrderItem.ITEM_PRICE_AT_ORDER + " FLOAT NOT NULL DEFAULT 0,"
-            + " " + OrderItem.ITEM_QUANTITY + " INT NOT NULL DEFAULT 0,"
+            + " " + OrderItem.ITEM_QUANTITY + " FLOAT NOT NULL DEFAULT 0,"
             + " FOREIGN KEY(" + OrderItem.ITEM_ID +") REFERENCES " + Item.TABLE_NAME + "(" + Item.ITEM_ID + ") ON DELETE CASCADE,"
             + " FOREIGN KEY(" + OrderItem.ORDER_ID +") REFERENCES " + Order.TABLE_NAME + "(" + Order.ORDER_ID + ") ON DELETE CASCADE,"
             + " PRIMARY KEY (" + OrderItem.ITEM_ID + ", " + OrderItem.ORDER_ID + "),"
@@ -54,14 +54,6 @@ public class OrderItem {
     // getter and setter Methods
 
 
-    public Item getItem() {
-        return item;
-    }
-
-    public void setItem(Item item) {
-        this.item = item;
-    }
-
     public Integer getItemID() {
         return itemID;
     }
@@ -76,12 +68,6 @@ public class OrderItem {
 
     public void setOrderID(Integer orderID) {
         this.orderID = orderID;
-    }
-
-
-
-    public void setItemQuantity(Integer itemQuantity) {
-        this.itemQuantity = itemQuantity;
     }
 
     public double getItemQuantity() {
@@ -100,7 +86,11 @@ public class OrderItem {
         this.itemPriceAtOrder = itemPriceAtOrder;
     }
 
-    public void setItemPriceAtOrder(Integer itemPriceAtOrder) {
-        this.itemPriceAtOrder = itemPriceAtOrder;
+    public Item getItem() {
+        return item;
+    }
+
+    public void setItem(Item item) {
+        this.item = item;
     }
 }

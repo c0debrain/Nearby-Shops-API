@@ -5,6 +5,8 @@ import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Order;
 import org.nearbyshops.ModelEndpoint.OrderEndPoint;
+import org.nearbyshops.ModelRoles.ShopStaffPermissions;
+import org.nearbyshops.ModelRoles.User;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
@@ -13,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
+import java.util.List;
 
 
 @Singleton
@@ -20,35 +23,38 @@ import java.util.ArrayList;
 public class OrderEndpointDeliveryGuySelf {
 
 
-	public OrderEndpointDeliveryGuySelf() {
-		super();
-		// TODO Auto-generated constructor stub
+
+
+
+	@PUT
+	@Path("/HandoverToDelivery/{OrderID}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@RolesAllowed({GlobalConstants.ROLE_DELIVERY_GUY_SELF,GlobalConstants.ROLE_DELIVERY_GUY})
+	public Response startPickup(@PathParam("OrderID")int orderID)
+	{
+
+		int rowCount = 0;
+
+
+		int deliveryGuyID = ((User)Globals.accountApproved).getUserID();
+
+
+		rowCount = Globals.daoOrderDeliveryGuy.pickupOrder(orderID,deliveryGuyID);
+
+
+
+		if(rowCount>=1)
+		{
+			return Response.status(Status.OK)
+					.build();
+
+		}
+		else
+		{
+			return Response.status(Status.NOT_MODIFIED)
+					.build();
+		}
 	}
-
-
-//	@GET
-//	@Path("/Notifications/{ShopID}")
-//	@Produces(SseFeature.SERVER_SENT_EVENTS)
-//	public EventOutput listenToBroadcast(@PathParam("ShopID")int shopID) {
-//		final EventOutput eventOutput = new EventOutput();
-//
-//		if(Globals.broadcasterMap.get(shopID)!=null)
-//		{
-//			SseBroadcaster broadcasterOne = Globals.broadcasterMap.get(shopID);
-//			broadcasterOne.add(eventOutput);
-//		}
-//		else
-//		{
-//			SseBroadcaster broadcasterTwo = new SseBroadcaster();
-//			broadcasterTwo.add(eventOutput);
-//			Globals.broadcasterMap.put(shopID,broadcasterTwo);
-//		}
-//
-//		return eventOutput;
-//	}
-
-
-
 
 
 
@@ -87,6 +93,8 @@ public class OrderEndpointDeliveryGuySelf {
 		return Response.status(Status.NOT_MODIFIED)
 				.build();
 	}
+
+
 
 
 
@@ -186,11 +194,6 @@ public class OrderEndpointDeliveryGuySelf {
 
 
 
-
-
-
-
-
 	@PUT
 	@Path("/HandoverToUser/{OrderID}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -250,11 +253,6 @@ public class OrderEndpointDeliveryGuySelf {
 				.build();
 
 	}
-
-
-
-
-
 
 
 

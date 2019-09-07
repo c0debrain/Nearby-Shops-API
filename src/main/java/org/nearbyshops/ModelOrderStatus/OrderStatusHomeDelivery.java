@@ -62,10 +62,6 @@ public class OrderStatusHomeDelivery {
 
 
 
-
-
-
-
     public static String getStatusString(int orderStatus)
     {
         String statusString = "";

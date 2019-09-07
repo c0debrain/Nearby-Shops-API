@@ -12,7 +12,7 @@ import org.nearbyshops.DAOPreparedCartOrder.CartService;
 import org.nearbyshops.DAOPreparedCartOrder.CartStatsDAO;
 import org.nearbyshops.DAOPreparedCartOrder.DeliveryAddressService;
 import org.nearbyshops.DAOPreparedItemSpecification.*;
-import org.nearbyshops.DAOPreparedOrders.*;
+import org.nearbyshops.DAOOrders.*;
 import org.nearbyshops.DAOPreparedReviewItem.FavoriteItemDAOPrepared;
 import org.nearbyshops.DAOPreparedReviewItem.ItemReviewDAOPrepared;
 import org.nearbyshops.DAOPreparedReviewItem.ItemReviewThanksDAOPrepared;
@@ -23,7 +23,6 @@ import org.nearbyshops.DAOPreparedSettings.ServiceConfigurationDAOPrepared;
 import org.nearbyshops.DAOPushNotifications.DAOOneSignal;
 import org.nearbyshops.DAORoles.*;
 import org.nearbyshops.DAOsPrepared.*;
-import org.nearbyshops.RESTEndpointRoles.UserSignUpRESTEndpoint;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
 
@@ -60,6 +59,8 @@ public class Globals {
     public static DeliveryAddressService deliveryAddressService = new DeliveryAddressService();
     public static OrderItemService orderItemService = new OrderItemService();
     public static PlaceOrderDAO pladeOrderDAO = new PlaceOrderDAO();
+
+    public static DAOOrderUtility daoOrderUtility = new DAOOrderUtility();
 
 
     public static FavoriteItemDAOPrepared favoriteItemDAOPrepared = new FavoriteItemDAOPrepared();
@@ -232,10 +233,7 @@ public class Globals {
 
 
 
-
-
-
-
+        
 
     private static Random randomNew = new Random();
 

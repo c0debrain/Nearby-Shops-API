@@ -250,7 +250,8 @@ public class CartItemService {
 
 
 
-	
+
+
 	public ArrayList<CartItem> getCartItem(Integer cartID, Integer itemID, Integer endUserID)
 	{
 
@@ -316,7 +317,7 @@ public class CartItemService {
 
 				cartItem.setCartID(rs.getInt(CartItem.CART_ID));
 				cartItem.setItemID(rs.getInt(CartItem.ITEM_ID));
-				cartItem.setItemQuantity(rs.getInt(CartItem.ITEM_QUANTITY));
+				cartItem.setItemQuantity(rs.getDouble(CartItem.ITEM_QUANTITY));
 
 				cartItemList.add(cartItem);
 			}
@@ -420,7 +421,7 @@ public class CartItemService {
 
 				cartItem.setCartID(rs.getInt(CartItem.CART_ID));
 				cartItem.setItemID(rs.getInt(CartItem.ITEM_ID));
-				cartItem.setItemQuantity(rs.getInt(CartItem.ITEM_QUANTITY));
+				cartItem.setItemQuantity(rs.getDouble(CartItem.ITEM_QUANTITY));
 				cartItem.setRt_availableItemQuantity(rs.getInt("available_item_quantity"));
 				cartItem.setRt_itemPrice(rs.getDouble("item_price"));
 
@@ -576,7 +577,7 @@ public class CartItemService {
 
 				cartItem.setCartID(rs.getInt(CartItem.CART_ID));
 				cartItem.setItemID(rs.getInt(CartItem.ITEM_ID));
-				cartItem.setItemQuantity(rs.getInt(CartItem.ITEM_QUANTITY));
+				cartItem.setItemQuantity(rs.getDouble(CartItem.ITEM_QUANTITY));
 
 				cartItem.setRt_availableItemQuantity(rs.getInt(ShopItem.AVAILABLE_ITEM_QUANTITY));
 				cartItem.setRt_itemPrice(rs.getDouble(ShopItem.ITEM_PRICE));

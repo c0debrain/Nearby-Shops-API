@@ -1,5 +1,6 @@
 package org.nearbyshops.RESTEndpointsOrder;
 
+import org.nearbyshops.DAOOrders.DAOOrderUtility;
 import org.nearbyshops.DAOPushNotifications.DAOOneSignal;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
@@ -30,14 +31,7 @@ import static org.nearbyshops.Globals.Globals.oneSignalNotifications;
 public class OrderEndpointShopStaff {
 
 
-	public OrderEndpointShopStaff() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-
-
-
+	private DAOOrderUtility daoOrderUtility = Globals.daoOrderUtility;
 
 
 //
@@ -66,10 +60,6 @@ public class OrderEndpointShopStaff {
 
 
 
-
-
-
-
 	@PUT
 	@Path("/SetConfirmed/{OrderID}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -92,8 +82,6 @@ public class OrderEndpointShopStaff {
 			}
 
 		}
-
-
 
 
 
@@ -357,6 +345,8 @@ public class OrderEndpointShopStaff {
 
 
 
+
+
 	@PUT
 	@Path("/UndoHandover/{OrderID}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -400,6 +390,9 @@ public class OrderEndpointShopStaff {
 
 
 	}
+
+
+
 
 
 
@@ -525,8 +518,6 @@ public class OrderEndpointShopStaff {
 //		int rowCount = Globals.orderService.updateOrder(order);
 
 	}
-
-
 
 
 
@@ -752,7 +743,11 @@ public class OrderEndpointShopStaff {
 		getRowCount=true;
 
 
-		UserEndpoint endpoint = Globals.daoOrderStaff.fetchDeliveryGuys(
+
+
+
+
+		UserEndpoint endpoint = daoOrderUtility.fetchDeliveryGuys(
 				shopID,
 				homeDeliveryStatus,
 				sortBy,limit,offset,
@@ -774,17 +769,12 @@ public class OrderEndpointShopStaff {
 
 
 
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-
-		//Marker
-
 		return Response.status(Status.OK)
 				.entity(endpoint)
 				.build();
+
+
+
 	}
 
 

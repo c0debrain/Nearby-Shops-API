@@ -10,6 +10,8 @@ import org.nearbyshops.Model.Shop;
 
 public class DeliveryGuyData {
 
+
+
     // Table Name for User
     public static final String TABLE_NAME = "DELIVERY_GUY_DATA";
 
@@ -23,6 +25,11 @@ public class DeliveryGuyData {
     public static final String IS_EMPLOYED_BY_SHOP = "IS_EMPLOYED_BY_SHOP";
     public static final String SHOP_ID = "SHOP_ID";
     public static final String CURRENT_BALANCE = "CURRENT_BALANCE";
+
+
+    public static final String LAT_CENTER_DELIVERY_AREA = "LAT_CENTER_DELIVERY_AREA";
+    public static final String LON_CENTER_DELIVERY_AREA = "LON_CENTER_DELIVERY_AREA";
+    public static final String RADIUS_DELIVERY_AREA = "RADIUS_DELIVERY_AREA";
 
 
 

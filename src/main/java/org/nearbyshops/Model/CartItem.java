@@ -101,9 +101,6 @@ public class CartItem {
         this.itemQuantity = itemQuantity;
     }
 
-    public void setItemQuantity(int itemQuantity) {
-        this.itemQuantity = itemQuantity;
-    }
 
     public int getRt_availableItemQuantity() {
         return rt_availableItemQuantity;

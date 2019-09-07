@@ -1,4 +1,4 @@
-package org.nearbyshops.DAOPreparedOrders;
+package org.nearbyshops.DAOOrders;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
@@ -12,12 +12,6 @@ import java.util.ArrayList;
 
 public class OrderItemService {
 
-	
-	@Override
-	protected void finalize() throws Throwable {
-		// TODO Auto-generated method stub
-		super.finalize();	
-	}
 
 
 	private HikariDataSource dataSource = Globals.getDataSource();
@@ -347,8 +341,8 @@ public class OrderItemService {
 
 				orderItem.setOrderID(rs.getInt(OrderItem.ORDER_ID));
 				orderItem.setItemID(rs.getInt(OrderItem.ITEM_ID));
-				orderItem.setItemPriceAtOrder(rs.getInt(OrderItem.ITEM_PRICE_AT_ORDER));
-				orderItem.setItemQuantity(rs.getInt(OrderItem.ITEM_QUANTITY));
+				orderItem.setItemPriceAtOrder(rs.getDouble(OrderItem.ITEM_PRICE_AT_ORDER));
+				orderItem.setItemQuantity(rs.getDouble(OrderItem.ITEM_QUANTITY));
 
 
 				if(itemID==null)

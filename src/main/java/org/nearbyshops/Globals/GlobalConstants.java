@@ -137,7 +137,6 @@ public class GlobalConstants {
 
 
 
-
     // Constants for the Roles in the Application
     public static final String ROLE_ADMIN = "ADMIN";
     public static final String ROLE_STAFF = "STAFF";
