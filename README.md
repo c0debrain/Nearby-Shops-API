@@ -1,5 +1,5 @@
-Nearby Shops
-------------------
+About Nearby Shops - How it Works ? 
+-------------------------------
 
 Nearby Shops is a distributed ecosystem of local markets conceptually similar to Mastadon project. Anyone can self-host their Local Market Instance and create their local market on Nearby Shops. The technology is fully open-source and funded by Donations. We dont charge any fee or comission in order to use the platform. 
 
