@@ -1,17 +1,31 @@
+Nearby Shops
+------------------
+
+Nearby Shops is a distributed ecosystem of local markets conceptually similar to Mastadon project. Anyone can self-host their Local Market Instance and create their local market on Nearby Shops. The technology is fully open-source and funded by Donations. We dont charge any fee or comission in order to use the platform. 
+
+Although the platform and technology is free but Service Providers (Market Creators) are allowed to charge for their services in order to recover their expenses and cost of human efforts and Man-Hours. You can make a reasonable middle-class income if your local market gets a decent enough traction. 
+
+Local Market's are generally self-hosted by independent Volunteers, Service Providers and local vendor cooperatives who seek the welfare of their local vendors.
+
+Nearby Shops helps you build your own local market for food delivery or Grocery delivery similar to Zomato, Swiggy, Dunzo, Grubhub and Rappi. This project comes with a comprehensive developer guide which makes it really easy and simple to start using this project. You dont even need to be a developer and just having basic knowledge of installing and working with software in enough for you. 
+
+
+
 Nearby Shops API (JSON based REST API)
 ====================================
 
-This is the server side component of the Nearby Shops e-commerce software. For more information about this project please visit https://nearbyshops.org
+This is the server side part of the Nearby Shops open-source project. For more information about this project please visit https://nearbyshops.org Developers Visit : https://developer.nearbyshops.org
+
 
 A note to potential Contributors
 ----------------------------------
-For those who are interested in contributing to this repo you are welcome ... but source code in this repository is due for some refactoring. Which will make it easy to understand and work upon. You may want to wait until the refactoring is done. 
+For those who are interested in contributing to this project needs to be aware that the source code in this repository is due for some refactoring which will make the code more easy to understand. Until then you are welcome to go through this code but you may face difficulties in understanding the code. 
 
-Until then feel free to review the code and suggest best technologies/ libraries to use in the backend side and how can we improve the code in this repository. 
+You are free to review the code and welcome to suggest the best technologies/ libraries to use in the backend side and how can we improve the code in this repository. 
 
 If you're an experienced backend developer your inputs will be highly valuable to improve the project code !
 
-To give your suggestion ... you can create an Issue or also post on our forum at http://forum.nearbyshops.org ... 
+To give your suggestion ... get in touch with us on our forum http://forum.nearbyshops.org
 
 
 
@@ -39,7 +53,10 @@ The server side component is a JSON Based Rest API built with Java
 
 Third Party Integrations
 -------------------------
-SMS-OTP Integration using msg91, Open-Signal (for push notifications), Fabrio.io (crash reporting)
+SMS-OTP Integration using msg91, One-Signal (for push notifications)
+
+Please visit our integrations guide for more information about integrations : https://developer.nearbyshops.org/integrations/e-mail-integration.html
+
 
 
 Download
@@ -58,8 +75,8 @@ Developer time is valuable and its not fair to expect developers to contribute t
 We may have some strategy / plan to compensate the contributors. 
 
 
-Community 
------------
+Community and Discussion Forum
+-----------------------------------
 
 Do you have questions ? Need help ? you can speak with original developers of this project. We welcome you to join our forum for discussion on anything related to this project !
 
@@ -70,12 +87,11 @@ Please visit : https://forum.nearbyshops.org
 Client Side Repositories
 --------------------------
 
-End-User android app : https://github.com/SumeetMoray/Nearby-Shops-End-User-Android-app
+End-User android app : https://github.com/nearbyshops/Nearby-Shops-End-User-Android-app
 
-Shop-Owner android app : https://github.com/SumeetMoray/Nearby-Shops-Shop-Owner-Android-app
+Shop-Owner android app : https://github.com/NearbyShops/Nearby-Shops-Shop-Owner-Android-app
 
-Admin android app : https://github.com/SumeetMoray/Nearby-Shops-Admin-App
-
+Admin android app : https://github.com/NearbyShops/Nearby-Shops-Admin-App
 
 
 
