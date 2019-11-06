@@ -1,16 +1,3 @@
-About Nearby Shops - How it Works ? 
--------------------------------
-
-Nearby Shops is a distributed ecosystem of local markets conceptually similar to Mastadon project. Anyone can self-host their Local Market Instance and create their local market on Nearby Shops. The technology is fully open-source and funded by Donations. We dont charge any fee or comission in order to use the platform. 
-
-Although the platform and technology is free but Service Providers (Market Creators) are allowed to charge for their services in order to recover their expenses and cost of human efforts and Man-Hours. You can make a reasonable middle-class income if your local market gets a decent enough traction. 
-
-Local Market's are generally self-hosted by independent Volunteers, Service Providers and local vendor cooperatives who seek the welfare of their local vendors.
-
-Nearby Shops helps you build your own local market for food delivery or Grocery delivery similar to Zomato, Swiggy, Dunzo, Grubhub and Rappi. This project comes with a comprehensive developer guide which makes it really easy and simple to start using this project. You dont even need to be a developer and just having basic knowledge of installing and working with software in enough for you. 
-
-
-
 Nearby Shops API (JSON based REST API)
 ====================================
 
@@ -19,7 +6,7 @@ This is the server side part of the Nearby Shops open-source project. For more i
 
 A note to potential Contributors
 ----------------------------------
-For those who are interested in contributing to this project needs to be aware that the source code in this repository is due for some refactoring which will make the code more easy to understand. Until then you are welcome to go through this code but you may face difficulties in understanding the code. 
+This repository is due for some code cleanup and refactoring. When that cleanup is done the code will become more easy to understand and comprehend. You can still go ahead and study the code. But be aware that you may not see a production quality and organized code. 
 
 You are free to review the code and welcome to suggest the best technologies/ libraries to use in the backend side and how can we improve the code in this repository. 
 
@@ -93,6 +80,17 @@ Shop-Owner android app : https://github.com/NearbyShops/Nearby-Shops-Shop-Owner-
 
 Admin android app : https://github.com/NearbyShops/Nearby-Shops-Admin-App
 
+
+About Nearby Shops - How it Works ? 
+-------------------------------
+
+Nearby Shops is a distributed ecosystem of local markets conceptually similar to Mastadon project. Anyone can self-host their Local Market Instance and create their local market on Nearby Shops. The technology is fully open-source and funded by Donations. We dont charge any fee or comission in order to use the platform. 
+
+Although the platform and technology is free but Service Providers (Market Creators) are allowed to charge for their services in order to recover their expenses and cost of human efforts and Man-Hours. You can make a reasonable middle-class income if your local market gets a decent enough traction. 
+
+Local Market's are generally self-hosted by independent Volunteers, Service Providers and local vendor cooperatives who seek the welfare of their local vendors.
+
+Nearby Shops helps you build your own local market for food delivery or Grocery delivery similar to Zomato, Swiggy, Dunzo, Grubhub and Rappi. This project comes with a comprehensive developer guide which makes it really easy and simple to start using this project. You dont even need to be a developer and just having basic knowledge of installing and working with software in enough for you. 
 
 
 License
