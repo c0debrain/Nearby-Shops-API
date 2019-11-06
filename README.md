@@ -6,7 +6,7 @@ This is the server side part of the Nearby Shops open-source project. For more i
 
 A note to potential Contributors
 ----------------------------------
-This repository is due for some code cleanup and refactoring. When that cleanup is done the code will become more easy to understand and comprehend. You can still go ahead and study the code. But be aware that you may not see a production quality and organized code. 
+This repository is due for some code cleanup and refactoring. When that cleanup is done the code will become more easy to understand and comprehend. You can still go ahead and study the code. But be aware that you may not see a production quality organized code. 
 
 You are free to review the code and welcome to suggest the best technologies/ libraries to use in the backend side and how can we improve the code in this repository. 
 
