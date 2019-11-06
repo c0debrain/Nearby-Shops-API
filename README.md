@@ -1,7 +1,7 @@
 Nearby Shops API (JSON based REST API)
 ====================================
 
-This is the server side part of the Nearby Shops open-source project. For more information about this project please visit https://nearbyshops.org Developers Visit : https://developer.nearbyshops.org
+This is the server side part of the Nearby Shops open-source project. For more information about this project please visit https://nearbyshops.org | Developers Visit : https://developer.nearbyshops.org
 
 
 A note to potential Contributors
