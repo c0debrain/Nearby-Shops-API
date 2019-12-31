@@ -17,14 +17,6 @@ public class CartStatsResource {
 
 	private ShopDAO shopDAO = Globals.shopDAO;
 
-	public CartStatsResource() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-
-
-
 
 
 	@GET

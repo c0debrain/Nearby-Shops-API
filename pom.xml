@@ -35,6 +35,15 @@
 
 
 
+        <!--  Firebase admin SDK-->
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>6.10.0</version>
+        </dependency>
+
+
+
 
         <dependency>
             <groupId>org.simplejavamail</groupId>
@@ -89,16 +98,10 @@
             <artifactId>jersey-hk2</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>org.glassfish.jersey.containers</groupId>-->
-            <!--<artifactId>jersey-container-jetty-http</artifactId>-->
-            <!--<version>2.26</version>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>org.glassfish.jersey.containers</groupId>
             <artifactId>jersey-container-jetty-http</artifactId>
-            <version>2.28</version>
+            <version>2.29.1</version>
         </dependency>
 
 
@@ -333,8 +336,9 @@
         </plugins>
     </build>
 
+
     <properties>
-        <jersey.version>2.28</jersey.version>
+        <jersey.version>2.29.1</jersey.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.9</maven.compiler.source>
         <maven.compiler.target>1.9</maven.compiler.target>

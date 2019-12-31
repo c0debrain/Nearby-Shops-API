@@ -243,8 +243,6 @@ public class DAOResetPassword {
 
 
 
-
-
     public boolean checkPasswordResetCode(String emailOrPhone, String resetCode)
     {
 
@@ -324,6 +322,8 @@ public class DAOResetPassword {
 
         return false;
     }
+
+
 
 
 

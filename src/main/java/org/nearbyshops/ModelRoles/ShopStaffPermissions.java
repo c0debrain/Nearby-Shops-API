@@ -2,9 +2,7 @@ package org.nearbyshops.ModelRoles;
 
 import org.nearbyshops.Model.Shop;
 
-/**
- * Created by sumeet on 28/8/17.
- */
+
 
 
 public class ShopStaffPermissions {
@@ -36,7 +34,10 @@ public class ShopStaffPermissions {
     public static final String ACCEPT_PAYMENTS_FROM_DELIVERY = "ACCEPT_PAYMENTS_FROM_DELIVERY";
     public static final String ACCEPT_RETURNS = "ACCEPT_RETURNS";
 
-    public static final String MARK_ORDERS_DELIVERED = "MARK_ORDERS_DELIVERED";
+//    public static final String MARK_ORDERS_DELIVERED = "MARK_ORDERS_DELIVERED";
+
+
+
 
 
     // Create Table CurrentServiceConfiguration Provider
@@ -57,9 +58,11 @@ public class ShopStaffPermissions {
                     + " " + ShopStaffPermissions.UPDATE_STOCK + " boolean NOT NULL default 'f',"
 
                     + " " + ShopStaffPermissions.CANCEL_ORDERS + " boolean NOT NULL default 'f',"
+
                     + " " + ShopStaffPermissions.CONFIRM_ORDERS + " boolean NOT NULL default 'f',"
                     + " " + ShopStaffPermissions.SET_ORDERS_PACKED + " boolean NOT NULL default 'f',"
                     + " " + ShopStaffPermissions.HANDOVER_TO_DELIVERY + " boolean NOT NULL default 'f',"
+
                     + " " + ShopStaffPermissions.ACCEPT_PAYMENTS_FROM_DELIVERY + " boolean NOT NULL default 'f',"
                     + " " + ShopStaffPermissions.ACCEPT_RETURNS + " boolean NOT NULL default 'f',"
 
@@ -95,12 +98,15 @@ public class ShopStaffPermissions {
     private boolean permitConfirmOrders;
     private boolean permitSetOrdersPacked;
     private boolean permitHandoverToDelivery;
-    private boolean permitMarkOrdersDelivered;
+//    private boolean permitMarkOrdersDelivered;
     private boolean permitAcceptPaymentsFromDelivery;
     private boolean permitAcceptReturns;
 
 
     private double rt_distance;
+
+
+
 
 
 
@@ -163,13 +169,8 @@ public class ShopStaffPermissions {
         this.permitHandoverToDelivery = permitHandoverToDelivery;
     }
 
-    public boolean isPermitMarkOrdersDelivered() {
-        return permitMarkOrdersDelivered;
-    }
 
-    public void setPermitMarkOrdersDelivered(boolean permitMarkOrdersDelivered) {
-        this.permitMarkOrdersDelivered = permitMarkOrdersDelivered;
-    }
+
 
     public boolean isPermitAcceptPaymentsFromDelivery() {
         return permitAcceptPaymentsFromDelivery;

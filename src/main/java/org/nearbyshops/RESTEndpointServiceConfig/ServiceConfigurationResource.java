@@ -25,10 +25,7 @@ import java.util.List;
 
 
 
-
-
-
-@Path("/api/serviceconfiguration")
+@Path("/api/ServiceConfiguration")
 public class ServiceConfigurationResource {
 
 
@@ -48,6 +45,7 @@ public class ServiceConfigurationResource {
 		if(serviceConfigurationLocal != null)
 		{
 			serviceConfigurationLocal.setRt_login_using_otp_enabled(GlobalConstants.enable_login_using_otp_value);
+			serviceConfigurationLocal.setRt_market_id_for_fcm(GlobalConstants.market_id_for_fcm);
 
 
 			return Response.status(Status.OK)

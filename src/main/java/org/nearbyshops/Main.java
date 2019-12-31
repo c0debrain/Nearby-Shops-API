@@ -1,7 +1,8 @@
 package org.nearbyshops;
 
-import okhttp3.internal.http2.Settings;
-import org.apache.commons.configuration2.Configuration;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.nearbyshops.Globals.GlobalConfig;
@@ -26,6 +27,8 @@ import org.nearbyshops.ModelRoles.*;
 import org.nearbyshops.ModelSettings.ServiceConfigurationLocal;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
@@ -42,16 +45,9 @@ import java.sql.Statement;
 
 
 
-
-
 public class Main {
 
-    // Base URI the Grizzly HTTP server will listen on
 
-    /**
-     * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
-     * @return Grizzly HTTP server.
-     */
 
 
 
@@ -71,8 +67,8 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
 
-        GlobalConfig.loadGlobalConfiguration();
 
+        GlobalConfig.loadGlobalConfiguration();
 
 //        createDB();
 //        upgradeTables();
@@ -80,10 +76,14 @@ public class Main {
         createTables();
         startJettyServer();
 
+
+        setupFirebaseAdminSDK();
     }
 
 
 
+
+    
 
     private static void createTables()
     {
@@ -148,7 +148,6 @@ public class Main {
             statement.executeUpdate(ItemSpecificationName.createTableItemSpecNamePostgres);
             statement.executeUpdate(ItemSpecificationValue.createTableItemSpecificationValuePostgres);
             statement.executeUpdate(ItemSpecificationItem.createTableItemSpecificationItemPostgres);
-
 
 
             statement.executeUpdate(ServiceConfigurationLocal.createTablePostgres);
@@ -437,6 +436,71 @@ public class Main {
                 }
             }
         }
+
+    }
+
+
+
+
+    private static void setupFirebaseAdminSDK() {
+
+        FileInputStream serviceAccount = null;
+
+
+        try {
+
+
+//            "/media/sumeet/data/aNearbyShops/NearbyShopsAPI/firebase/nearbyshops-f7b77-firebase-adminsdk-phmoy-50db87dde4.json"
+//            "https://nearbyshops-f7b77.firebaseio.com"
+
+            serviceAccount = new FileInputStream(GlobalConstants.fcm_config_file_path);
+
+
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl(GlobalConstants.fcm_database_url)
+                    .build();
+
+
+            FirebaseApp.initializeApp(options);
+
+
+
+
+
+//
+////            GlobalConstants.market_id_for_fcm +
+//                    // The topic name can be optionally prefixed with "/topics/".
+//            String topic = "end_user_4";
+//
+//            System.out.println(topic);
+//
+//            // See documentation on defining a message payload.
+//            Message message = Message.builder()
+//                    .setNotification(new Notification("Initialization","Notifications are initialized"))
+//                    .setTopic(topic)
+//                    .build();
+//
+//
+////             Send a message to the devices subscribed to the provided topic.
+//            String response = FirebaseMessaging.getInstance().send(message);
+//
+////             Response is a message ID string.
+//            System.out.println("Successfully sent message: " + response);
+
+
+
+
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
+
+        } catch (IOException e) {
+
+            e.printStackTrace();
+        }
+
+
 
     }
 

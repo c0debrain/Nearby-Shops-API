@@ -19,12 +19,8 @@ import java.util.List;
 public class DeliveryAddressResource {
 
 
-	public DeliveryAddressResource() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	
+
+
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -45,16 +41,20 @@ public class DeliveryAddressResource {
 					.entity(address)
 					.build();
 			
-		}else {
+		}
+		else
+			{
 
 			//Response.status(Status.CREATED).location(arg0)
-			
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
 	}
+
+
+
+
 
 	
 	@PUT
@@ -86,6 +86,9 @@ public class DeliveryAddressResource {
 	}
 
 
+
+
+
 	@DELETE
 	@Path("/{id}")
 	public Response deleteCart(@PathParam("id")int addressID)
@@ -98,21 +101,20 @@ public class DeliveryAddressResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		else if(rowCount == 0)
 		{
-
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 		
 		
 		return null;
 	}
-	
+
+
+
 	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -125,8 +127,6 @@ public class DeliveryAddressResource {
 		GenericEntity<List<DeliveryAddress>> listEntity = new GenericEntity<List<DeliveryAddress>>(addressesList){
 			
 		};
-
-
 
 		
 		if(addressesList.size()<=0)

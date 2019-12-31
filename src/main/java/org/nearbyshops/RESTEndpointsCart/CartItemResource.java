@@ -17,15 +17,8 @@ import java.util.List;
 public class CartItemResource {
 
 
-	private ItemDAO itemDAO = Globals.itemDAO;
 
 
-	public CartItemResource() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
-	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -94,6 +87,10 @@ public class CartItemResource {
 
 		return null;
 	}
+
+
+
+
 
 
 

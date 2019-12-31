@@ -1,11 +1,13 @@
 package org.nearbyshops.RESTEndpointsOrder;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import org.nearbyshops.DAOPushNotifications.DAOOneSignal;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Order;
-import org.nearbyshops.ModelEndpoint.OrderEndPoint;
-import org.nearbyshops.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.ModelRoles.User;
 
 import javax.annotation.security.RolesAllowed;
@@ -15,7 +17,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
-import java.util.List;
 
 
 @Singleton
@@ -25,9 +26,8 @@ public class OrderEndpointDeliveryGuySelf {
 
 
 
-
 	@PUT
-	@Path("/HandoverToDelivery/{OrderID}")
+	@Path("/StartPickup/{OrderID}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_DELIVERY_GUY_SELF,GlobalConstants.ROLE_DELIVERY_GUY})
 	public Response startPickup(@PathParam("OrderID")int orderID)
@@ -74,6 +74,10 @@ public class OrderEndpointDeliveryGuySelf {
 		int rowCount = Globals.daoOrderDeliveryGuy.acceptOrder(orderID);
 
 
+
+
+
+
 //		try {
 //			Thread.sleep(3000);
 //		} catch (InterruptedException e) {
@@ -83,6 +87,34 @@ public class OrderEndpointDeliveryGuySelf {
 
 		if(rowCount >= 1)
 		{
+
+
+
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
+
+
+			// See documentation on defining a message payload.
+			Message messageEndUser = Message.builder()
+					.setNotification(new Notification("Out For Delivery", "Order number " + String.valueOf(orderID) + " is out for Delivery !"))
+					.setTopic("end_user_" + orderResult.getEndUserID())
+					.build();
+
+
+			System.out.println("Topic : " + "end_user_" + orderResult.getEndUserID());
+
+
+			try {
+
+
+				String responseEndUser = FirebaseMessaging.getInstance().send(messageEndUser);
+				System.out.println("Sent Notification to EndUser: " + responseEndUser);
+
+
+			} catch (FirebaseMessagingException e) {
+				e.printStackTrace();
+			}
+
+
 
 //				Globals.broadcastMessageToEndUser("Order Out For Delivery (Home Delivery)","Order Number " + String.valueOf(orderID) + " (HD) is Out for Delivery !",order.getEndUserID());
 			return Response.status(Status.OK)
@@ -151,7 +183,7 @@ public class OrderEndpointDeliveryGuySelf {
 
 		if(rowCount >= 1)
 		{
-			Order orderResult = Globals.orderService.readSingleOrder(orderID);
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
 //			String shopAdminPlayerID = oneSignalNotifications.getPlayerIDforShopAdmin(orderResult.getShopID());
 			ArrayList<String> playerIDs =  Globals.oneSignalNotifications.getPlayerIDsForShopStaff(orderResult.getShopID(),
@@ -216,7 +248,7 @@ public class OrderEndpointDeliveryGuySelf {
 		if (rowCount >= 1) {
 
 
-			Order orderResult = Globals.orderService.readSingleOrder(orderID);
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
 //			String shopAdminPlayerID = oneSignalNotifications.getPlayerIDforShopAdmin(orderResult.getShopID());
 			ArrayList<String> playerIDs =  Globals.oneSignalNotifications.getPlayerIDsForShopStaff(orderResult.getShopID(),
@@ -254,129 +286,6 @@ public class OrderEndpointDeliveryGuySelf {
 
 	}
 
-
-
-
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@RolesAllowed({GlobalConstants.ROLE_SHOP_STAFF, GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_DELIVERY_GUY_SELF,GlobalConstants.ROLE_DELIVERY_GUY})
-	public Response getOrders(@QueryParam("OrderID")Integer orderID,
-                              @QueryParam("EndUserID")Integer endUserID,
-                              @QueryParam("ShopID")Integer shopID,
-                              @QueryParam("PickFromShop") Boolean pickFromShop,
-                              @QueryParam("StatusHomeDelivery")Integer homeDeliveryStatus,
-                              @QueryParam("StatusPickFromShopStatus")Integer pickFromShopStatus,
-                              @QueryParam("DeliveryGuyID")Integer deliveryGuyID,
-                              @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
-                              @QueryParam("PendingOrders") Boolean pendingOrders,
-                              @QueryParam("SearchString") String searchString,
-                              @QueryParam("SortBy") String sortBy,
-                              @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
-							  @QueryParam("GetRowCount")boolean getRowCount,
-							  @QueryParam("MetadataOnly")boolean getOnlyMetaData)
-
-
-	{
-
-		// *********************** second Implementation
-
-
-		if(limit!=null)
-		{
-			if(limit >= GlobalConstants.max_limit)
-			{
-				limit = GlobalConstants.max_limit;
-			}
-
-			if(offset==null)
-			{
-				offset = 0;
-			}
-		}
-
-
-
-		getRowCount=true;
-
-
-		OrderEndPoint endpoint = Globals.orderService.readOrders(orderID,
-							endUserID,shopID, pickFromShop,
-							homeDeliveryStatus,pickFromShopStatus,
-							deliveryGuyID,
-							latCenter,lonCenter,
-							pendingOrders,
-							searchString,
-							sortBy,limit,offset,
-							getRowCount,getOnlyMetaData);
-
-
-
-
-		if(limit!=null)
-		{
-			endpoint.setLimit(limit);
-			endpoint.setOffset(offset);
-			endpoint.setMax_limit(GlobalConstants.max_limit);
-		}
-
-
-
-/*
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-*/
-
-		//Marker
-
-		return Response.status(Status.OK)
-				.entity(endpoint)
-				.build();
-	}
-
-
-
-
-
-
-
-	//############################# CODE ENDS HERE ############################################
-
-
-
-
-
-
-
-//	// requires authentication by the Distributor
-//	@PUT
-//	@Path("/ReturnOrder/{OrderID}")
-//	public Response returnOrder(@PathParam("OrderID")int orderID)
-//	{
-//
-//		int rowCount = Globals.orderService.returnOrderByDeliveryGuy(orderID);
-//
-//		if(rowCount >= 1)
-//		{
-//
-//			return Response.status(Status.OK)
-//					.entity(null)
-//					.build();
-//		}
-//		if(rowCount <= 0)
-//		{
-//
-//			return Response.status(Status.NOT_MODIFIED)
-//					.entity(null)
-//					.build();
-//		}
-//
-//		return null;
-//	}
-//
 
 
 

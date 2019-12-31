@@ -22,8 +22,10 @@ public class DAOOrderDeliveryGuy {
         String updateStatement = "UPDATE " + Order.TABLE_NAME
 
                 + " SET " + Order.STATUS_HOME_DELIVERY + " = ?,"
-                + Order.DELIVERY_GUY_SELF_ID + " = ?"
+                            + Order.DELIVERY_GUY_SELF_ID + " = ?"
                 + " WHERE " + Order.ORDER_ID + " = ?";
+
+
 
 
 
@@ -77,7 +79,6 @@ public class DAOOrderDeliveryGuy {
 
         return updatedRows;
     }
-
 
 
 
@@ -263,6 +264,7 @@ public class DAOOrderDeliveryGuy {
 
         return updatedRows;
     }
+
 
 
 

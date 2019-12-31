@@ -36,13 +36,12 @@ public class LoginUsingOTPRESTEndpoint {
     private DAOUserNew daoUser = Globals.daoUserNew;
     private DAOLoginUsingOTP daoLoginUsingOTP = new DAOLoginUsingOTP();
     private DAOPhoneVerificationCodes daoPhoneVerificationCodes = Globals.daoPhoneVerificationCodes;
+    private final OkHttpClient client = new OkHttpClient();
+
 
 
     private static final String AUTHENTICATION_SCHEME = "Basic";
 
-
-
-//    @Path("/GetProfileWithLogin")
 
 
 
@@ -283,30 +282,6 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
-//
-//
-//    private static char[] generateOTP(int length) {
-//        String numbers = "1234567890";
-//        Random random = new Random();
-//        char[] otp = new char[length];
-//
-//        for(int i = 0; i< length ; i++) {
-//            otp[i] = numbers.charAt(random.nextInt(numbers.length()));
-//        }
-//
-//        return otp;
-//    }
-//
-//
-
-
-
-
-    private final OkHttpClient client = new OkHttpClient();
-
-
-
-
 
 
     @GET
@@ -321,10 +296,6 @@ public class LoginUsingOTPRESTEndpoint {
     ) throws IOException
     {
 
-
-
-
-//        System.out.println("Login using global credentials !");
 
 
         boolean trusted = false;
@@ -347,8 +318,6 @@ public class LoginUsingOTPRESTEndpoint {
             return Response.status(Response.Status.UNAUTHORIZED)
                     .build();
         }
-
-
 
 
 
@@ -381,8 +350,6 @@ public class LoginUsingOTPRESTEndpoint {
 
 
         String credentials = Credentials.basic(username, password);
-
-
 
         String url = serviceURLForSDS + "/api/v1/User/LoginGlobal/VerifyCredentials?GetUserProfile=true";
 
@@ -459,14 +426,14 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
-        if(daoLoginUsingOTP.checkUserExists(userProfileGlobal.getEmail(),userProfileGlobal.getPhone())!=null)
-        {
-            // user exist ...  update profile
-
-            rowsUpdated = daoLoginUsingOTP.updateUserProfile(userProfileGlobal);
-        }
-        else
-        {
+//        if(daoLoginUsingOTP.checkUserExists(userProfileGlobal.getEmail(),userProfileGlobal.getPhone())!=null)
+//        {
+//            // user exist ...  update profile
+//
+//            rowsUpdated = daoLoginUsingOTP.updateUserProfile(userProfileGlobal);
+//        }
+//        else
+//        {
             // check if user account has existing associations
 
 
@@ -484,9 +451,10 @@ public class LoginUsingOTPRESTEndpoint {
             }
 
 
+
 //            rowsUpdated = daoLoginUsingOTP.insertUserProfile(userProfileGlobal,serviceURLForSDS,true);
 
-        }
+//        }
 
 
 
@@ -533,9 +501,6 @@ public class LoginUsingOTPRESTEndpoint {
             return Response.status(Response.Status.NO_CONTENT)
                     .build();
         }
-
-
-
     }
 
 

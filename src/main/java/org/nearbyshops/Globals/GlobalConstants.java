@@ -50,7 +50,11 @@ public class GlobalConstants {
 //    public static String MAILGUN_EMAIL;
 
 
+    public static String market_id_for_fcm;
+    public static int push_notification_provider;
 
+    public static String fcm_config_file_path;
+    public static String fcm_database_url;
 
     public static String ONE_SIGNAL_API_KEY_ADMIN_APP;
     public static String ONE_SIGNAL_APP_ID_ADMIN_APP;

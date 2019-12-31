@@ -15,6 +15,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,34 +42,9 @@ public class ItemImageResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response saveItemImage(ItemImage itemImage)
+    public Response createItemImage(ItemImage itemImage)
     {
         int idOfInsertedRow = -1;
-
-
-
-//        if(Globals.accountApproved instanceof User) {
-//
-//            // checking permission
-//            User staff = (User) Globals.accountApproved;
-//
-////
-////            if (!staff.isPermitCreateItems())
-////            {
-////                // the staff member doesnt have persmission to post Item Category
-////                throw new ForbiddenException("Not Permitted");
-////            }
-//
-//
-//            idOfInsertedRow = itemImagesDAO.saveItemImage(itemImage,false);
-//
-//        }
-//        else if(Globals.accountApproved instanceof User)
-//        {
-//            idOfInsertedRow = itemImagesDAO.saveItemImage(itemImage,false);
-//        }
-
-
 
 
 
@@ -103,34 +79,10 @@ public class ItemImageResource {
     @Path("/{ImageID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
-    public Response updateItem(ItemImage itemImage, @PathParam("ImageID")int imageID)
+    public Response updateItemImage(ItemImage itemImage, @PathParam("ImageID")int imageID)
     {
 
 
-        if(Globals.accountApproved instanceof User) {
-
-            User staff = (User) Globals.accountApproved;
-
-//            if(staff.isPermitUpdateOnlyItemsAddedBySelf())
-//            {
-//
-//                if(Globals.staffItemDAO.checkStaffItem(itemImage.getItemID(),staff.getUserID())==null)
-//                {
-//                    // Item not added by self
-//                    throw new ForbiddenException("Not Permitted");
-//                }
-//
-//            }
-//            else if (staff.isPermitUpdateItems())
-//            {
-//
-//            }
-//            else
-//            {
-//                throw new ForbiddenException("Not Permitted");
-//            }
-
-        }
 
 
         itemImage.setImageID(imageID);
@@ -169,53 +121,15 @@ public class ItemImageResource {
         ItemImage itemImage = itemImagesDAO.getItemImageForItemID(imageID);
 
 
-
-        if(Globals.accountApproved instanceof User) {
-
-            // checking permission
-            User staff = (User) Globals.accountApproved;
-
-
-//            if(staff.isPermitDeleteOnlyItemsAddedBySelf())
-//            {
-//
-//
-//                if(Globals.staffItemDAO.checkStaffItem(itemImage.getItemID(),staff.getUserID())==null)
-//                {
-//                    throw new ForbiddenException("Not Permitted");
-//                }
-//            }
-//            else if (staff.isPermitDeleteItems())
-//            {
-//
-//            }
-//            else
-//            {
-//                throw new ForbiddenException("Not Permitted");
-//            }
-        }
-
-
-
-
-
-
-//        Item item = itemDAO.getItemImageURL(itemID);
-
         int rowCount = itemImagesDAO.deleteItemImage(itemImage.getImageID());
 
-//        System.out.println("Image FIle : " + itemImage.getImageFilename());
 
 
 
         if(rowCount >= 1)
         {
-            // delete successful delete the image also
-//            System.out.println("Image FIle : " + itemImage.getImageFilename());
-
             deleteImageFileInternal(itemImage.getImageFilename());
         }
-
 
 
 
@@ -246,32 +160,15 @@ public class ItemImageResource {
     public Response getItemImages(
             @QueryParam("ItemID")Integer itemID,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
+            @QueryParam("Limit")Integer limit, @QueryParam("Offset")int offset,
             @QueryParam("metadata_only")Boolean metaonly)
     {
 
-        int set_limit = 30;
-        int set_offset = 0;
-        final int max_limit = 100;
 
-        if(limit!= null)
+
+        if(limit!=null && limit >= GlobalConstants.max_limit)
         {
-
-            if (limit >= max_limit) {
-
-                set_limit = max_limit;
-            }
-            else
-            {
-
-                set_limit = limit;
-            }
-
-        }
-
-        if(offset!=null)
-        {
-            set_offset = offset;
+            limit = GlobalConstants.max_limit;
         }
 
 
@@ -279,9 +176,6 @@ public class ItemImageResource {
 
         ItemImageEndPoint endPoint = itemImagesDAO.getEndPointMetadata(itemID);
 
-        endPoint.setLimit(set_limit);
-        endPoint.setMax_limit(max_limit);
-        endPoint.setOffset(set_offset);
 
         List<ItemImage> list = null;
 
@@ -291,11 +185,22 @@ public class ItemImageResource {
             list =
                     itemImagesDAO.getItemImages(
                             itemID,
-                            sortBy,set_limit,set_offset
+                            sortBy,limit,offset
                     );
 
             endPoint.setResults(list);
         }
+
+
+
+
+        if(limit!=null)
+        {
+            endPoint.setLimit(limit);
+            endPoint.setOffset(offset);
+            endPoint.setMax_limit(GlobalConstants.max_limit);
+        }
+
 
 
 //		try {

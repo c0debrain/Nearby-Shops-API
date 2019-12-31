@@ -280,6 +280,9 @@ public class ShopDAO {
 	}
 
 
+
+
+
 	public int updateShopByAdmin(Shop shop)
 	{
 
@@ -481,6 +484,8 @@ public class ShopDAO {
 
 
 
+
+
 	public int setShopOpen(boolean isOpen,int shopAdminID)
 	{
 
@@ -602,229 +607,6 @@ public class ShopDAO {
 		return rowCountDeleted;
 	}
 
-
-
-
-
-
-
-	public Shop getShopIDForShopAdmin(int shopAdminID)
-	{
-		String query =  " SELECT " + Shop.TABLE_NAME + "." + Shop.SHOP_ID + "" +
-						" FROM " + Shop.TABLE_NAME +
-						" WHERE " + Shop.SHOP_ADMIN_ID + " = " + shopAdminID ;
-
-
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet rs = null;
-		Shop shop = null;
-
-		try {
-
-			connection = dataSource.getConnection();
-			statement = connection.createStatement();
-
-			rs = statement.executeQuery(query);
-
-			while(rs.next())
-			{
-
-				shop = new Shop();
-
-				shop.setShopID(rs.getInt(Shop.SHOP_ID));
-				shop.setShopAdminID(shopAdminID);
-			}
-
-
-//			System.out.println("Total Shops queried " + shopList.size());
-
-
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-		finally
-
-		{
-
-			try {
-				if(rs!=null)
-				{rs.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(statement!=null)
-				{statement.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(connection!=null)
-				{connection.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return shop;
-	}
-
-
-
-
-
-	public Shop getShopForShopAdmin(int shopAdminID)
-	{
-			String query = " SELECT "
-							+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + ","
-							+ Shop.SHOP_NAME + ","
-
-							+ Shop.DELIVERY_RANGE + ","
-							+ Shop.LAT_CENTER + ","
-							+ Shop.LON_CENTER + ","
-
-							+ Shop.DELIVERY_CHARGES + ","
-							+ Shop.BILL_AMOUNT_FOR_FREE_DELIVERY + ","
-							+ Shop.PICK_FROM_SHOP_AVAILABLE + ","
-							+ Shop.HOME_DELIVERY_AVAILABLE + ","
-
-							+ Shop.SHOP_ENABLED + ","
-
-							+ Shop.LOGO_IMAGE_PATH + ","
-
-							+ Shop.SHOP_ADDRESS + ","
-							+ Shop.CITY + ","
-							+ Shop.PINCODE + ","
-							+ Shop.LANDMARK + ","
-
-							+ Shop.CUSTOMER_HELPLINE_NUMBER + ","
-							+ Shop.DELIVERY_HELPLINE_NUMBER + ","
-
-							+ Shop.SHORT_DESCRIPTION + ","
-							+ Shop.LONG_DESCRIPTION + ","
-
-							+ Shop.TIMESTAMP_CREATED + ","
-							+ Shop.IS_OPEN + ","
-
-							+ Shop.ACCOUNT_BALANCE + ","
-							+ Shop.EXTENDED_CREDIT_LIMIT + "" +
-
-							" FROM " + Shop.TABLE_NAME +
-							" WHERE " + Shop.SHOP_ADMIN_ID + " = " + shopAdminID ;
-
-
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet rs = null;
-		Shop shop = null;
-
-		try {
-
-			connection = dataSource.getConnection();
-			statement = connection.createStatement();
-
-			rs = statement.executeQuery(query);
-
-			while(rs.next())
-			{
-
-				shop = new Shop();
-
-				shop.setShopID(rs.getInt(Shop.SHOP_ID));
-				shop.setShopAdminID(shopAdminID);
-
-				shop.setShopName(rs.getString(Shop.SHOP_NAME));
-				shop.setDeliveryRange(rs.getDouble(Shop.DELIVERY_RANGE));
-				shop.setLatCenter(rs.getFloat(Shop.LAT_CENTER));
-				shop.setLonCenter(rs.getFloat(Shop.LON_CENTER));
-
-				shop.setDeliveryCharges(rs.getFloat(Shop.DELIVERY_CHARGES));
-				shop.setBillAmountForFreeDelivery(rs.getInt(Shop.BILL_AMOUNT_FOR_FREE_DELIVERY));
-				shop.setPickFromShopAvailable(rs.getBoolean(Shop.PICK_FROM_SHOP_AVAILABLE));
-				shop.setHomeDeliveryAvailable(rs.getBoolean(Shop.HOME_DELIVERY_AVAILABLE));
-
-				shop.setShopEnabled(rs.getBoolean(Shop.SHOP_ENABLED));
-//				shop.setShopWaitlisted(rs.getBoolean(Shop.SHOP_WAITLISTED));
-
-				shop.setLogoImagePath(rs.getString(Shop.LOGO_IMAGE_PATH));
-
-				shop.setShopAddress(rs.getString(Shop.SHOP_ADDRESS));
-				shop.setCity(rs.getString(Shop.CITY));
-				shop.setPincode(rs.getLong(Shop.PINCODE));
-				shop.setLandmark(rs.getString(Shop.LANDMARK));
-
-				shop.setCustomerHelplineNumber(rs.getString(Shop.CUSTOMER_HELPLINE_NUMBER));
-				shop.setDeliveryHelplineNumber(rs.getString(Shop.DELIVERY_HELPLINE_NUMBER));
-
-				shop.setShortDescription(rs.getString(Shop.SHORT_DESCRIPTION));
-				shop.setLongDescription(rs.getString(Shop.LONG_DESCRIPTION));
-
-				shop.setTimestampCreated(rs.getTimestamp(Shop.TIMESTAMP_CREATED));
-				shop.setOpen(rs.getBoolean(Shop.IS_OPEN));
-
-				shop.setAccountBalance(rs.getDouble(Shop.ACCOUNT_BALANCE));
-
-
-				shop.setRt_min_balance(GlobalConstants.min_account_balance_for_shop - rs.getDouble(Shop.EXTENDED_CREDIT_LIMIT));
-
-			}
-
-
-//			System.out.println("Total Shops queried " + shopList.size());
-
-
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-		finally
-
-		{
-
-			try {
-				if(rs!=null)
-				{rs.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(statement!=null)
-				{statement.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(connection!=null)
-				{connection.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return shop;
-	}
 
 
 
@@ -2954,7 +2736,6 @@ public class ShopDAO {
 			Double deliveryRangeMin,Double deliveryRangeMax,
 			Double proximity
 	)
-
 	{
 
 

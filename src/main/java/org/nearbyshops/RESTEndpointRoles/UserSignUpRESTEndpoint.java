@@ -8,13 +8,13 @@ import org.nearbyshops.ModelRoles.*;
 import org.simplejavamail.email.Email;
 import org.simplejavamail.email.EmailBuilder;
 
-import javax.annotation.security.RolesAllowed;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.Random;
+
+
 
 import static org.nearbyshops.Globals.Globals.getMailerInstance;
 
@@ -28,401 +28,16 @@ public class UserSignUpRESTEndpoint {
     private DAOUserSignUp daoUser = Globals.daoUserSignUp;
 
 
-    /* Sign Up */
-
-//    driverRegistration(User user)
-//    endUserRegistration(User user)
-//    staffRegistration(User user)
-//    public Response checkUsername(@PathParam("username")String username)
-//    public Response checkEmailVerificationCode(
-//    public Response sendVerificationEmail(@PathParam("email")String email)
-
-
 
 
     @POST
     @Path("/EndUserRegistration")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response insertEndUser(User user)
+    public Response RegisterEndUser(User user)
     {
         return userRegistration(user,GlobalConstants.ROLE_END_USER_CODE);
     }
-
-
-
-
-
-
-
-    @POST
-    @Path("/DeliveryGuySelfRegistration")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response deliveryGuySelfRegistration(User user)
-    {
-        if(user==null)
-        {
-            throw new WebApplicationException();
-        }
-
-
-        User shopAdmin = ((User) Globals.accountApproved);
-
-        int shopID = Globals.shopDAO.getShopIDForShopAdmin(shopAdmin.getUserID()).getShopID();
-
-        user.setRole(GlobalConstants.ROLE_DELIVERY_GUY_SELF_CODE);
-
-        DeliveryGuyData deliveryGuyData = new DeliveryGuyData();
-        deliveryGuyData.setShopID(shopID);
-        deliveryGuyData.setEmployedByShop(true);
-        user.setRt_delivery_guy_data(deliveryGuyData);
-
-//        ShopStaffPermissions permissions = new ShopStaffPermissions();
-//        permissions.setShopID(shopID);
-//        user.setRt_shop_staff_permissions(permissions);
-
-
-
-
-        int idOfInsertedRow =-1;
-
-
-
-        if(user.getRt_registration_mode()==User.REGISTRATION_MODE_EMAIL)
-        {
-            idOfInsertedRow = Globals.daoUserSignUp.registerUsingEmailNoCredits(user,false);
-
-
-//            System.out.println("Email : " + user.getEmail()
-//                    + "\nPassword : " + user.getPassword()
-//                    + "\nRegistration Mode : " + user.getRt_registration_mode()
-//                    + "\nName : " + user.getName()
-//                    + "\nInsert Count : " + idOfInsertedRow
-//                    + "\nVerificationCode : " + user.getRt_email_verification_code()
-//            );
-
-
-            if(idOfInsertedRow>=1)
-            {
-
-
-                String message = "<h2>Your account has been Created for your e-mail id : "+ user.getEmail() + ".</h2>"
-                        + "<p>You can now login with your email and password that you have provided. Thank you for creating your account.<p>";
-
-
-//                Globals.sendEmail(user.getEmail(),user.getEmail(),"Registration successful for your account",message);
-
-
-
-                // registration successful therefore send email to notify the user
-                Email email = EmailBuilder.startingBlank()
-                        .from(GlobalConstants.EMAIL_SENDER_NAME, GlobalConstants.EMAIL_ADDRESS_FOR_SENDER)
-                        .to(user.getName(),user.getEmail())
-                        .withSubject("Registration successful for your account")
-                        .withHTMLText(message)
-                        .buildEmail();
-
-
-                getMailerInstance().sendMail(email,true);
-
-
-
-            }
-
-        }
-        else if(user.getRt_registration_mode()==User.REGISTRATION_MODE_PHONE)
-        {
-            idOfInsertedRow = daoUser.registerUsingPhoneNoCredits(user,false);
-
-
-//            System.out.println("Phone : " + user.getPhone()
-//                    + "\nEmail : " + user.getEmail()
-//                    + "\nPassword : " + user.getPassword()
-//                    + "\nRegistration Mode : " + user.getRt_registration_mode()
-//                    + "\nName : " + user.getName()
-//                    + "\nInsert Count : " + idOfInsertedRow
-//                    + "\nVerificationCode : " + user.getRt_phone_verification_code()
-//            );
-
-            // send notification to the mobile number via SMS
-
-            if(idOfInsertedRow>=1)
-            {
-
-                SendSMS.sendSMS("Congratulations your account has been registered with " + GlobalConstants.service_name_for_sms_value,
-                        user.getPhone());
-            }
-
-        }
-
-
-        user.setUserID(idOfInsertedRow);
-
-
-        if(idOfInsertedRow >=1)
-        {
-
-            return Response.status(Response.Status.CREATED)
-                    .entity(user)
-                    .build();
-
-        }else {
-
-            return Response.status(Response.Status.NOT_MODIFIED)
-                    .build();
-        }
-
-
-    }
-
-
-
-
-
-    @POST
-    @Path("/DeliveryGuyRegistration")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN})
-    public Response deliveryGuyRegistration(User user)
-    {
-        if(user==null)
-        {
-            throw new WebApplicationException();
-        }
-
-
-        user.setRole(GlobalConstants.ROLE_DELIVERY_GUY_CODE);
-
-        DeliveryGuyData deliveryGuyData = new DeliveryGuyData();
-        deliveryGuyData.setShopID(0);
-        deliveryGuyData.setEmployedByShop(false);
-        user.setRt_delivery_guy_data(deliveryGuyData);
-
-
-
-        int idOfInsertedRow =-1;
-
-
-
-        if(user.getRt_registration_mode()==User.REGISTRATION_MODE_EMAIL)
-        {
-            idOfInsertedRow = Globals.daoUserSignUp.registerUsingEmailNoCredits(user,false);
-
-
-//            System.out.println("Email : " + user.getEmail()
-//                    + "\nPassword : " + user.getPassword()
-//                    + "\nRegistration Mode : " + user.getRt_registration_mode()
-//                    + "\nName : " + user.getName()
-//                    + "\nInsert Count : " + idOfInsertedRow
-//                    + "\nVerificationCode : " + user.getRt_email_verification_code()
-//            );
-
-
-            if(idOfInsertedRow>=1)
-            {
-
-
-                String message = "<h2>Your account has been Created for your e-mail id : "+ user.getEmail() + ".</h2>"
-                        + "<p>You can now login with your email and password that you have provided. Thank you for creating your account.<p>";
-
-
-//                Globals.sendEmail(user.getEmail(),user.getEmail(),"Registration successful for your account",message);
-
-
-
-                // registration successful therefore send email to notify the user
-                Email email = EmailBuilder.startingBlank()
-                        .from(GlobalConstants.EMAIL_SENDER_NAME, GlobalConstants.EMAIL_ADDRESS_FOR_SENDER)
-                        .to(user.getName(),user.getEmail())
-                        .withSubject("Registration successful for your account")
-                        .withHTMLText(message)
-                        .buildEmail();
-
-
-                getMailerInstance().sendMail(email,true);
-
-
-
-            }
-
-
-        }
-        else if(user.getRt_registration_mode()==User.REGISTRATION_MODE_PHONE)
-        {
-            idOfInsertedRow = daoUser.registerUsingPhoneNoCredits(user,false);
-
-
-
-            System.out.println("Phone : " + user.getPhone()
-                    + "\nEmail : " + user.getEmail()
-                    + "\nPassword : " + user.getPassword()
-                    + "\nRegistration Mode : " + user.getRt_registration_mode()
-                    + "\nName : " + user.getName()
-                    + "\nInsert Count : " + idOfInsertedRow
-                    + "\nVerificationCode : " + user.getRt_phone_verification_code()
-            );
-
-            // send notification to the mobile number via SMS
-
-            if(idOfInsertedRow>=1)
-            {
-
-                SendSMS.sendSMS("Congratulations your account has been registered with Nearby Shops.",
-                        user.getPhone());
-            }
-
-        }
-
-
-
-
-        user.setUserID(idOfInsertedRow);
-
-
-        if(idOfInsertedRow >=1)
-        {
-
-            return Response.status(Response.Status.CREATED)
-                    .entity(user)
-                    .build();
-
-
-        }else {
-
-            return Response.status(Response.Status.NOT_MODIFIED)
-                    .build();
-        }
-
-
-    }
-
-
-
-
-
-    @POST
-    @Path("/ShopStaffRegistration")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response shopStaffRegistration(User user)
-    {
-
-        if(user==null)
-        {
-            throw new WebApplicationException();
-        }
-
-
-        User shopAdmin = ((User) Globals.accountApproved);
-
-        int shopID = Globals.shopDAO.getShopIDForShopAdmin(shopAdmin.getUserID()).getShopID();
-
-        user.setRole(GlobalConstants.ROLE_SHOP_STAFF_CODE);
-
-        ShopStaffPermissions permissions = new ShopStaffPermissions();
-        permissions.setShopID(shopID);
-        user.setRt_shop_staff_permissions(permissions);
-
-
-
-
-        int idOfInsertedRow =-1;
-
-
-
-        if(user.getRt_registration_mode()==User.REGISTRATION_MODE_EMAIL)
-        {
-            idOfInsertedRow = Globals.daoUserSignUp.registerUsingEmailNoCredits(user,false);
-
-
-//            System.out.println("Email : " + user.getEmail()
-//                    + "\nPassword : " + user.getPassword()
-//                    + "\nRegistration Mode : " + user.getRt_registration_mode()
-//                    + "\nName : " + user.getName()
-//                    + "\nInsert Count : " + idOfInsertedRow
-//                    + "\nVerificationCode : " + user.getRt_email_verification_code()
-//            );
-
-
-            if(idOfInsertedRow>=1)
-            {
-
-
-                String message = "<h2>Your account has been Created for your e-mail id : "+ user.getEmail() + ".</h2>"
-                        + "<p>You can now login with your email and password that you have provided. Thank you for creating your account.<p>";
-
-
-//                Globals.sendEmail(user.getEmail(),user.getEmail(),"Registration successful for your account",message);
-
-
-
-                // registration successful therefore send email to notify the user
-                Email email = EmailBuilder.startingBlank()
-                        .from(GlobalConstants.EMAIL_SENDER_NAME, GlobalConstants.EMAIL_ADDRESS_FOR_SENDER)
-                        .to(user.getName(),user.getEmail())
-                        .withSubject("Registration successful for your account")
-                        .withHTMLText(message)
-                        .buildEmail();
-
-
-                getMailerInstance().sendMail(email,true);
-
-
-
-            }
-
-
-        }
-        else if(user.getRt_registration_mode()==User.REGISTRATION_MODE_PHONE)
-        {
-            idOfInsertedRow = daoUser.registerUsingPhoneNoCredits(user,false);
-
-
-//            System.out.println("Phone : " + user.getPhone()
-//                    + "\nEmail : " + user.getEmail()
-//                    + "\nPassword : " + user.getPassword()
-//                    + "\nRegistration Mode : " + user.getRt_registration_mode()
-//                    + "\nName : " + user.getName()
-//                    + "\nInsert Count : " + idOfInsertedRow
-//                    + "\nVerificationCode : " + user.getRt_phone_verification_code()
-//            );
-
-            // send notification to the mobile number via SMS
-
-            if(idOfInsertedRow>=1)
-            {
-
-                SendSMS.sendSMS("Congratulations your account has been registered with Nearby Shops.",
-                        user.getPhone());
-            }
-
-        }
-
-
-        user.setUserID(idOfInsertedRow);
-
-
-        if(idOfInsertedRow >=1)
-        {
-
-            return Response.status(Response.Status.CREATED)
-                    .entity(user)
-                    .build();
-
-
-        }else {
-
-            return Response.status(Response.Status.NOT_MODIFIED)
-                    .build();
-        }
-
-
-    }
-
 
 
 
@@ -431,155 +46,10 @@ public class UserSignUpRESTEndpoint {
     @Path("/ShopAdminRegistration")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response shopAdminRegistration(User user)
+    public Response RegisterShopAdmin(User user)
     {
-        if(user==null)
-        {
-            throw new WebApplicationException();
-        }
-
-
-        user.setRole(GlobalConstants.ROLE_SHOP_ADMIN_CODE);
-
-
-        int idOfInsertedRow =-1;
-
-
-
-        if(user.getRt_registration_mode()==User.REGISTRATION_MODE_EMAIL)
-        {
-            idOfInsertedRow = Globals.daoUserSignUp.registerUsingEmail(user,false);
-
-
-//            System.out.println("Email : " + user.getEmail()
-//                    + "\nPassword : " + user.getPassword()
-//                    + "\nRegistration Mode : " + user.getRt_registration_mode()
-//                    + "\nName : " + user.getName()
-//                    + "\nInsert Count : " + idOfInsertedRow
-//                    + "\nVerificationCode : " + user.getRt_email_verification_code()
-//            );
-
-
-            if(idOfInsertedRow>=1)
-            {
-
-
-                // registration successful therefore send email to notify the user
-//                Mail.using(Globals.getMailgunConfiguration())
-//                        .body()
-//                        .h1("Registration successful for your account")
-//                        .p("Your account has been Created.")
-//                        .h3("Your E-mail : " + user.getEmail())
-//                        .p("You can login with your email and password that you have provided. Thank you for registering with Nearby Shops.")
-//                        .mail()
-//                        .to(user.getEmail())
-//                        .subject("Nearby Shops : Account Registered")
-//                        .from("Nearby Shops","noreply@nearbyshops.org")
-//                        .build()
-//                        .send();
-
-
-
-
-                String message = "<h2>Your account has been Created. Your E-mail is : "+ user.getEmail() + ".</h2>"
-                        + "<p>You can login with your email and password that you have provided. Thank you for creating your account.<p>";
-
-
-
-//                Globals.sendEmail(user.getEmail(),user.getEmail(),"Registration successful for your account",message);
-
-
-                Email email = EmailBuilder.startingBlank()
-                        .from(GlobalConstants.EMAIL_SENDER_NAME, GlobalConstants.EMAIL_ADDRESS_FOR_SENDER)
-                        .to(user.getName(),user.getEmail())
-                        .withSubject("Registration successful for your account")
-                        .withHTMLText(message)
-                        .buildEmail();
-
-
-                getMailerInstance().sendMail(email,true);
-
-
-
-
-
-
-
-            }
-        }
-        else if(user.getRt_registration_mode()==User.REGISTRATION_MODE_PHONE)
-        {
-
-            idOfInsertedRow = daoUser.registerUsingPhone(user,false,100,100,false);
-
-
-//            System.out.println("Phone : " + user.getPhone()
-//                    + "\nEmail : " + user.getEmail()
-//                    + "\nPassword : " + user.getPassword()
-//                    + "\nRegistration Mode : " + user.getRt_registration_mode()
-//                    + "\nName : " + user.getName()
-//                    + "\nInsert Count : " + idOfInsertedRow
-//                    + "\nVerificationCode : " + user.getRt_phone_verification_code()
-//            );
-
-            // send notification to the mobile number via SMS
-
-            if(idOfInsertedRow>=1)
-            {
-                if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
-                {
-
-                    String message = "Thank you for registering with Nearby Shops.";
-                    SendSMS.sendSMS(message, user.getPhone());
-
-
-                }
-                else
-                {
-                    SendSMS.sendSMS("Congratulations your account has been registered with Nearby Shops.",
-                            user.getPhone());
-                }
-            }
-
-        }
-
-
-        user.setUserID(idOfInsertedRow);
-
-
-        if(idOfInsertedRow >=1)
-        {
-
-            return Response.status(Response.Status.CREATED)
-                    .entity(user)
-                    .build();
-
-        }else {
-
-            return Response.status(Response.Status.NOT_MODIFIED)
-                    .build();
-        }
-
-
+        return userRegistration(user,GlobalConstants.ROLE_SHOP_ADMIN_CODE);
     }
-
-
-
-
-
-    @POST
-    @Path("/StaffRegistration")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN})
-    public Response insertStaff(User user)
-    {
-        user.setRole(GlobalConstants.ROLE_STAFF_CODE);
-        return userRegistration(user,GlobalConstants.ROLE_STAFF_CODE);
-    }
-
-
-
 
 
 
@@ -599,9 +69,10 @@ public class UserSignUpRESTEndpoint {
 
 
 
-        if(user.getRt_registration_mode()==User.REGISTRATION_MODE_EMAIL)
-        {
-            idOfInsertedRow = Globals.daoUserSignUp.registerUsingEmail(user,false);
+
+            idOfInsertedRow = Globals.daoUserSignUp.registerUsingEmailOrPhone(
+                    user, true,true,false
+            );
 
 
 //            System.out.println("Email : " + user.getEmail()
@@ -617,112 +88,65 @@ public class UserSignUpRESTEndpoint {
             {
 
 
-
-//                Mail.using(Globals.getMailgunConfiguration())
-//                        .body()
-//                        .h1("Registration successful for your account")
-//                        .p("Your account has been Created.")
-//                        .h3("Your E-mail : " + user.getEmail())
-//                        .p("You can login with your email and password that you have provided. Thank you for registering with Nearby Shops.")
-//                        .mail()
-//                        .to(user.getEmail())
-//                        .subject("Nearby Shops : Account Registered")
-//                        .from("Nearby Shops","noreply@nearbyshops.org")
-//                        .build()
-//                        .send();
-
-
-
-                String message = "<h2>Your account has been Created. Your E-mail is : "+ user.getEmail() + ".</h2>"
-                        + "<p>You can login with your email and password that you have provided. Thank you for creating your account.<p>";
-
-
-
-
-//                Globals.sendEmail(user.getEmail(),user.getEmail(),"Registration successful for your account",message);
-
-
-
-                // registration successful therefore send email to notify the user
-                Email email = EmailBuilder.startingBlank()
-                        .from(GlobalConstants.EMAIL_SENDER_NAME, GlobalConstants.EMAIL_ADDRESS_FOR_SENDER)
-                        .to(user.getName(),user.getEmail())
-                        .withSubject("Registration successful for your account")
-                        .withHTMLText(message)
-                        .buildEmail();
-
-
-                getMailerInstance().sendMail(email,true);
-
-
-
-            }
-        }
-        else if(user.getRt_registration_mode()==User.REGISTRATION_MODE_PHONE)
-        {
-
-            if(user.getRole()==GlobalConstants.ROLE_STAFF_CODE)
-            {
-                idOfInsertedRow = daoUser.registerUsingPhoneNoCredits(user,false);
-            }
-            else
-            {
-                idOfInsertedRow = daoUser.registerUsingPhone(user,false,100,100,false);
-            }
-
-
-
-//            System.out.println("Phone : " + user.getPhone()
-//                    + "\nEmail : " + user.getEmail()
-//                    + "\nPassword : " + user.getPassword()
-//                    + "\nRegistration Mode : " + user.getRt_registration_mode()
-//                    + "\nName : " + user.getName()
-//                    + "\nInsert Count : " + idOfInsertedRow
-//                    + "\nVerificationCode : " + user.getRt_phone_verification_code()
-//            );
-
-            // send notification to the mobile number via SMS
-
-            if(idOfInsertedRow>=1)
-            {
-                if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
+                if(user.getRt_registration_mode()==User.REGISTRATION_MODE_EMAIL)
                 {
+                    String message = "<h2>Your account has been Created. Your E-mail is : "+ user.getEmail() + ".</h2>"
+                            + "<p>You can login with your email and password that you have provided. Thank you for creating your account.<p>";
 
-                    String message = "Thank you for registering with " + GlobalConstants.service_name_for_sms_value;
-                            SendSMS.sendSMS(message, user.getPhone());
 
+
+                    // registration successful therefore send email to notify the user
+                    Email email = EmailBuilder.startingBlank()
+                            .from(GlobalConstants.EMAIL_SENDER_NAME, GlobalConstants.EMAIL_ADDRESS_FOR_SENDER)
+                            .to(user.getName(),user.getEmail())
+                            .withSubject("Registration successful for your account")
+                            .withHTMLText(message)
+                            .buildEmail();
+
+
+                    getMailerInstance().sendMail(email,true);
                 }
                 else
                 {
-                    SendSMS.sendSMS("Congratulations your account has been registered with " + GlobalConstants.service_name_for_sms_value,
-                            user.getPhone());
+                    String message = "";
+
+
+                    if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
+                    {
+                        message = "Thank you for registering with " + GlobalConstants.service_name_for_sms_value;
+                    }
+                    else
+                    {
+                        message = "Congratulations your account has been registered with " + GlobalConstants.service_name_for_sms_value;
+                    }
+
+
+                    SendSMS.sendSMS(message, user.getPhone());
+
                 }
+
             }
 
-        }
 
 
-        user.setUserID(idOfInsertedRow);
+            user.setUserID(idOfInsertedRow);
 
 
-        if(idOfInsertedRow >=1)
-        {
+            if(idOfInsertedRow >=1)
+            {
 
-            return Response.status(Response.Status.CREATED)
-                    .entity(user)
-                    .build();
+                return Response.status(Response.Status.CREATED)
+                        .entity(user)
+                        .build();
 
-        }else {
+            }else {
 
-            return Response.status(Response.Status.NOT_MODIFIED)
-                    .build();
-        }
+                return Response.status(Response.Status.NOT_MODIFIED)
+                        .build();
+            }
 
 
     }
-
-
-
 
 
 
@@ -821,7 +245,8 @@ public class UserSignUpRESTEndpoint {
 //            String emailVerificationCode = new BigInteger(30, Globals.random).toString(32);
 
 
-            String emailVerificationCode = String.valueOf(generateOTP(5));
+
+            String emailVerificationCode = String.valueOf(Globals.generateOTP(5));
 
             Timestamp timestampExpiry
                     = new Timestamp(
@@ -1002,11 +427,7 @@ public class UserSignUpRESTEndpoint {
 
 
 
-
-
     /* Methods for Phone Verification for Sign-Up */
-
-
 
 
 
@@ -1048,7 +469,6 @@ public class UserSignUpRESTEndpoint {
 
 
 
-
     @PUT
     @Path("/SendPhoneVerificationCode/{phone}")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -1073,7 +493,7 @@ public class UserSignUpRESTEndpoint {
 
 
 
-            char[] phoneOTP = generateOTP(4);
+            char[] phoneOTP = Globals.generateOTP(4);
 
             Timestamp timestampExpiry
                     = new Timestamp(
@@ -1093,19 +513,6 @@ public class UserSignUpRESTEndpoint {
 
                 System.out.println("Phone Verification Code : " + phoneOTP);
 
-//                Mail.using(Globals.configurationMailgun)
-//                        .body()
-//                        .h1("Your Phone Verification Code is given below")
-//                        .p("You have requested to verify your phone. If you did not request the phone verification please ignore this e-mail message.")
-//                        .h3("The e-mail verification code is : " + emailVerificationCode)
-//                        .p("This verification code will expire at " + timestampExpiry.toLocaleString() + ". Please use this code before it expires.")
-//                        .mail()
-//                        .to(phone)
-//                        .subject("E-mail Verification Code for Taxi Referral Service (TRS)")
-//                        .from("Taxi Referral Service","noreply@taxireferral.org")
-//                        .build()
-//                        .send();
-
 
                 SendSMS.sendOTP(String.valueOf(phoneOTP),phone);
 
@@ -1117,23 +524,6 @@ public class UserSignUpRESTEndpoint {
         {
 
             System.out.println("Phone Verification Code : " + verificationCode.getVerificationCode());
-
-
-//            Mail.using(Globals.configurationMailgun)
-//                    .body()
-//                    .h1("Your E-mail Verification Code is given below")
-//                    .p("You have requested to verify your e-mail. If you did not request the e-mail verification please ignore this e-mail message.")
-//                    .h3("The e-mail verification code is : " + verificationCode.getVerificationCode())
-//                    .p("This verification code will expire at " + verificationCode.getTimestampExpires().toLocaleString() + ". Please use this code before it expires.")
-//                    .mail()
-//                    .to(email)
-//                    .subject("E-mail Verification Code for Taxi Referral Service (TRS)")
-//                    .from("Taxi Referral Service","noreply@taxireferral.org")
-//                    .build()
-//                    .send();
-
-
-
 
             SendSMS.sendOTP(verificationCode.getVerificationCode(),phone);
 
@@ -1160,25 +550,6 @@ public class UserSignUpRESTEndpoint {
 
         return null;
     }
-
-
-
-
-
-
-    private static char[] generateOTP(int length) {
-        String numbers = "1234567890";
-        Random random = new Random();
-        char[] otp = new char[length];
-
-        for(int i = 0; i< length ; i++) {
-            otp[i] = numbers.charAt(random.nextInt(numbers.length()));
-        }
-
-        return otp;
-    }
-
-
 
 
 }

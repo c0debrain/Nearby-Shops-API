@@ -1,8 +1,11 @@
 package org.nearbyshops.RESTEndpointRoles;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
+import org.nearbyshops.Model.Shop;
 import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
 import org.nearbyshops.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.ModelRoles.StaffPermissions;
@@ -23,69 +26,6 @@ import static org.nearbyshops.Globals.Globals.daoStaff;
 
 @Path("/api/v1/User/ShopStaffLogin")
 public class ShopStaffLoginRESTEndpoint {
-
-
-
-    @PUT
-    @Path("/UpdateProfileStaff")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_SHOP_STAFF})
-    public Response updateProfileStaff(User user)
-    {
-//        /{UserID}
-//        @PathParam("UserID")int userID
-
-        user.setUserID(((User) Globals.accountApproved).getUserID());
-        int rowCount = daoShopStaff.updateShopStaffProfile(user);
-
-
-        if(rowCount >= 1)
-        {
-
-            return Response.status(Response.Status.OK)
-                    .build();
-        }
-        if(rowCount == 0)
-        {
-
-            return Response.status(Response.Status.NOT_MODIFIED)
-                    .build();
-        }
-
-        return null;
-    }
-
-
-
-
-    @PUT
-    @Path("/{UserID}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response updateStaffByAdmin(User user, @PathParam("UserID")int userID)
-    {
-
-//        user.setUserID(userID);
-        int rowCount = daoShopStaff.updateShopStaffByAdmin(user);
-
-
-        if(rowCount >= 1)
-        {
-
-            return Response.status(Response.Status.OK)
-                    .build();
-        }
-        if(rowCount == 0)
-        {
-
-            return Response.status(Response.Status.NOT_MODIFIED)
-                    .build();
-        }
-
-        return null;
-    }
-
-
 
 
 
@@ -118,135 +58,113 @@ public class ShopStaffLoginRESTEndpoint {
 
 
 
-
-    @GET
-    @Path("/GetShopStaffForShopAdmin")
-    @Produces(MediaType.APPLICATION_JSON)
+    @PUT
+    @Path("/UpdateStaffPermissions")
+    @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response getShopStaffForShopAdmin(
-            @QueryParam("latCurrent") Double latPickUp, @QueryParam("lonCurrent") Double lonPickUp,
-            @QueryParam("PermitProfileUpdate") Boolean permitProfileUpdate,
-            @QueryParam("PermitRegistrationAndRenewal") Boolean permitRegistrationAndRenewal,
-            @QueryParam("Gender") Boolean gender,
-            @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
-            @QueryParam("GetRowCount")boolean getRowCount,
-            @QueryParam("MetadataOnly")boolean getOnlyMetaData)
+    public Response updateStaffPermissions(ShopStaffPermissions permissions)
     {
 
-
-        User user = (User) Globals.accountApproved;
-
-        int shopID = Globals.shopDAO.getShopIDForShopAdmin(user.getUserID()).getShopID();
-
-//        System.out.println("Get Shop Staff !");
+        int shopAdminID = ((User)Globals.accountApproved).getUserID();
+        int shopID = daoShopStaff.getShopIDForShopAdmin(shopAdminID).getShopID();
+        permissions.setShopID(shopID);
 
 
-        if(limit!=null)
+        int rowCount = daoShopStaff.updateShopStaffPermissions(permissions);
+
+
+        if(rowCount >= 1)
         {
-            if(limit >= GlobalConstants.max_limit)
-            {
-                limit = GlobalConstants.max_limit;
-            }
+            return Response.status(Response.Status.OK)
+                    .build();
+        }
+        else if(rowCount == 0)
+        {
 
-            if(offset==null)
-            {
-                offset = 0;
-            }
+            return Response.status(Response.Status.NOT_MODIFIED)
+                    .build();
+        }
+
+        return null;
+    }
+
+
+
+
+    @PUT
+    @Path("/UpgradeUser/{UserID}/{Role}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
+    public Response upgradeUserToShopStaff(@PathParam("UserID")int userID,@PathParam("Role")int role)
+    {
+
+        int shopAdminID = ((User)Globals.accountApproved).getUserID();
+        int shopID = daoShopStaff.getShopIDForShopAdmin(shopAdminID).getShopID();
+
+
+        int rowCount = daoShopStaff.upgradeUserToShopStaff(userID,shopID,0,role);
+
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        if(rowCount >= 1)
+        {
+            return Response.status(Response.Status.OK)
+                    .build();
+        }
+        if(rowCount == 0)
+        {
+
+            return Response.status(Response.Status.NOT_MODIFIED)
+                    .build();
+        }
+
+        return null;
+    }
+
+
+
+
+
+    @GET
+    @Path("/GetUserDetails/{UserID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
+    public Response getUserDetails(@PathParam("UserID")int userID)
+    {
+
+        ShopStaffPermissions permissions = daoShopStaff.getShopStaffPermissions(userID);
+
+
+//        GsonBuilder gsonBuilder = new GsonBuilder();
+//
+//        Gson gson =  gsonBuilder
+//                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+//                .create();
+
+//        System.out.println(gson.toJson(permissions));
+
+
+
+        if(permissions!=null)
+        {
+            return Response.status(Response.Status.OK)
+                    .entity(permissions)
+                    .build();
         }
         else
         {
-            limit = GlobalConstants.max_limit;
+            return Response.status(Response.Status.NOT_MODIFIED)
+                    .build();
         }
 
-
-
-        UserEndpoint endPoint = daoShopStaff.getShopStaffForShopAdmin(
-                latPickUp,lonPickUp,
-                permitProfileUpdate,permitRegistrationAndRenewal,
-                gender,
-                shopID,
-                sortBy,limit,offset,
-                getRowCount,getOnlyMetaData
-        );
-
-
-
-        endPoint.setLimit(limit);
-        endPoint.setOffset(offset);
-        endPoint.setMax_limit(GlobalConstants.max_limit);
-
-
-        //Marker
-        return Response.status(Response.Status.OK)
-                .entity(endPoint)
-                .build();
     }
 
 
-
-
-
-
-    @GET
-    @Path("/GetShopStaffListPublic")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response getStaffListPublic(
-            @QueryParam("latCurrent") Double latPickUp, @QueryParam("lonCurrent") Double lonPickUp,
-            @QueryParam("PermitProfileUpdate") Boolean permitProfileUpdate,
-            @QueryParam("PermitRegistrationAndRenewal") Boolean permitRegistrationAndRenewal,
-            @QueryParam("PermitAcceptPayments") Boolean permitAcceptPayments,
-            @QueryParam("Gender") Boolean gender,
-            @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
-            @QueryParam("GetRowCount")boolean getRowCount,
-            @QueryParam("MetadataOnly")boolean getOnlyMetaData)
-    {
-
-
-        if(limit!=null)
-        {
-            if(limit >= GlobalConstants.max_limit)
-            {
-                limit = GlobalConstants.max_limit;
-            }
-
-            if(offset==null)
-            {
-                offset = 0;
-            }
-        }
-
-
-
-        UserEndpoint endPoint = daoShopStaff.getShopStaffListPublic(
-                latPickUp,lonPickUp,
-                permitProfileUpdate,
-                permitRegistrationAndRenewal,
-                gender,
-                sortBy,limit,offset,
-                getRowCount,getOnlyMetaData
-        );
-
-
-
-
-
-        if(limit!=null)
-        {
-            endPoint.setLimit(limit);
-            endPoint.setOffset(offset);
-            endPoint.setMax_limit(GlobalConstants.max_limit);
-        }
-
-
-
-
-        //Marker
-        return Response.status(Response.Status.OK)
-                .entity(endPoint)
-                .build();
-    }
 
 
 }

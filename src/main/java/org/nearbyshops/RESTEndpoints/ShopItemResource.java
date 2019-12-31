@@ -26,17 +26,11 @@ import java.util.List;
 public class ShopItemResource {
 
 
-//	private ItemDAO itemDAO = Globals.itemDAO;
-//	private ShopDAO shopDAO = Globals.shopDAO;
-
 
 	private ShopItemByShopDAO shopItemByShopDAO = Globals.shopItemByShopDAO;
 	private ShopItemByItemDAO shopItemByItemDAO = Globals.shopItemByItemDAO;
 	private ShopItemDAO shopItemDAO = Globals.shopItemDAO;
 	private ItemCategoryDAO itemCategoryDAO = Globals.itemCategoryDAO;
-
-
-
 
 
 
@@ -58,7 +52,7 @@ public class ShopItemResource {
 		if(shopAdmin.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
 
-			Shop shop = Globals.shopDAO.getShopIDForShopAdmin(shopAdmin.getUserID());
+			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(shopAdmin.getUserID());
 			shopID = shop.getShopID();
 
 		}
@@ -89,34 +83,6 @@ public class ShopItemResource {
 
 
 
-
-//		if(Globals.accountApproved instanceof ShopStaff)
-//		{
-//			ShopStaff shopStaff = (ShopStaff) Globals.accountApproved;
-//
-//			if(!shopStaff.isUpdateStock())
-//			{
-//				// staff member do not have permission
-//				throw new ForbiddenException("Not Permitted !");
-//			}
-//
-//
-//			for(ShopItem shopItem : itemList)
-//			{
-//				shopItem.setShopID(shopStaff.getShopID());
-//				rowCountSum = rowCountSum + shopItemDAO.updateShopItem(shopItem);
-//			}
-//		}
-
-
-
-
-//
-//		for(ShopItem shopItem : itemList)
-//		{
-//			shopItem.setShopID(shopStaff.getShopID());
-//			rowCountSum = rowCountSum + shopItemDAO.updateShopItem(shopItem);
-//		}
 
 
 		if(rowCountSum ==  itemList.size())
@@ -155,39 +121,6 @@ public class ShopItemResource {
 	{
 		int rowCountSum = 0;
 
-//		if(Globals.accountApproved instanceof User)
-//		{
-//			User shopAdmin = (User) Globals.accountApproved;
-//			Shop shop = Globals.shopDAO.getShopIDForShopAdmin(shopAdmin.getShopAdminID());
-//
-//			for(ShopItem shopItem : itemList)
-//			{
-//				shopItem.setShopID(shop.getShopID());
-//				rowCountSum = rowCountSum + shopItemDAO.insertShopItem(shopItem);
-//			}
-//		}
-//
-//
-//
-//
-//		if(Globals.accountApproved instanceof ShopStaff)
-//		{
-//
-//			ShopStaff shopStaff = (ShopStaff) Globals.accountApproved;
-//
-//			if(!shopStaff.isAddRemoveItemsFromShop())
-//			{
-//				// staff member do not have permission
-//				throw new ForbiddenException("Not Permitted !");
-//			}
-//
-//
-//			for(ShopItem shopItem : itemList)
-//			{
-//				shopItem.setShopID(shopStaff.getShopID());
-//				rowCountSum = rowCountSum + shopItemDAO.insertShopItem(shopItem);
-//			}
-//		}
 
 
 		User user = (User) Globals.accountApproved;
@@ -215,7 +148,7 @@ public class ShopItemResource {
 		}
 		else if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-			int shopID = Globals.shopDAO.getShopIDForShopAdmin(user.getUserID()).getShopID();
+			int shopID = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID()).getShopID();
 
 
 			for(ShopItem shopItem : itemList)
@@ -226,26 +159,23 @@ public class ShopItemResource {
 		}
 
 
-//		rowCountSum = shopItemDAO.insertShopItemBulk(itemList);
+
 
 		if(rowCountSum ==  itemList.size())
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		else if( (rowCountSum < itemList.size()) && (rowCountSum > 0))
 		{
 
 			return Response.status(Status.PARTIAL_CONTENT)
-					.entity(null)
 					.build();
 		}
 		else if(rowCountSum == 0 ) {
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -261,15 +191,38 @@ public class ShopItemResource {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-	public Response saveShopItem(ShopItem shopItem)
+	public Response createShopItem(ShopItem shopItem)
 	{
 		int rowCount = 0;
+		int shopID = 0;
 
-		User shopAdmin = (User) Globals.accountApproved;
-		Shop shop = Globals.shopDAO.getShopIDForShopAdmin(shopAdmin.getUserID());
+		User user = (User) Globals.accountApproved;
 
 
-		shopItem.setShopID(shop.getShopID());
+		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
+		{
+
+			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
+			shopID = shop.getShopID();
+
+		}
+		else if (user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
+		{
+
+			shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
+			ShopStaffPermissions permissions = Globals.daoShopStaff.getShopStaffPermissions(user.getUserID());
+
+
+			if (!permissions.isPermitUpdateItemsInShop()) {
+				// staff member do not have this permission
+				throw new ForbiddenException("Not Permitted !");
+			}
+		}
+
+
+
+
+		shopItem.setShopID(shopID);
 		rowCount = shopItemDAO.insertShopItem(shopItem);
 
 
@@ -296,8 +249,6 @@ public class ShopItemResource {
 
 
 
-
-
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN,GlobalConstants.ROLE_SHOP_STAFF})
@@ -317,7 +268,7 @@ public class ShopItemResource {
 		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
 
-			Shop shop = Globals.shopDAO.getShopIDForShopAdmin(user.getUserID());
+			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
 			shopID = shop.getShopID();
 
 		}
@@ -359,52 +310,6 @@ public class ShopItemResource {
 
 
 
-
-
-	@PUT
-	@Path("/UpdateByShop")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_SHOP_STAFF})
-	public Response updateShop(ShopItem shopItem)
-	{
-
-//		System.out.println("Inside Resource Method | Update by shop !");
-
-
-		User staff = (User) Globals.accountApproved;
-
-//		if (!staff.isUpdateStock())
-//		{
-//			// the staff member doesnt have persmission to post Item Category
-//			throw new ForbiddenException("Not Permitted");
-//		}
-
-
-		shopItemDAO.updateShopItem(shopItem);
-		int rowCount = shopItemDAO.updateShopItem(shopItem);
-
-		if(rowCount >= 1)
-		{
-
-			return Response.status(Status.OK)
-					.entity(null)
-					.build();
-		}
-		if(rowCount <= 0)
-		{
-
-			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
-					.build();
-		}
-
-		return null;
-	}
-
-
-
-
-
 	@DELETE
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN,GlobalConstants.ROLE_SHOP_STAFF})
 	public Response deleteShopItem(@QueryParam("ShopID")int ShopID, @QueryParam("ItemID") int itemID)
@@ -417,7 +322,7 @@ public class ShopItemResource {
 
 		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-			Shop shop = Globals.shopDAO.getShopIDForShopAdmin(user.getUserID());
+			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
 			shopID = shop.getShopID();
 		}
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
@@ -443,7 +348,7 @@ public class ShopItemResource {
 		{
 
 			return Response.status(Status.OK)
-								.build();
+					.build();
 			
 		}else if(rowCount <= 0)
 		{
@@ -473,7 +378,7 @@ public class ShopItemResource {
 
 		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-			 shopID = Globals.shopDAO.getShopIDForShopAdmin(user.getUserID()).getShopID();
+			 shopID = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID()).getShopID();
 
 		}
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
@@ -526,83 +431,9 @@ public class ShopItemResource {
 
 		return null;
 	}
-	
-/*
-
-*/
-/*
-	@GET
-	@Path("/Deprecated")
-	@Produces(MediaType.APPLICATION_JSON)*//*
-
-	public Response getShopItems(
-			@QueryParam("ItemCategoryID")Integer ItemCategoryID,
-			@QueryParam("ShopID")Integer ShopID, @QueryParam("ItemID") Integer itemID,
-			@QueryParam("latCenter")Double latCenter,@QueryParam("lonCenter")Double lonCenter,
-			@QueryParam("deliveryRangeMax")Double deliveryRangeMax,
-			@QueryParam("deliveryRangeMin")Double deliveryRangeMin,
-			@QueryParam("proximity")Double proximity,
-			@QueryParam("EndUserID") Integer endUserID,@QueryParam("IsFilledCart") Boolean isFilledCart,
-			@QueryParam("IsOutOfStock") Boolean isOutOfStock,@QueryParam("PriceEqualsZero")Boolean priceEqualsZero,
-			@QueryParam("MinPrice")Integer minPrice,@QueryParam("MaxPrice")Integer maxPrice,
-			@QueryParam("SortBy") String sortBy,
-			@QueryParam("Limit") Integer limit, @QueryParam("Offset") Integer offset
-	)
-	{
-		List<ShopItem> shopItemsList = shopItemDAO.getShopItems(
-				ItemCategoryID,
-				ShopID, itemID,
-				latCenter, lonCenter,
-				deliveryRangeMin,deliveryRangeMax,
-				proximity, endUserID,
-				isFilledCart,
-				isOutOfStock,
-				priceEqualsZero,
-				null,
-				sortBy,
-				limit,offset);
 
 
-		for(ShopItem shopItem: shopItemsList)
-		{
-			if(ShopID == null)
-			{
-				shopItem.setShop(shopDAO.getShop(shopItem.getShopID(),latCenter,lonCenter));
-			}
 
-			if(itemID == null)
-			{
-//				shopItem.setItem(itemDAO.getItem(shopItem.getItemID()));
-			}
-
-		}
-
-		
-		GenericEntity<List<ShopItem>> list = new GenericEntity<List<ShopItem>>(shopItemsList){
-			
-		};
-		
-		
-		if(shopItemsList.size()== 0)
-		{
-			return Response.status(Status.NO_CONTENT)
-					.type(MediaType.APPLICATION_JSON)
-					.entity(list)
-					.build();
-			
-		
-		
-		}else
-		{
-			return Response.status(Status.OK)
-					.type(MediaType.APPLICATION_JSON)
-					.entity(list)
-					.build();
-		}
-	}
-
-
-*/
 
 
 
@@ -618,19 +449,6 @@ public class ShopItemResource {
 	)
 	{
 
-		/*final int max_limit = 100;
-
-		if(limit!=null)
-		{
-			if(limit>=max_limit)
-			{
-				limit = max_limit;
-			}
-		}
-		else
-		{
-			limit = 30;
-		}*/
 
 
 		ShopItemEndPoint endPoint = shopItemDAO.getShopItemsForShop(
@@ -662,12 +480,6 @@ public class ShopItemResource {
 
 
 
-
-
-
-
-
-
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getShopItems(
@@ -684,7 +496,7 @@ public class ShopItemResource {
             @QueryParam("SearchString") String searchString,
             @QueryParam("ShopEnabled")Boolean shopEnabled,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit") Integer limit, @QueryParam("Offset") Integer offset,
+            @QueryParam("Limit") Integer limit, @QueryParam("Offset") int offset,
             @QueryParam("metadata_only")Boolean metaonly,
             @QueryParam("GetExtras")Boolean getExtras
 	)
@@ -702,11 +514,6 @@ public class ShopItemResource {
 		else
 		{
 			limit = 30;
-		}
-
-		if(offset==null)
-		{
-			offset=0;
 		}
 
 

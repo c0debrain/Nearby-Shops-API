@@ -148,6 +148,7 @@ public class ServiceConfigurationLocal {
     private String rt_styleURL;
 
     private boolean rt_login_using_otp_enabled;
+    private String rt_market_id_for_fcm;
 
 
 
@@ -193,6 +194,14 @@ public class ServiceConfigurationLocal {
 
     //    Getter and Setters
 
+
+    public String getRt_market_id_for_fcm() {
+        return rt_market_id_for_fcm;
+    }
+
+    public void setRt_market_id_for_fcm(String rt_market_id_for_fcm) {
+        this.rt_market_id_for_fcm = rt_market_id_for_fcm;
+    }
 
     public boolean isRt_login_using_otp_enabled() {
         return rt_login_using_otp_enabled;

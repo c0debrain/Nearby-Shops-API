@@ -67,7 +67,7 @@ public class ItemResource {
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
 
-			Shop shop = Globals.shopDAO.getShopForShopAdmin(user.getUserID());
+			Shop shop = Globals.daoShopStaff.getShopForShopAdmin(user.getUserID());
 
 			if(shop==null || !shop.getShopEnabled())
 			{
@@ -130,18 +130,18 @@ public class ItemResource {
 
 		int rowCount = itemDAO.changeParent(item);
 
+
+
+
 		if(rowCount >= 1)
 		{
-
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
-		}
-		if(rowCount == 0)
-		{
 
+		}
+		else if(rowCount == 0)
+		{
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -191,20 +191,17 @@ public class ItemResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		else if( rowCountSum < itemList.size() && rowCountSum > 0)
 		{
 
 			return Response.status(Status.PARTIAL_CONTENT)
-					.entity(null)
 					.build();
 		}
 		else if(rowCountSum == 0 ) {
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -239,7 +236,7 @@ public class ItemResource {
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
 
-			Shop shop = Globals.shopDAO.getShopForShopAdmin(user.getUserID());
+			Shop shop = Globals.daoShopStaff.getShopForShopAdmin(user.getUserID());
 
 			if(shop==null || !shop.getShopEnabled())
 			{
@@ -276,56 +273,9 @@ public class ItemResource {
 
 
 
-//	@PUT
-//	@Consumes(MediaType.APPLICATION_JSON)
-//	@RolesAllowed({GlobalConstants.ROLE_ADMIN,GlobalConstants.ROLE_STAFF})
-//	public Response updateItemBulk(List<Item> itemList)
-//	{
-//
-//		if(Globals.accountApproved instanceof Staff) {
-//
-//			// checking permission
-//			Staff staff = (Staff) Globals.accountApproved;
-//			if (!staff.isCreateUpdateItems())
-//			{
-//				// the staff member doesnt have persmission to post Item Category
-//				throw new ForbiddenException("Not Permitted");
-//			}
-//		}
-//
-//		int rowCountSum = 0;
-//
-////		for(Item item : itemList)
-////		{
-////			rowCountSum = rowCountSum + itemDAO.updateItem(item);
-////		}
-//
-//		rowCountSum = itemDAO.updateItemBulk(itemList);
-//
-//		if(rowCountSum ==  itemList.size())
-//		{
-//
-//			return Response.status(Status.OK)
-//					.entity(null)
-//					.build();
-//		}
-//		else if( rowCountSum < itemList.size() && rowCountSum > 0)
-//		{
-//
-//			return Response.status(Status.PARTIAL_CONTENT)
-//					.entity(null)
-//					.build();
-//		}
-//		else if(rowCountSum == 0 ) {
-//
-//			return Response.status(Status.NOT_MODIFIED)
-//					.entity(null)
-//					.build();
-//		}
-//
-//		return null;
-//	}
-	
+
+
+
 	
 	@DELETE
 	@Path("/{ItemID}")
@@ -381,59 +331,6 @@ public class ItemResource {
 	}
 	
 	
-	
-
-//	@Path("/Deprecated")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response getItems(
-//            @QueryParam("ItemCategoryID")Integer itemCategoryID,
-//            @QueryParam("ShopID")Integer shopID,
-//            @QueryParam("latCenter") Double latCenter, @QueryParam("lonCenter") Double lonCenter,
-//            @QueryParam("deliveryRangeMax")Double deliveryRangeMax,
-//            @QueryParam("deliveryRangeMin")Double deliveryRangeMin,
-//            @QueryParam("proximity")Double proximity,
-//            @QueryParam("SortBy") String sortBy,
-//            @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset)
-//
-//	{
-//
-//		//Marker
-//
-//		List<Item> list =
-//				itemDAO.getItems(
-//						itemCategoryID,
-//						shopID,
-//						latCenter, lonCenter,
-//						deliveryRangeMin,
-//						deliveryRangeMax,
-//						proximity,null,
-//						sortBy,limit,offset
-//				);
-//
-//
-//		GenericEntity<List<Item>> listEntity = new GenericEntity<List<Item>>(list){
-//
-//			};
-//
-//
-//			if(list.size()<=0)
-//			{
-//
-//				return Response.status(Status.NO_CONTENT)
-//						.entity(listEntity)
-//						.build();
-//
-//			}else
-//			{
-//
-//				return Response.status(Status.OK)
-//						.entity(listEntity)
-//						.build();
-//			}
-//	}
-
-
-
 
 
 
@@ -461,13 +358,11 @@ public class ItemResource {
 		List<ItemCategory> subcategories;
 
 
-		if(limit!=null)
+		if(limit!=null && limit >= GlobalConstants.max_limit)
 		{
-			if(limit >= GlobalConstants.max_limit)
-			{
-				limit = GlobalConstants.max_limit;
-			}
+			limit = GlobalConstants.max_limit;
 		}
+
 
 
 
@@ -558,13 +453,11 @@ public class ItemResource {
 
 		final int max_limit = 100;
 
-		if(limit!= null)
-		{
 
-			if (limit >= max_limit) {
 
-				limit = max_limit;
-			}
+		if (limit!= null && limit >= max_limit) {
+
+			limit = max_limit;
 		}
 
 

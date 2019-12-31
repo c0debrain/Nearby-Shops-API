@@ -16,11 +16,8 @@ import java.util.List;
 public class CartResource {
 
 
-	public CartResource() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-	
+
+
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -47,7 +44,6 @@ public class CartResource {
 			//Response.status(Status.CREATED).location(arg0)
 			
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -69,14 +65,12 @@ public class CartResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		if(rowCount == 0)
 		{
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -97,7 +91,6 @@ public class CartResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		
@@ -105,7 +98,6 @@ public class CartResource {
 		{
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 		
@@ -161,8 +153,8 @@ public class CartResource {
 		{
 
 			return Response.status(Status.OK)
-			.entity(cart)
-			.build();
+					.entity(cart)
+					.build();
 			
 		} else 
 		{

@@ -20,11 +20,6 @@ public class ItemSpecificationItemDAO {
 
     private HikariDataSource dataSource = Globals.getDataSource();
 
-    @Override
-    protected void finalize() throws Throwable {
-        // TODO Auto-generated method stub
-        super.finalize();
-    }
 
 
 
@@ -151,9 +146,6 @@ public class ItemSpecificationItemDAO {
 
         return rowCountDeleted;
     }
-
-
-
 
 
 

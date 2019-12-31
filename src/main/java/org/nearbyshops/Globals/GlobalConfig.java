@@ -71,7 +71,11 @@ public class GlobalConfig {
 //        GlobalConstants.MAILGUN_EMAIL = configuration.getString("mailgun.email");
 
 
+        GlobalConstants.market_id_for_fcm = configuration.getString("market_id_for_fcm");
+        GlobalConstants.push_notification_provider = configuration.getInt("push_notification_provider");
 
+        GlobalConstants.fcm_config_file_path = configuration.getString("configuration_file_path");
+        GlobalConstants.fcm_database_url = configuration.getString("database_url");
 
 
         GlobalConstants.ONE_SIGNAL_API_KEY_ADMIN_APP = configuration.getString("one_signal_rest_api_key_admin");
@@ -144,7 +148,7 @@ public class GlobalConfig {
 
 
 
-    static void printGlobalConfiguration()
+    private static void printGlobalConfiguration()
     {
         System.out.println("Printing API Configuration :  ");
 

@@ -5,6 +5,8 @@ import org.nearbyshops.DAORoles.DAOUserNew;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
+import org.nearbyshops.Model.Shop;
+import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
 import org.nearbyshops.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.ModelRoles.StaffPermissions;
 import org.nearbyshops.ModelRoles.User;
@@ -17,20 +19,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigInteger;
-//import java.net.URI;
 import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Timestamp;
-//import java.util.Base64;
 import java.util.Base64;
 import java.util.StringTokenizer;
-//import org.apache.commons.codec.binary.Base64;
-/**
- * Created by sumeet on 21/4/17.
- */
-
 
 
 
@@ -40,72 +35,18 @@ public class UserLoginRESTEndpoint {
 
     private DAOUserNew daoUser = Globals.daoUserNew;
 
-    /* Methods */
-
-    // updateFirebaseID(String firebaseID)
-
-
-
-
-
-/* Update and Login */
-//    updateUser(User user, @PathParam("UserID")int userID)
-//    updateEmail(User user)
-//    updatePhone(User user)
-//    public Response changePassword(User user, @PathParam("OldPassword")String oldPassword)
-//    public Response getProfile(@HeaderParam("Authorization")String headerParam)
-//    public Response getToken(@HeaderParam("Authorization")String headerParam)
-
-
-
-
-    //    GlobalConstants.ROLE_ADMIN,GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_END_USER
-
-//
-//    @PUT
-//    @Path("/UpdateOneSignalID/{OneSignalID}")
-//    @RolesAllowed({GlobalConstants.ROLE_END_USER,GlobalConstants.ROLE_SHOP_ADMIN,GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_ADMIN})
-//    public Response updateOneSignalID(@PathParam("OneSignalID") String oneSignalID)
-//    {
-//
-//        User user = (User) Globals.accountApproved;
-//        user.setRt_oneSignalPlayerID(oneSignalID);
-//
-//        int rowCount = Globals.oneSignalNotifications.updateOneSignalID(
-//                user.getUserID(),
-//                user.getRt_oneSignalPlayerID());
-//
-//
-//        if(rowCount >= 1)
-//        {
-//
-//            return Response.status(Response.Status.OK)
-//                    .build();
-//        }
-//        if(rowCount == 0)
-//        {
-//
-//            return Response.status(Response.Status.NOT_MODIFIED)
-//                    .build();
-//        }
-//
-//
-//        return null;
-//    }
 
 
 
     @PUT
-    @Path("/UpdateProfileEndUser")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_END_USER})
-    public Response updateProfileEndUser(User user)
+    public Response updateProfile(User user)
     {
-//        /{UserID}
-//        @PathParam("UserID")int userID
+
 
         user.setUserID(((User)Globals.accountApproved).getUserID());
-        int rowCount = daoUser.updateEndUser(user);
+        int rowCount = daoUser.updateUser(user);
 
 
         if(rowCount >= 1)
@@ -128,16 +69,13 @@ public class UserLoginRESTEndpoint {
 
 
     @PUT
-    @Path("/UpdateProfileShopAdmin")
     @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response updateProfileShopAdmin(User user)
+    @Path("/UpdateProfileByAdmin")
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN})
+    public Response updateProfileByAdmin(User user)
     {
-//        /{UserID}
-//        , @PathParam("UserID")int userID
 
-        user.setUserID(((User)Globals.accountApproved).getUserID());
-        int rowCount = daoUser.updateShopAdmin(user);
+        int rowCount = daoUser.updateUserByAdmin(user);
 
 
         if(rowCount >= 1)
@@ -156,43 +94,6 @@ public class UserLoginRESTEndpoint {
         return null;
     }
 
-
-
-
-
-
-
-
-
-
-//    @PUT
-//    @Path("/UpdateFirebaseID/{FirebaseID}")
-//    @RolesAllowed({GlobalConstants.ROLE_END_USER,GlobalConstants.ROLE_SHOP_ADMIN,GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_ADMIN})
-//    public Response updateFirebaseID(@PathParam("FirebaseID") String firebaseID)
-//    {
-//
-//        User user = (User) Globals.accountApproved;
-//        user.setFirebaseID(firebaseID);
-//
-//        int rowCount = Globals.userNotifications.updateFirebaseID(user);
-//
-//
-//        if(rowCount >= 1)
-//        {
-//
-//            return Response.status(Response.Status.OK)
-//                    .build();
-//        }
-//        if(rowCount == 0)
-//        {
-//
-//            return Response.status(Response.Status.NOT_MODIFIED)
-//                    .build();
-//        }
-//
-//
-//        return null;
-//    }
 
 
 
@@ -237,8 +138,6 @@ public class UserLoginRESTEndpoint {
 
 
 
-
-
     @PUT
     @Path("/UpdateEmail")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -248,7 +147,6 @@ public class UserLoginRESTEndpoint {
 
         user.setUserID(((User)Globals.accountApproved).getUserID());
         int rowCount = daoUser.updateEmail(user);
-
 
         if(rowCount >= 1)
         {
@@ -361,6 +259,7 @@ public class UserLoginRESTEndpoint {
 
 
 
+
     @GET
     @Path("/GetProfileWithLogin")
     @Produces(MediaType.APPLICATION_JSON)
@@ -462,8 +361,9 @@ public class UserLoginRESTEndpoint {
             return Response.status(Response.Status.NOT_MODIFIED)
                     .build();
         }
-
     }
+
+
 
 
 
@@ -554,6 +454,108 @@ public class UserLoginRESTEndpoint {
 
 
 
+
+
+
+//    @QueryParam("latCurrent") Double latPickUp, @QueryParam("lonCurrent") Double lonPickUp,
+
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN,GlobalConstants.ROLE_SHOP_ADMIN})
+    public Response getUsers(
+            @QueryParam("UserRole") Integer userRole,
+            @QueryParam("Gender") Boolean gender,
+            @QueryParam("SortBy") String sortBy,
+            @QueryParam("Limit")int limit, @QueryParam("Offset")int offset,
+            @QueryParam("GetRowCount")boolean getRowCount,
+            @QueryParam("MetadataOnly")boolean getOnlyMetaData)
+    {
+
+            User user = (User) Globals.accountApproved;
+
+
+
+            Integer shopID = null;
+
+            if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
+            {
+                Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
+                shopID = shop.getShopID();
+            }
+
+
+
+            if(limit >= GlobalConstants.max_limit)
+            {
+                limit = GlobalConstants.max_limit;
+            }
+
+
+
+    //        latPickUp,lonPickUp,
+
+            UserEndpoint endPoint = Globals.daoUserNew.getUsers(
+                    userRole,
+                    shopID, gender,
+                    sortBy,
+                    limit,offset,
+                    getRowCount,getOnlyMetaData
+            );
+
+
+
+            endPoint.setLimit(limit);
+            endPoint.setOffset(offset);
+            endPoint.setMax_limit(GlobalConstants.max_limit);
+
+
+//        try {
+//            Thread.sleep(1000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+
+
+        //Marker
+            return Response.status(Response.Status.OK)
+                    .entity(endPoint)
+                    .build();
+    }
+
+
+
+
+
+
+
+    @GET
+    @Path("/GetUserDetails/{UserID}")
+    @Produces(MediaType.APPLICATION_JSON)
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN})
+    public Response getUserDetails(@PathParam("UserID")int userID)
+    {
+
+        User user = daoUser.getUserDetails(userID);
+
+
+
+        if(user!=null)
+        {
+
+            return Response.status(Response.Status.OK)
+                    .entity(user)
+                    .build();
+
+        }
+        else
+        {
+            return Response.status(Response.Status.NOT_MODIFIED)
+                    .build();
+        }
+
+    }
 
 
 
@@ -666,8 +668,6 @@ public class UserLoginRESTEndpoint {
 
 
 
-
-
     @GET
     @Path("/Image/{name}")
     @Produces("image/jpeg")
@@ -689,6 +689,8 @@ public class UserLoginRESTEndpoint {
 
         return null;
     }
+
+
 
 
 

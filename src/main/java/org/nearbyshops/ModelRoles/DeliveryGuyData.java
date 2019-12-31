@@ -1,12 +1,5 @@
 package org.nearbyshops.ModelRoles;
-
 import org.nearbyshops.Model.Shop;
-
-/**
- * Created by sumeet on 28/8/17.
- */
-
-
 
 public class DeliveryGuyData {
 

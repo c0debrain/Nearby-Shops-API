@@ -8,6 +8,7 @@ import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
 import org.nearbyshops.Model.Shop;
 import org.nearbyshops.ModelEndpoint.ShopEndPoint;
+import org.nearbyshops.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.ModelRoles.StaffPermissions;
 import org.nearbyshops.ModelRoles.User;
 
@@ -30,12 +31,6 @@ import java.util.ArrayList;
 @Produces(MediaType.APPLICATION_JSON)
 public class ShopResource {
 
-//	private GeoLocation center;
-//	private GeoLocation[] minMaxArray;
-//	private GeoLocation pointOne;
-//	private GeoLocation pointTwo;
-
-
 
 
 	private ShopDAO shopDAO = Globals.shopDAO;
@@ -43,38 +38,12 @@ public class ShopResource {
 
 
 
-
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-	public Response saveShop(Shop shop)
+	public Response createShop(Shop shop)
 	{
-
-		// generate bounding coordinates for the shop based on its center and delivery range
-//		center = GeoLocation.fromDegrees(shop.getLatCenter(),shop.getLonCenter());
-//		minMaxArray = center.boundingCoordinates(shop.getDeliveryRange(),6371.01);
-//
-//		pointOne = minMaxArray[0];
-//		pointTwo = minMaxArray[1];
-//
-//		shop.setLatMin(pointOne.getLatitudeInDegrees());
-//		shop.setLonMin(pointOne.getLongitudeInDegrees());
-//		shop.setLatMax(pointTwo.getLatitudeInDegrees());
-//		shop.setLonMax(pointTwo.getLongitudeInDegrees());
-
-
-//		if (Globals.accountApproved instanceof ShopAdmin)
-//		{
-//			// We need to make sure that SHop Admin Creates shop only on his account not on the account of others
-//			shop.setShopAdminID(((ShopAdmin) Globals.accountApproved).getShopAdminID());
-//
-//			Settings settings = Globals.settingsDAOPrepared.getSettings();
-//
-//			shop.setShopEnabled(settings.isShopEnabledByDefault());
-//			shop.setShopWaitlisted(false);
-//		}
-
 
 		int idOfInsertedRow = shopDAO.insertShop(shop);
 
@@ -84,27 +53,22 @@ public class ShopResource {
 		if(idOfInsertedRow >=1)
 		{
 
-
 			return Response.status(Status.CREATED)
 					.location(URI.create("/api/Shop/" + idOfInsertedRow))
 					.entity(shop)
 					.build();
-			
-		}else if(idOfInsertedRow <= 0)
-		{
+
+		}
+		else {
+
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
-		
-		
-		return null;	
-		
+
+
 	}
 	
-
-
 
 
 
@@ -116,49 +80,22 @@ public class ShopResource {
 	{
 
 
-//		if(Globals.accountApproved instanceof Staff) {
-//			// checking permission
-//			Staff staff = (Staff) Globals.accountApproved;
-//			if (!staff.isApproveShops())
-//			{
-//				// the staff member doesnt have persmission to post Item Category
-//				throw new ForbiddenException("Not Permitted");
-//			}
-//		}
-
-
-		// generate bounding coordinates for the shop based on its center and delivery range
-//		center = GeoLocation.fromDegrees(shop.getLatCenter(),shop.getLonCenter());
-//		minMaxArray = center.boundingCoordinates(shop.getDeliveryRange(),6371.01);
-//
-//		pointOne = minMaxArray[0];
-//		pointTwo = minMaxArray[1];
-//
-//		shop.setLatMin(pointOne.getLatitudeInDegrees());
-//		shop.setLonMin(pointOne.getLongitudeInDegrees());
-//		shop.setLatMax(pointTwo.getLatitudeInDegrees());
-//		shop.setLonMax(pointTwo.getLongitudeInDegrees());
-
 		shop.setShopID(ShopID);
 		
 		int rowCount = shopDAO.updateShopByAdmin(shop);
-		
+
+
 		if(rowCount >= 1)
 		{
-
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
-		if(rowCount <= 0)
+		else
 		{
-
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
-		return null;
 	}
 
 
@@ -169,49 +106,8 @@ public class ShopResource {
 	@Path("/UpdateBySelf")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-	public Response updateShopBySelf(Shop shop)
+	public Response updateShopByOwner(Shop shop)
 	{
-
-		// generate bounding coordinates for the shop based on its center and delivery range
-//		center = GeoLocation.fromDegrees(shop.getLatCenter(),shop.getLonCenter());
-//		minMaxArray = center.boundingCoordinates(shop.getDeliveryRange(),6371.01);
-//
-//		pointOne = minMaxArray[0];
-//		pointTwo = minMaxArray[1];
-//
-//		shop.setLatMin(pointOne.getLatitudeInDegrees());
-//		shop.setLonMin(pointOne.getLongitudeInDegrees());
-//		shop.setLatMax(pointTwo.getLatitudeInDegrees());
-//		shop.setLonMax(pointTwo.getLongitudeInDegrees());
-
-//		if(Globals.accountApproved instanceof ShopAdmin)
-//		{
-//				/*
-//			int shopIDForTest = ((ShopAdmin) Globals.accountApproved).getShopID();
-//
-//			shopIDForTest = shopDAO.getShopForShopAdmin(((ShopAdmin) Globals.accountApproved).getShopAdminID()).getShopID();
-//
-//			if(ShopID != shopIDForTest)
-//			{
-//
-//
-//				// update by wrong account . Throw an Exception
-//				Response responseError = Response.status(Status.FORBIDDEN)
-//						.entity(new ErrorNBSAPI(403, APIErrors.UPDATE_BY_WRONG_SHOP_OWNER))
-//						.build();
-//
-//				throw new ForbiddenException("You are not allowed to update the shop you do not own !",responseError);
-//			}*/
-//
-////			shop.setShopAdminID(((ShopAdmin) Globals.accountApproved).getShopAdminID());
-//
-//		}
-//		else
-//		{
-//			throw new ForbiddenException();
-//		}
-
-
 
 
 		shop.setShopAdminID(((User)Globals.accountApproved).getUserID());
@@ -223,12 +119,14 @@ public class ShopResource {
 			return Response.status(Status.OK)
 					.build();
 		}
-
-		return Response.status(Status.NOT_MODIFIED)
-				.entity(null)
-				.build();
-
+		else
+		{
+			return Response.status(Status.NOT_MODIFIED)
+					.build();
+		}
 	}
+
+
 
 
 
@@ -237,7 +135,7 @@ public class ShopResource {
 	@Path("/SetShopOpen")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-	public Response updateShopOpen()
+	public Response setShopOpen()
 	{
 
 		int shopAdminID = ((User)Globals.accountApproved).getUserID();
@@ -250,10 +148,11 @@ public class ShopResource {
 			return Response.status(Status.OK)
 					.build();
 		}
-
-		return Response.status(Status.NOT_MODIFIED)
-				.build();
-
+		else
+		{
+			return Response.status(Status.NOT_MODIFIED)
+					.build();
+		}
 	}
 
 
@@ -264,14 +163,12 @@ public class ShopResource {
 	@Path("/SetShopClosed")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-	public Response updateShopClosed()
+	public Response setShopClosed()
 	{
 
 		int shopAdminID = ((User)Globals.accountApproved).getUserID();
 
 		int rowCount = shopDAO.setShopOpen(false,shopAdminID);
-
-
 
 
 		if(rowCount >= 1)
@@ -296,34 +193,31 @@ public class ShopResource {
 	public Response deleteShop(@PathParam("ShopID")int shopID)
 	{
 
-//		if(Globals.accountApproved instanceof ShopAdmin)
-//		{
-//			Shop shop = Globals.shopDAO.getShopForShopAdmin(((ShopAdmin) Globals.accountApproved).getShopAdminID());
-//
-//			if(shopID != shop.getShopID())
-//			{
-//				// update by wrong account . Throw an Exception
-//				Response responseError = Response.status(Status.FORBIDDEN)
-//						.entity(new ErrorNBSAPI(403, APIErrors.DELETE_BY_WRONG_SHOP_OWNER))
-//						.build();
-//
-//				throw new ForbiddenException(APIErrors.DELETE_BY_WRONG_SHOP_OWNER,responseError);
-//			}
-//
-//		}
-//
-//
-//		if(Globals.accountApproved instanceof Staff) {
-//			// checking permission
-//			Staff staff = (Staff) Globals.accountApproved;
-//			if (!staff.isApproveShops())
-//			{
-//				// the staff member doesnt have persmission to post Item Category
-//				throw new ForbiddenException("Not Permitted");
-//			}
-//		}
 
-		
+		User user = (User) Globals.accountApproved;
+
+		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
+		{
+			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
+			shopID = shop.getShopID();
+		}
+		else if(user.getRole()==GlobalConstants.ROLE_STAFF_CODE)
+		{
+
+			StaffPermissions permissions = Globals.daoStaff.getStaffPermissions(user.getUserID());
+
+			if(!permissions.isPermitApproveShops())
+			{
+				return Response.status(Status.BAD_REQUEST)
+						.build();
+			}
+
+		}
+
+
+
+
+
 		int rowCount = shopDAO.deleteShop(shopID);
 	
 		
@@ -331,70 +225,18 @@ public class ShopResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		else if(rowCount == 0)
 		{
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 		
 		return null;
 
 	}
-
-
-
-
-
-//	@GET
-//	@Path("/Deprecated")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response getShops(@QueryParam("DistributorID")Integer distributorID,
-//							 @QueryParam("LeafNodeItemCategoryID")Integer itemCategoryID,
-//							 @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
-//							 @QueryParam("deliveryRangeMax")Double deliveryRangeMax,
-//							 @QueryParam("deliveryRangeMin")Double deliveryRangeMin,
-//							 @QueryParam("proximity")Double proximity,
-//							 @QueryParam("SearchString") String searchString,
-//							 @QueryParam("SortBy") String sortBy,
-//							 @QueryParam("Limit") Integer limit, @QueryParam("Offset") Integer offset)
-//	{
-//
-//		List<Shop> list = shopDAO.getShopListQueryJoin(
-//				itemCategoryID,
-//				latCenter, lonCenter,
-//				deliveryRangeMin,deliveryRangeMax,
-//				proximity,searchString,sortBy,limit,offset
-//		);
-//
-//
-//		GenericEntity<List<Shop>> listEntity = new GenericEntity<List<Shop>>(list){
-//
-//			};
-//
-//
-//			if(list.size()<=0)
-//			{
-//
-//				return Response.status(Status.NO_CONTENT)
-//						.entity(listEntity)
-//						.build();
-//
-//			}else
-//			{
-//
-//				return Response.status(Status.OK)
-//						.entity(listEntity)
-//						.build();
-//			}
-//
-//	}
-
-
 
 
 
@@ -428,8 +270,8 @@ public class ShopResource {
 				limit = max_limit;
 			}
 		}
-		else
-		{
+		else {
+
 			limit = 30;
 		}
 
@@ -740,7 +582,7 @@ public class ShopResource {
 	public Response getShopForShopAdmin()
 	{
 
-		Shop shop = shopDAO.getShopForShopAdmin(((User) Globals.accountApproved).getUserID());
+		Shop shop = Globals.daoShopStaff.getShopForShopAdmin(((User) Globals.accountApproved).getUserID());
 
 
 

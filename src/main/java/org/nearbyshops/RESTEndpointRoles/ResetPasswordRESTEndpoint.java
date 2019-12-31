@@ -32,14 +32,6 @@ public class ResetPasswordRESTEndpoint {
 
 
 
-    /* Reset Password */
-//    public Response resetPassword(User user)
-//    public Response checkPasswordResetCode(@PathParam("emailOrPhone")String emailOrPhone,
-//                                           @QueryParam("ResetCode")String resetCode)
-//    public Response generateResetCode(User user)
-
-
-
 
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
@@ -73,16 +65,6 @@ public class ResetPasswordRESTEndpoint {
 
         return null;
     }
-
-
-
-
-
-
-//    , @PathParam("EmailOrPhone") String emailOrPhone
-//    /{EmailOrPhone}
-
-
 
 
 
@@ -134,8 +116,6 @@ public class ResetPasswordRESTEndpoint {
 
 
 
-
-
     @PUT
     @Path("/GenerateResetCode")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -177,24 +157,6 @@ public class ResetPasswordRESTEndpoint {
 
                 if(user.getRt_registration_mode()==User.REGISTRATION_MODE_EMAIL)
                 {
-
-
-
-//                    Mail.using(Globals.getMailgunConfiguration())
-//                            .body()
-//                            .h1("Your E-mail Verification Code is given below")
-//                            .p("You have requested to verify your e-mail. If you did not request the e-mail verification please ignore this e-mail message.")
-//                            .h3("The e-mail verification code is : " + resetCode)
-//                            .p("This verification code will expire at " + timestampExpiry.toLocaleString() + ". Please use this code before it expires.")
-//                            .mail()
-//                            .to(user.getEmail())
-//                            .subject("E-mail Verification Code for Taxi Referral Service (TRS)")
-//                            .from("Taxi Referral Service","noreply@taxireferral.org")
-//                            .build()
-//                            .send();
-//
-//
-
 
                     String message = "<p>You have made a request to verify your e-mail. If you did not request the e-mail verification please ignore this e-mail message.</p>"
                             +"<h2>The e-mail verification code is : " + resetCode + "</h2>" +
@@ -241,19 +203,6 @@ public class ResetPasswordRESTEndpoint {
 
             if(user.getRt_registration_mode()==User.REGISTRATION_MODE_EMAIL)
             {
-
-//                Mail.using(Globals.getMailgunConfiguration())
-//                        .body()
-//                        .h1("Your E-mail Verification Code is given below")
-//                        .p("You have requested to verify your e-mail. If you did not request the e-mail verification please ignore this e-mail message.")
-//                        .h3("The e-mail verification code is : " + user_credentials.getPasswordResetCode())
-//                        .p("This verification code will expire at " + user_credentials.getResetCodeExpires().toLocaleString() + ". Please use this code before it expires.")
-//                        .mail()
-//                        .to(user.getEmail())
-//                        .subject("E-mail Verification Code for Taxi Referral Service (TRS)")
-//                        .from("Taxi Referral Service","noreply@taxireferral.org")
-//                        .build()
-//                        .send();
 
 
                 String message = "<p>You have made a request to verify your e-mail. If you did not request the e-mail verification please ignore this e-mail message.</p>"
@@ -310,11 +259,6 @@ public class ResetPasswordRESTEndpoint {
 
         return null;
     }
-
-
-
-
-
 
 
 }

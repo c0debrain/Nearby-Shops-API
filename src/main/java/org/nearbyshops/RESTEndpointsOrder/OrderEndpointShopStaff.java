@@ -1,5 +1,9 @@
 package org.nearbyshops.RESTEndpointsOrder;
 
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingException;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
 import org.nearbyshops.DAOOrders.DAOOrderUtility;
 import org.nearbyshops.DAOPushNotifications.DAOOneSignal;
 import org.nearbyshops.Globals.GlobalConstants;
@@ -7,7 +11,6 @@ import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Globals.SendSMS;
 import org.nearbyshops.Model.Order;
 import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelEndpoint.OrderEndPoint;
 import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
 import org.nearbyshops.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.ModelRoles.User;
@@ -23,7 +26,6 @@ import javax.ws.rs.core.Response.Status;
 import java.util.List;
 
 import static org.nearbyshops.Globals.Globals.getMailerInstance;
-import static org.nearbyshops.Globals.Globals.oneSignalNotifications;
 
 
 @Singleton
@@ -34,32 +36,103 @@ public class OrderEndpointShopStaff {
 	private DAOOrderUtility daoOrderUtility = Globals.daoOrderUtility;
 
 
-//
-//	@GET
-//	@Path("/Notifications/{ShopID}")
-//	@Produces(SseFeature.SERVER_SENT_EVENTS)
-//	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-//	public EventOutput listenToBroadcast(@PathParam("ShopID")int shopID) {
-//		final EventOutput eventOutput = new EventOutput();
-//
-//		if(Globals.broadcasterMap.get(shopID)!=null)
-//		{
-//			SseBroadcaster broadcasterOne = Globals.broadcasterMap.get(shopID);
-//			broadcasterOne.add(eventOutput);
-//		}
-//		else
-//		{
-//			SseBroadcaster broadcasterTwo = new SseBroadcaster();
-//			broadcasterTwo.add(eventOutput);
-//			Globals.broadcasterMap.put(shopID,broadcasterTwo);
-//		}
-//
-//		return eventOutput;
-//	}
+
+
+
+	@GET
+	@Path("/FetchDeliveryGuys")
+	@Produces(MediaType.APPLICATION_JSON)
+	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_SHOP_STAFF})
+	public Response fetchDeliveryGuys(
+			@QueryParam("StatusHomeDelivery")Integer homeDeliveryStatus,
+			@QueryParam("SortBy") String sortBy,
+			@QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
+			@QueryParam("GetRowCount")boolean getRowCount,
+			@QueryParam("MetadataOnly")boolean getOnlyMetaData
+
+	)
+	{
+
+		//		@QueryParam("ShopID")Integer shopID,
+
+
+		int shopID = 0;
+
+		// *********************** second Implementation
+
+		User user = (User) Globals.accountApproved;
+
+		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
+		{
+			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
+			shopID = shop.getShopID();
+		}
+		else if(user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
+		{
+			shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
+		}
 
 
 
 
+		if(limit!=null)
+		{
+			if(limit >= GlobalConstants.max_limit)
+			{
+				limit = GlobalConstants.max_limit;
+			}
+
+			if(offset==null)
+			{
+				offset = 0;
+			}
+		}
+
+
+
+
+		getRowCount=true;
+
+
+
+
+
+
+		UserEndpoint endpoint = daoOrderUtility.fetchDeliveryGuys(
+				shopID,
+				homeDeliveryStatus,
+				sortBy,limit,offset,
+				true,getOnlyMetaData
+		);
+
+
+
+
+
+
+		if(limit!=null)
+		{
+			endpoint.setLimit(limit);
+			endpoint.setOffset(offset);
+			endpoint.setMax_limit(GlobalConstants.max_limit);
+		}
+
+
+
+
+		return Response.status(Status.OK)
+				.entity(endpoint)
+				.build();
+
+
+
+	}
+
+
+
+
+
+	
 	@PUT
 	@Path("/SetConfirmed/{OrderID}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -91,20 +164,50 @@ public class OrderEndpointShopStaff {
 		if(rowCount >= 1)
 		{
 
-			Order orderResult = Globals.orderService.readSingleOrder(orderID);
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
-			oneSignalNotifications.sendNotificationToEndUser(
-					orderResult.getEndUserID(),
-					GlobalConstants.url_for_notification_icon_value,
-					null,
-					null,
-					10,
-					"Order Confirmed",
-					"Order number " + String.valueOf(orderID) + " has been confirmed !",
-					1,
-					DAOOneSignal.ORDER_CONFIRMED,
-					null
-			);
+
+
+//			oneSignalNotifications.sendNotificationToEndUser(
+//					orderResult.getEndUserID(),
+//					GlobalConstants.url_for_notification_icon_value,
+//					null,
+//					null,
+//					10,
+//					"Order Confirmed",
+//					"Order number " + String.valueOf(orderID) + " has been confirmed !",
+//					1,
+//					DAOOneSignal.ORDER_CONFIRMED,
+//					null
+//			);
+
+
+
+
+			String topic = GlobalConstants.market_id_for_fcm + "end_user_" + orderResult.getEndUserID();
+
+			// See documentation on defining a message payload.
+			Message messageEndUser = Message.builder()
+					.setNotification(new Notification("Order Confirmed", "Order number " + String.valueOf(orderID) + " has been confirmed !"))
+					.setTopic(topic)
+					.build();
+
+
+
+			System.out.println("Topic : " + topic);
+
+
+			try {
+
+
+				String responseEndUser = FirebaseMessaging.getInstance().send(messageEndUser);
+				System.out.println("Sent Notification to EndUser: " + responseEndUser);
+
+
+			} catch (FirebaseMessagingException e) {
+				e.printStackTrace();
+			}
+
 
 
 
@@ -191,47 +294,52 @@ public class OrderEndpointShopStaff {
 			if(rowCount >= 1)
 			{
 
-				Order orderResult = Globals.orderService.readSingleOrder(orderID);
+				Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
-				oneSignalNotifications.sendNotificationToEndUser(
-						orderResult.getEndUserID(),
-						GlobalConstants.url_for_notification_icon_value,
-						null,
-						null,
-						10,
-						"Order Packed",
-						"Order number " + String.valueOf(orderID) + " has been Packed !",
-						1,
-						DAOOneSignal.ORDER_PACKED,
-						null
-				);
-
-
-
-//
-////			String shopAdminPlayerID = oneSignalNotifications.getPlayerIDforShopAdmin(orderResult.getShopID());
-//				ArrayList<String> playerIDs =  Globals.oneSignalNotifications.getPlayerIDsForShopStaff(orderResult.getShopID(),
-//						null,null,true,null,null);
-//
-//
-////			playerIDs.add(shopAdminPlayerID);
-//
-//
-//
-//				Globals.oneSignalNotifications.sendNotificationToUser(
-//						playerIDs,
-//						GlobalConstants.ONE_SIGNAL_APP_ID_SHOP_OWNER_APP,
-//						GlobalConstants.ONE_SIGNAL_API_KEY_SHOP_OWNER_APP,
-//						"https://i1.wp.com/nearbyshops.org/wp-content/uploads/2017/02/cropped-backdrop_play_store-1.png?w=250&ssl=1",
+//				oneSignalNotifications.sendNotificationToEndUser(
+//						orderResult.getEndUserID(),
+//						GlobalConstants.url_for_notification_icon_value,
 //						null,
 //						null,
 //						10,
 //						"Order Packed",
-//						"Order number " + String.valueOf(orderID) + " has been packed !",
+//						"Order number " + String.valueOf(orderID) + " has been Packed !",
 //						1,
 //						DAOOneSignal.ORDER_PACKED,
 //						null
 //				);
+
+
+
+
+
+
+				String topic = GlobalConstants.market_id_for_fcm + "end_user_" + orderResult.getEndUserID();
+
+				// See documentation on defining a message payload.
+				Message messageEndUser = Message.builder()
+						.setNotification(new Notification("Order Packed", "Order number " + String.valueOf(orderID) + " has been Packed !"))
+						.setTopic(topic)
+						.build();
+
+
+				System.out.println("Topic : " + topic);
+
+
+				try {
+
+
+					String responseEndUser = FirebaseMessaging.getInstance().send(messageEndUser);
+					System.out.println("Sent Notification to EndUser: " + responseEndUser);
+
+
+				} catch (FirebaseMessagingException e) {
+					e.printStackTrace();
+				}
+
+
+
+
 
 
 
@@ -246,6 +354,8 @@ public class OrderEndpointShopStaff {
 
 
 	}
+
+
 
 
 
@@ -394,9 +504,6 @@ public class OrderEndpointShopStaff {
 
 
 
-
-
-
 	@PUT
 	@Path("/AcceptReturn/{OrderID}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -437,20 +544,48 @@ public class OrderEndpointShopStaff {
 
 		if(rowCount >= 1)
 		{
-			Order orderResult = Globals.orderService.readSingleOrder(orderID);
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
-			oneSignalNotifications.sendNotificationToEndUser(
-					orderResult.getEndUserID(),
-					GlobalConstants.url_for_notification_icon_value,
-					null,
-					null,
-					10,
-					"Order Returned",
-					"Order number " + String.valueOf(orderID) + " has been returned because order failed to be delivered !",
-					1,
-					DAOOneSignal.ORDER_RETURNED,
-					null
-			);
+//			oneSignalNotifications.sendNotificationToEndUser(
+//					orderResult.getEndUserID(),
+//					GlobalConstants.url_for_notification_icon_value,
+//					null,
+//					null,
+//					10,
+//					"Order Returned",
+//					"Order number " + String.valueOf(orderID) + " has been returned because order failed to be delivered !",
+//					1,
+//					DAOOneSignal.ORDER_RETURNED,
+//					null
+//			);
+
+
+
+			String topic = GlobalConstants.market_id_for_fcm + "end_user_" + orderResult.getEndUserID();
+
+			// See documentation on defining a message payload.
+			Message messageEndUser = Message.builder()
+					.setNotification(new Notification("Order Returned", "Order number " + String.valueOf(orderID) + " has been returned !"))
+					.setTopic(topic)
+					.build();
+
+
+			System.out.println("Topic : " + topic);
+
+
+			try {
+
+
+				String responseEndUser = FirebaseMessaging.getInstance().send(messageEndUser);
+				System.out.println("Sent Notification to EndUser: " + responseEndUser);
+
+			} catch (FirebaseMessagingException e) {
+				e.printStackTrace();
+			}
+
+
+
+
 
 
 			return Response.status(Status.OK)
@@ -467,6 +602,8 @@ public class OrderEndpointShopStaff {
 //		int rowCount = Globals.orderService.updateOrder(order);
 
 	}
+
+
 
 
 
@@ -552,20 +689,50 @@ public class OrderEndpointShopStaff {
 		if(rowCount >= 1)
 		{
 
-			Order orderResult = Globals.orderService.readSingleOrder(orderID);
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
-			oneSignalNotifications.sendNotificationToEndUser(
-					orderResult.getEndUserID(),
-					GlobalConstants.url_for_notification_icon_value,
-					null,
-					null,
-					10,
-					"Order Delivered",
-					"Order number " + String.valueOf(orderID) + " has been delivered to you !",
-					1,
-					DAOOneSignal.ORDER_DELIVERED,
-					null
-			);
+//			oneSignalNotifications.sendNotificationToEndUser(
+//					orderResult.getEndUserID(),
+//					GlobalConstants.url_for_notification_icon_value,
+//					null,
+//					null,
+//					10,
+//					"Order Delivered",
+//					"Order number " + String.valueOf(orderID) + " has been delivered to you !",
+//					1,
+//					DAOOneSignal.ORDER_DELIVERED,
+//					null
+//			);
+
+
+
+
+
+			String topic = GlobalConstants.market_id_for_fcm + "end_user_" + orderResult.getEndUserID();
+
+
+			// See documentation on defining a message payload.
+			Message messageEndUser = Message.builder()
+					.setNotification(new Notification("Order Delivered", "Order number " + String.valueOf(orderID) + " has been delivered to you !"))
+					.setTopic(topic)
+					.build();
+
+
+			System.out.println("Topic : " + "end_user_" + orderResult.getEndUserID());
+
+
+
+			try {
+
+
+				String responseEndUser = FirebaseMessaging.getInstance().send(messageEndUser);
+				System.out.println("Sent Notification to EndUser: " + responseEndUser);
+
+
+			} catch (FirebaseMessagingException e) {
+				e.printStackTrace();
+			}
+
 
 
 
@@ -580,200 +747,6 @@ public class OrderEndpointShopStaff {
 
 //		order.setOrderID(orderID);
 //		int rowCount = Globals.orderService.updateOrder(order);
-
-	}
-
-
-
-
-
-
-
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_SHOP_STAFF})
-	public Response getOrders(@QueryParam("OrderID")Integer orderID,
-                              @QueryParam("EndUserID")Integer endUserID,
-                              @QueryParam("ShopID")Integer shopID,
-                              @QueryParam("PickFromShop") Boolean pickFromShop,
-                              @QueryParam("StatusHomeDelivery")Integer homeDeliveryStatus,
-                              @QueryParam("StatusPickFromShopStatus")Integer pickFromShopStatus,
-                              @QueryParam("DeliveryGuyID")Integer deliveryGuyID,
-                              @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
-                              @QueryParam("PendingOrders") Boolean pendingOrders,
-                              @QueryParam("SearchString") String searchString,
-                              @QueryParam("SortBy") String sortBy,
-                              @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
-							  @QueryParam("GetRowCount")boolean getRowCount,
-							  @QueryParam("MetadataOnly")boolean getOnlyMetaData)
-
-	{
-
-
-
-		// *********************** second Implementation
-
-		User user = (User) Globals.accountApproved;
-
-		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
-		{
-			Shop shop = Globals.shopDAO.getShopIDForShopAdmin(user.getUserID());
-			shopID = shop.getShopID();
-		}
-		else if(user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
-		{
-			shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
-		}
-
-
-
-		if(limit!=null)
-		{
-			if(limit >= GlobalConstants.max_limit)
-			{
-				limit = GlobalConstants.max_limit;
-			}
-
-			if(offset==null)
-			{
-				offset = 0;
-			}
-		}
-
-
-		getRowCount=true;
-
-
-		OrderEndPoint endpoint = Globals.orderService.readOrders(orderID,
-				endUserID,shopID, pickFromShop,
-				homeDeliveryStatus,pickFromShopStatus,
-				deliveryGuyID,
-				latCenter,lonCenter,
-				pendingOrders,
-				searchString,
-				sortBy,limit,offset,
-				true,getOnlyMetaData);
-
-
-
-
-		if(limit!=null)
-		{
-			endpoint.setLimit(limit);
-			endpoint.setOffset(offset);
-			endpoint.setMax_limit(GlobalConstants.max_limit);
-		}
-
-
-
-
-
-//		try {
-//			Thread.sleep(1000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
-
-		//Marker
-
-		return Response.status(Status.OK)
-				.entity(endpoint)
-				.build();
-	}
-
-
-
-
-
-
-
-	@GET
-	@Path("/FetchDeliveryGuys")
-	@Produces(MediaType.APPLICATION_JSON)
-	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_SHOP_STAFF})
-	public Response fetchDeliveryGuys(
-			@QueryParam("StatusHomeDelivery")Integer homeDeliveryStatus,
-			@QueryParam("SortBy") String sortBy,
-			@QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
-			@QueryParam("GetRowCount")boolean getRowCount,
-			@QueryParam("MetadataOnly")boolean getOnlyMetaData
-
-	)
-	{
-
-		//		@QueryParam("ShopID")Integer shopID,
-
-
-		int shopID = 0;
-
-		// *********************** second Implementation
-
-		User user = (User) Globals.accountApproved;
-
-		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
-		{
-			Shop shop = Globals.shopDAO.getShopIDForShopAdmin(user.getUserID());
-			shopID = shop.getShopID();
-		}
-		else if(user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
-		{
-			shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
-		}
-
-
-
-
-		if(limit!=null)
-		{
-			if(limit >= GlobalConstants.max_limit)
-			{
-				limit = GlobalConstants.max_limit;
-			}
-
-			if(offset==null)
-			{
-				offset = 0;
-			}
-		}
-
-
-
-
-		getRowCount=true;
-
-
-
-
-
-
-		UserEndpoint endpoint = daoOrderUtility.fetchDeliveryGuys(
-				shopID,
-				homeDeliveryStatus,
-				sortBy,limit,offset,
-				true,getOnlyMetaData
-		);
-
-
-
-
-
-
-		if(limit!=null)
-		{
-			endpoint.setLimit(limit);
-			endpoint.setOffset(offset);
-			endpoint.setMax_limit(GlobalConstants.max_limit);
-		}
-
-
-
-
-		return Response.status(Status.OK)
-				.entity(endpoint)
-				.build();
-
-
 
 	}
 
@@ -815,20 +788,50 @@ public class OrderEndpointShopStaff {
 
 		if(rowCount >= 1)
 		{
-			Order orderResult = Globals.orderService.readSingleOrder(orderID);
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
-			oneSignalNotifications.sendNotificationToEndUser(
-					orderResult.getEndUserID(),
-					GlobalConstants.url_for_notification_icon_value,
-					null,
-					null,
-					10,
-					"Order Confirmed",
-					"Order number " + String.valueOf(orderID) + " has been confirmed !",
-					1,
-					DAOOneSignal.ORDER_CONFIRMED,
-					null
-			);
+//			oneSignalNotifications.sendNotificationToEndUser(
+//					orderResult.getEndUserID(),
+//					GlobalConstants.url_for_notification_icon_value,
+//					null,
+//					null,
+//					10,
+//					"Order Confirmed",
+//					"Order number " + String.valueOf(orderID) + " has been confirmed !",
+//					1,
+//					DAOOneSignal.ORDER_CONFIRMED,
+//					null
+//			);
+
+
+
+
+			String topic = GlobalConstants.market_id_for_fcm + "end_user_" + orderResult.getEndUserID();
+
+			// See documentation on defining a message payload.
+			Message messageEndUser = Message.builder()
+					.setNotification(new Notification("Order Confirmed", "Order number " + String.valueOf(orderID) + " has been Confirmed!"))
+					.setTopic(topic)
+					.build();
+
+
+			System.out.println("Topic : " + topic);
+
+
+			try {
+
+
+				String responseEndUser = FirebaseMessaging.getInstance().send(messageEndUser);
+				System.out.println("Sent Notification to EndUser: " + responseEndUser);
+
+
+			} catch (FirebaseMessagingException e) {
+				e.printStackTrace();
+			}
+
+
+
+
 
 
 //			String htmlText = "";
@@ -856,6 +859,9 @@ public class OrderEndpointShopStaff {
 
 				getMailerInstance().sendMail(emailComposed,true);
 			}
+
+
+
 
 			return Response.status(Status.OK)
 					.build();
@@ -910,20 +916,48 @@ public class OrderEndpointShopStaff {
 
 		if(rowCount >= 1)
 		{
-			Order orderResult = Globals.orderService.readSingleOrder(orderID);
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
-			oneSignalNotifications.sendNotificationToEndUser(
-					orderResult.getEndUserID(),
-					GlobalConstants.url_for_notification_icon_value,
-					null,
-					null,
-					10,
-					"Order Packed",
-					"Order number " + String.valueOf(orderID) + " has been packed !",
-					1,
-					DAOOneSignal.ORDER_PACKED,
-					null
-			);
+//			oneSignalNotifications.sendNotificationToEndUser(
+//					orderResult.getEndUserID(),
+//					GlobalConstants.url_for_notification_icon_value,
+//					null,
+//					null,
+//					10,
+//					"Order Packed",
+//					"Order number " + String.valueOf(orderID) + " has been packed !",
+//					1,
+//					DAOOneSignal.ORDER_PACKED,
+//					null
+//			);
+
+
+
+			String topic = GlobalConstants.market_id_for_fcm + "end_user_" + orderResult.getEndUserID();
+
+			// See documentation on defining a message payload.
+			Message messageEndUser = Message.builder()
+					.setNotification(new Notification("Order Packed", "Order number " + String.valueOf(orderID) + " has been Packed !"))
+					.setTopic(topic)
+					.build();
+
+
+			System.out.println("Topic : " + topic);
+
+
+			try {
+
+
+				String responseEndUser = FirebaseMessaging.getInstance().send(messageEndUser);
+				System.out.println("Sent Notification to EndUser: " + responseEndUser);
+
+
+			} catch (FirebaseMessagingException e) {
+				e.printStackTrace();
+			}
+
+
+
 
 
 
@@ -1004,22 +1038,47 @@ public class OrderEndpointShopStaff {
 
 		if(rowCount >= 1)
 		{
-			Order orderResult = Globals.orderService.readSingleOrder(orderID);
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
-			oneSignalNotifications.sendNotificationToEndUser(
-					orderResult.getEndUserID(),
-					GlobalConstants.url_for_notification_icon_value,
-					null,
-					null,
-					10,
-					"Order Ready for Pickup",
-					"Order number " + String.valueOf(orderID) + " is ready for pickup !",
-					1,
-					DAOOneSignal.ORDER_PACKED,
-					null
-			);
+//			oneSignalNotifications.sendNotificationToEndUser(
+//					orderResult.getEndUserID(),
+//					GlobalConstants.url_for_notification_icon_value,
+//					null,
+//					null,
+//					10,
+//					"Order Ready for Pickup",
+//					"Order number " + String.valueOf(orderID) + " is ready for pickup !",
+//					1,
+//					DAOOneSignal.ORDER_PACKED,
+//					null
+//			);
 
 
+
+
+
+			String topic = GlobalConstants.market_id_for_fcm + "end_user_" + orderResult.getEndUserID();
+
+			// See documentation on defining a message payload.
+			Message messageEndUser = Message.builder()
+					.setNotification(new Notification("Order Ready for Pickup", "Order number " + String.valueOf(orderID) + " is Ready for Pickup !"))
+					.setTopic(topic)
+					.build();
+
+
+			System.out.println("Topic : " + topic);
+
+
+			try {
+
+
+				String responseEndUser = FirebaseMessaging.getInstance().send(messageEndUser);
+				System.out.println("Sent Notification to EndUser: " + responseEndUser);
+
+
+			} catch (FirebaseMessagingException e) {
+				e.printStackTrace();
+			}
 
 
 
@@ -1072,8 +1131,6 @@ public class OrderEndpointShopStaff {
 
 
 
-
-
 	@PUT
 	@Path("/PaymentReceivedPFS/{OrderID}")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -1103,20 +1160,46 @@ public class OrderEndpointShopStaff {
 
 		if(rowCount >= 1)
 		{
-			Order orderResult = Globals.orderService.readSingleOrder(orderID);
+			Order orderResult = Globals.orderService.getOrderDetails(orderID);
 
-			oneSignalNotifications.sendNotificationToEndUser(
-					orderResult.getEndUserID(),
-					GlobalConstants.url_for_notification_icon_value,
-					null,
-					null,
-					10,
-					"Order Delivered",
-					"Order number " + String.valueOf(orderID) + " has been delivered to you and order amount has been paid !",
-					1,
-					DAOOneSignal.ORDER_DELIVERED,
-					null
-			);
+//			oneSignalNotifications.sendNotificationToEndUser(
+//					orderResult.getEndUserID(),
+//					GlobalConstants.url_for_notification_icon_value,
+//					null,
+//					null,
+//					10,
+//					"Order Delivered",
+//					"Order number " + String.valueOf(orderID) + " has been delivered to you and order amount has been paid !",
+//					1,
+//					DAOOneSignal.ORDER_DELIVERED,
+//					null
+//			);
+
+
+
+			String topic = GlobalConstants.market_id_for_fcm + "end_user_" + orderResult.getEndUserID();
+
+			// See documentation on defining a message payload.
+			Message messageEndUser = Message.builder()
+					.setNotification(new Notification("Order Delivered", "Order number " + String.valueOf(orderID) + " has been delivered and amount paid !"))
+					.setTopic(topic)
+					.build();
+
+
+			System.out.println("Topic : " + topic);
+
+
+			try {
+
+
+				String responseEndUser = FirebaseMessaging.getInstance().send(messageEndUser);
+				System.out.println("Sent Notification to EndUser: " + responseEndUser);
+
+
+			} catch (FirebaseMessagingException e) {
+				e.printStackTrace();
+			}
+
 
 
 

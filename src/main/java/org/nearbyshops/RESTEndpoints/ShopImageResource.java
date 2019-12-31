@@ -41,16 +41,14 @@ public class ShopImageResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response saveShopImage(ShopImage shopImage)
+    public Response createShopImage(ShopImage shopImage)
     {
         int idOfInsertedRow = -1;
         int rowCount = 0;
 
         User user = (User) Globals.accountApproved;
 
-
-        Shop shop = Globals.shopDAO.getShopIDForShopAdmin(user.getUserID());
-
+        Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
         shopImage.setShopID(shop.getShopID());
 
 
@@ -92,10 +90,9 @@ public class ShopImageResource {
 
         User user = (User) Globals.accountApproved;
 
-        Shop shop = Globals.shopDAO.getShopIDForShopAdmin(user.getUserID());
 
+        Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
         shopImage.setShopID(shop.getShopID());
-
 
 
         int rowCount = shopImageDAO.updateShopImage(shopImage);
@@ -117,8 +114,6 @@ public class ShopImageResource {
         return null;
 
     }
-
-
 
 
 
@@ -179,7 +174,7 @@ public class ShopImageResource {
     public Response getShopImages(
             @QueryParam("ShopID")Integer shopID,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
+            @QueryParam("Limit")Integer limit, @QueryParam("Offset")int offset,
             @QueryParam("GetRowCount")boolean getRowCount,
             @QueryParam("MetadataOnly")boolean getOnlyMetaData)
     {
@@ -189,19 +184,10 @@ public class ShopImageResource {
         User user = (User) Globals.accountApproved;
 
 
-        if(limit!=null)
+        if(limit!=null && limit >= GlobalConstants.max_limit)
         {
-            if(limit >= GlobalConstants.max_limit)
-            {
-                limit = GlobalConstants.max_limit;
-            }
-
-            if(offset==null)
-            {
-                offset = 0;
-            }
+            limit = GlobalConstants.max_limit;
         }
-
 
 
 
@@ -368,11 +354,6 @@ public class ShopImageResource {
 
         return fileName;
     }
-
-
-
-
-
 
 
 

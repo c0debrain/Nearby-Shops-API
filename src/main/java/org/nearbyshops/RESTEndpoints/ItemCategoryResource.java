@@ -37,16 +37,7 @@ public class ItemCategoryResource {
 	private ItemCategoryDAO itemCategoryDAO = Globals.itemCategoryDAO;
 
 
-	
-	public ItemCategoryResource() {
-		super();
-		// TODO Auto-generated constructor stub
-	}                                 
 
-
-
-
-	
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -332,6 +323,9 @@ public class ItemCategoryResource {
 
 
 
+
+
+
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
@@ -388,55 +382,7 @@ public class ItemCategoryResource {
 
 
 
-//	@GET
-//	@Path("/Deprecated")
-//	@Produces(MediaType.APPLICATION_JSON)
-//	public Response getItemCategories(
-//			@QueryParam("ShopID")Integer shopID,
-//			@QueryParam("ParentID")Integer parentID,@QueryParam("IsDetached")Boolean parentIsNull,
-//			@QueryParam("latCenter")Double latCenter,@QueryParam("lonCenter")Double lonCenter,
-//			@QueryParam("deliveryRangeMax")Double deliveryRangeMax,
-//			@QueryParam("deliveryRangeMin")Double deliveryRangeMin,
-//			@QueryParam("proximity")Double proximity,
-//			@QueryParam("SortBy") String sortBy,
-//			@QueryParam("Limit") Integer limit, @QueryParam("Offset") Integer offset)
-//	{
-//
-//
-//		List<ItemCategory> list =
-//				itemCategoryDAO.getItemCategoriesJoinRecursive(
-//						shopID, parentID,parentIsNull,
-//						latCenter,lonCenter,
-//						deliveryRangeMin,
-//						deliveryRangeMax,
-//						proximity,
-//						sortBy,
-//						limit,offset);
-//
-//
-//		GenericEntity<List<ItemCategory>> listEntity = new GenericEntity<List<ItemCategory>>(list){
-//
-//			};
-//
-//
-//			if(list.size()<=0)
-//			{
-//				Response response = Response.status(Status.NO_CONTENT)
-//						.entity(listEntity)
-//						.build();
-//
-//				return response;
-//
-//			}else
-//			{
-//				Response response = Response.status(Status.OK)
-//						.entity(listEntity)
-//						.build();
-//
-//				return response;
-//			}
-//
-//	}
+
 
 
 	@GET
@@ -460,6 +406,7 @@ public class ItemCategoryResource {
 			{
 				limit = max_limit;
 			}
+
 		}
 
 
@@ -584,31 +531,7 @@ public class ItemCategoryResource {
 
 
 
-	/*@GET
-	@Path("/{itemCategoryID}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response checkRoot(@PathParam("itemCategoryID")Integer itemCategoryID)
-	{	
-		ItemCategory itemCategory = itemCategoryDAO.checkRoot(itemCategoryID);
-		
-		if(itemCategory!= null)
-		{
 
-			return Response.status(Status.OK)
-			.entity(itemCategory)
-			.build();
-			
-		} else 
-		{
-
-			return Response.status(Status.NO_CONTENT)
-					.build();
-			
-		}
-	}*/
-
-
-	// Add from Global
 
 
 

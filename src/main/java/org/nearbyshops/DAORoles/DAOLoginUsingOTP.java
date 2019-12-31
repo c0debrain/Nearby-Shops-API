@@ -465,6 +465,104 @@ public class DAOLoginUsingOTP {
 
 
 
+
+    public User checkUserExistsUsingAssociations(int global_user_id, String url_for_sds)
+    {
+
+
+        String queryPassword = "SELECT "
+
+                + User.USER_ID + ","
+                + User.USERNAME + ","
+                + User.ROLE + ""
+
+                + " FROM " + User.TABLE_NAME
+                + " INNER JOIN " + UserMarkets.TABLE_NAME + " ON ( " + User.TABLE_NAME + "." + User.USER_ID + " = " + UserMarkets.TABLE_NAME + "." + UserMarkets.LOCAL_USER_ID + " ) "
+                + " WHERE "
+                + " ( " + " ( " + UserMarkets.GLOBAL_USER_ID + " = ?" + ")"
+                + " AND " + " ( " + UserMarkets.MARKET_AGGREGATOR_URL + " = ?" + ")" + ")";
+
+
+
+//        CAST (" + User.TIMESTAMP_TOKEN_EXPIRES + " AS TIMESTAMP)"
+
+
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+
+        //Distributor distributor = null;
+        User user = null;
+
+        try {
+
+//            System.out.println(query);
+
+            connection = dataSource.getConnection();
+            statement = connection.prepareStatement(queryPassword);
+
+            int i = 0;
+            statement.setObject(++i,global_user_id); // global user id
+            statement.setString(++i,url_for_sds); // url for sds
+
+
+            rs = statement.executeQuery();
+
+            while(rs.next())
+            {
+                user = new User();
+
+                user.setUserID(rs.getInt(User.USER_ID));
+                user.setUsername(rs.getString(User.USERNAME));
+                user.setRole(rs.getInt(User.ROLE));
+            }
+
+
+            //System.out.println("Total itemCategories queried " + itemCategoryList.size());
+
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally
+
+        {
+
+            try {
+                if(rs!=null)
+                {rs.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(statement!=null)
+                {statement.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return user;
+    }
+
+
+
     public int insertUserProfile(User user, String service_url_of_sds,boolean getRowCount)
     {
 
@@ -629,110 +727,6 @@ public class DAOLoginUsingOTP {
 
 
 
-
-
-
-
-
-    public User checkUserExistsUsingAssociations(int global_user_id, String url_for_sds)
-    {
-
-
-        String queryPassword = "SELECT "
-
-                + User.USER_ID + ","
-                + User.USERNAME + ","
-                + User.ROLE + ""
-
-                + " FROM " + User.TABLE_NAME
-                + " INNER JOIN " + UserMarkets.TABLE_NAME + " ON ( " + User.TABLE_NAME + "." + User.USER_ID + " = " + UserMarkets.TABLE_NAME + "." + UserMarkets.LOCAL_USER_ID + " ) "
-                + " WHERE "
-                + " ( " + " ( " + UserMarkets.GLOBAL_USER_ID + " = ?" + ")"
-                + " AND " + " ( " + UserMarkets.MARKET_AGGREGATOR_URL + " = ?" + ")" + ")";
-
-
-
-//        CAST (" + User.TIMESTAMP_TOKEN_EXPIRES + " AS TIMESTAMP)"
-
-
-
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-
-
-        //Distributor distributor = null;
-        User user = null;
-
-        try {
-
-//            System.out.println(query);
-
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(queryPassword);
-
-            int i = 0;
-            statement.setObject(++i,global_user_id); // global user id
-            statement.setString(++i,url_for_sds); // url for sds
-
-
-            rs = statement.executeQuery();
-
-            while(rs.next())
-            {
-                user = new User();
-
-                user.setUserID(rs.getInt(User.USER_ID));
-                user.setUsername(rs.getString(User.USERNAME));
-                user.setRole(rs.getInt(User.ROLE));
-            }
-
-
-            //System.out.println("Total itemCategories queried " + itemCategoryList.size());
-
-
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally
-
-        {
-
-            try {
-                if(rs!=null)
-                {rs.close();}
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-            try {
-
-                if(statement!=null)
-                {statement.close();}
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-            try {
-
-                if(connection!=null)
-                {connection.close();}
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-
-        return user;
-    }
-
-
-
-
-
     public int updateUserProfileAssociated(User user, String url_for_sds)
     {
 
@@ -830,6 +824,7 @@ public class DAOLoginUsingOTP {
 
         return rowCountUpdated;
     }
+
 
 
 

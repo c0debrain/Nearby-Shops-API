@@ -132,17 +132,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
             }
 
-
-
-
-
     }
-
-
-
-
-
-
 
 
 
@@ -257,9 +247,6 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 //        System.out.println("Access Denied  : Role not allowed ");
         throw new NotAuthorizedException("Access is Denied ! Not permitted !. ");
     }
-
-
-
 
 
 

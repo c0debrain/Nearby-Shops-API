@@ -42,19 +42,6 @@ public class ShopItemByShopDAO {
 
 
 
-//			String queryNormal = "SELECT * FROM " + ShopItem.TABLE_NAME;
-
-
-
-		/*
-
-		+ "6371 * acos(cos( radians("
-					+ latCenter + ")) * cos( radians( lat_center) ) * cos(radians( lon_center ) - radians("
-					+ lonCenter + "))"
-					+ " + sin( radians(" + latCenter + ")) * sin(radians(lat_center))) as distance" + ","
-
-		*/
-
 
 			String queryJoin = "SELECT "
 
