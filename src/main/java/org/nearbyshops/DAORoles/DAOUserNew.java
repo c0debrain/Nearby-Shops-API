@@ -1184,11 +1184,28 @@ public class DAOUserNew {
 
 
 
+
         if(shopID!=null)
         {
-            queryJoin = queryJoin + " AND ( " + User.TABLE_NAME + "." + User.ROLE + " = " + GlobalConstants.ROLE_SHOP_STAFF_CODE + " AND " +  ShopStaffPermissions.TABLE_NAME + "." + ShopStaffPermissions.SHOP_ID + " = ? )"
-                                  + " AND ( " + User.TABLE_NAME + "." + User.ROLE + " = " + GlobalConstants.ROLE_DELIVERY_GUY_CODE +  " AND "  + DeliveryGuyData.TABLE_NAME + "." + DeliveryGuyData.SHOP_ID + " = ? )";
+
+            if(userRole==null || userRole==GlobalConstants.ROLE_DELIVERY_GUY_SELF_CODE)
+            {
+                queryJoin = queryJoin + " AND ( " + DeliveryGuyData.TABLE_NAME + "." + DeliveryGuyData.SHOP_ID + " = ? )";
+            }
+            else
+            {
+                queryJoin = queryJoin + " AND ( " + ShopStaffPermissions.TABLE_NAME + "." + ShopStaffPermissions.SHOP_ID + " = ? )";
+            }
+
+
+
+//            + " AND ( " + User.TABLE_NAME + "." + User.ROLE + " = " + GlobalConstants.ROLE_SHOP_STAFF_CODE + " AND " +  ShopStaffPermissions.TABLE_NAME + "." + ShopStaffPermissions.SHOP_ID + " = ? )"
+//            + User.TABLE_NAME + "." + User.ROLE + " = " + GlobalConstants.ROLE_DELIVERY_GUY_CODE +  " AND "
         }
+
+
+
+
 
 
 
@@ -1278,7 +1295,7 @@ public class DAOUserNew {
                 if(shopID!=null)
                 {
                     statement.setObject(++i,shopID);
-                    statement.setObject(++i,shopID);
+//                    statement.setObject(++i,shopID);
                 }
 
 
@@ -1322,10 +1339,13 @@ public class DAOUserNew {
                     statement.setObject(++i,gender);
                 }
 
+
+
+
                 if(shopID!=null)
                 {
                     statement.setObject(++i,shopID);
-                    statement.setObject(++i,shopID);
+//                    statement.setObject(++i,shopID);
                 }
 
 
