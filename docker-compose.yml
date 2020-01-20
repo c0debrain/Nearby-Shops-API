@@ -1,0 +1,17 @@
+version: '2'
+services:
+  postgresdb:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres_user"
+      POSTGRES_PASSWORD: "postgres_pass"
+      POSTGRES_DB: "nearbyshopsdb"
+  app:
+    build:
+      context: ./docker
+    volumes:
+      - "./docker/api_config.properties:/api_config.properties"
+    links:
+      - postgresdb
