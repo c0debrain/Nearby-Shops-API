@@ -464,8 +464,6 @@ public class DAOLoginUsingOTP {
 
 
 
-
-
     public User checkUserExistsUsingAssociations(int global_user_id, String url_for_sds)
     {
 

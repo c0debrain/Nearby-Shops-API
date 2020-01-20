@@ -284,6 +284,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
+
     @GET
     @Path("/LoginUsingGlobalCredentials")
     @Produces(MediaType.APPLICATION_JSON)
@@ -426,16 +427,16 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
-//        if(daoLoginUsingOTP.checkUserExists(userProfileGlobal.getEmail(),userProfileGlobal.getPhone())!=null)
-//        {
-//            // user exist ...  update profile
-//
-//            rowsUpdated = daoLoginUsingOTP.updateUserProfile(userProfileGlobal);
-//        }
-//        else
-//        {
-            // check if user account has existing associations
+        if(daoLoginUsingOTP.checkUserExists(userProfileGlobal.getEmail(),userProfileGlobal.getPhone())!=null)
+        {
+            // user exist ...  update profile
+            rowsUpdated = daoLoginUsingOTP.updateUserProfile(userProfileGlobal);
+        }
+        else
+        {
 
+
+            //             check if user account has existing associations
 
             if(daoLoginUsingOTP.checkUserExistsUsingAssociations(userProfileGlobal.getUserID(),serviceURLForSDS)!=null)
             {
@@ -454,7 +455,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 //            rowsUpdated = daoLoginUsingOTP.insertUserProfile(userProfileGlobal,serviceURLForSDS,true);
 
-//        }
+        }
 
 
 
@@ -469,8 +470,6 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 //        userProfile.setPhone(phone);
-
-
 
 
 

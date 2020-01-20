@@ -4,13 +4,12 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
 import org.nearbyshops.ModelRoles.ShopStaffPermissions;
-import org.nearbyshops.ModelRoles.StaffPermissions;
 import org.nearbyshops.ModelRoles.User;
 
+
+
 import java.sql.*;
-import java.util.ArrayList;
 
 
 public class DAOShopStaff {
@@ -376,6 +375,8 @@ public class DAOShopStaff {
 
 
 
+
+
 	public Shop getShopForShopAdmin(int shopAdminID)
 	{
 		String query = " SELECT "
@@ -721,6 +722,114 @@ public class DAOShopStaff {
 		return rowCountUpdated;
 	}
 
+
+
+
+	public int becomeASeller(int userID)
+	{
+
+
+		Connection connection = null;
+		PreparedStatement statement = null;
+
+		int rowCount = -1;
+
+
+		// add joining credit to the users account
+		String updateRole =  " UPDATE " + User.TABLE_NAME
+				+ " SET " + User.ROLE + " = " + GlobalConstants.ROLE_SHOP_ADMIN_CODE
+				+ " WHERE " + User.TABLE_NAME + "." + User.USER_ID + " = ? "
+				+ " AND " + User.TABLE_NAME + "." + User.ROLE + " = " + GlobalConstants.ROLE_END_USER_CODE ;
+
+
+
+		String insertShop = " INSERT INTO " + Shop.TABLE_NAME
+				+ "(" + Shop.SHOP_ADMIN_ID + ","
+				+ Shop.SHOP_ENABLED + ","
+				+ Shop.SHOP_WAITLISTED + ""
+
+				+ ") " +
+				" VALUES( ?,?,? )";
+
+
+
+
+		try {
+
+			connection = dataSource.getConnection();
+			connection.setAutoCommit(false);
+
+			int i = 0;
+
+
+			statement = connection.prepareStatement(updateRole);
+
+			statement.setObject(++i,userID);
+			rowCount = statement.executeUpdate();
+
+
+			if (rowCount == 1)
+			{
+
+				statement = connection.prepareStatement(insertShop);
+				i = 0;
+
+				statement.setObject(++i,userID);
+				statement.setObject(++i,null);
+				statement.setObject(++i,false);
+
+				statement.executeUpdate();
+
+			}
+
+
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+			if (connection != null) {
+				try {
+
+
+					rowCount = 0;
+
+					connection.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		finally
+		{
+
+
+
+			if (statement != null) {
+				try {
+					statement.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+
+			try {
+
+				if(connection!=null)
+				{connection.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+
+		return rowCount;
+
+	}
 
 
 

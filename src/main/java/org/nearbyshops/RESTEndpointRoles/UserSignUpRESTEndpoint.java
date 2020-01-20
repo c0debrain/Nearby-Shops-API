@@ -42,10 +42,11 @@ public class UserSignUpRESTEndpoint {
 
 
 
-    @POST
-    @Path("/ShopAdminRegistration")
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
+
+//    @POST
+//    @Path("/ShopAdminRegistration")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    @Consumes(MediaType.APPLICATION_JSON)
     public Response RegisterShopAdmin(User user)
     {
         return userRegistration(user,GlobalConstants.ROLE_SHOP_ADMIN_CODE);
@@ -56,6 +57,7 @@ public class UserSignUpRESTEndpoint {
 
     private Response userRegistration(User user, int role)
     {
+
         if(user==null)
         {
             throw new WebApplicationException();
@@ -147,6 +149,7 @@ public class UserSignUpRESTEndpoint {
 
 
     }
+
 
 
 

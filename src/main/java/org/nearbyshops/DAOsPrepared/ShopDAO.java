@@ -19,7 +19,9 @@ public class ShopDAO {
 
 	private HikariDataSource dataSource = Globals.getDataSource();
 
-	
+
+
+
 	public int insertShop(Shop shop)
 	{
 		

@@ -584,8 +584,6 @@ public class ShopResource {
 
 		Shop shop = Globals.daoShopStaff.getShopForShopAdmin(((User) Globals.accountApproved).getUserID());
 
-
-
 		if(shop!= null)
 		{
 			return Response.status(Status.OK)
@@ -604,6 +602,32 @@ public class ShopResource {
 
 
 
+
+	@PUT
+	@Path("/BecomeASeller")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@RolesAllowed({GlobalConstants.ROLE_END_USER})
+	public Response becomeASeller()
+	{
+
+		User user = (User) Globals.accountApproved;
+
+		int rowCount = Globals.daoShopStaff.becomeASeller(user.getUserID());
+
+
+		if(rowCount >= 1)
+		{
+			return Response.status(Response.Status.OK)
+					.build();
+		}
+		else {
+
+			return Response.status(Status.NOT_MODIFIED)
+					.build();
+		}
+
+
+	}
 
 
 
