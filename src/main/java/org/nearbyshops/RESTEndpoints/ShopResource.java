@@ -381,43 +381,56 @@ public class ShopResource {
             @QueryParam("proximity")Double proximity,
             @QueryParam("SearchString") String searchString,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit") Integer limit, @QueryParam("Offset") Integer offset,
+            @QueryParam("Limit") int limit, @QueryParam("Offset") int offset,
             @QueryParam("metadata_only")Boolean metaonly
 	)
 	{
 
-		int set_limit = 30;
-		int set_offset = 0;
-		final int max_limit = 100;
+
+		//
+//		int set_limit = 30;
+//		int set_offset = 0;
+//		final int max_limit = 100;
+//
+//
+//		if(limit!= null) {
+//
+//			if (limit >= max_limit) {
+//
+//				set_limit = max_limit;
+//			}
+//			else
+//			{
+//
+//				set_limit = limit;
+//			}
+//		}
+//
+
+//		if(offset!=null)
+//		{
+//			set_offset = offset;
+//		}
 
 
-		if(limit!= null) {
 
-			if (limit >= max_limit) {
-
-				set_limit = max_limit;
-			}
-			else
-			{
-
-				set_limit = limit;
-			}
-
-		}
-
-		if(offset!=null)
+		if(limit >= GlobalConstants.max_limit)
 		{
-			set_offset = offset;
+			limit = GlobalConstants.max_limit;
 		}
+
+
+
+
 
 
 		ShopEndPoint endPoint = shopDAO.getEndPointMetadata(itemCategoryID,
 				latCenter,lonCenter,deliveryRangeMin,deliveryRangeMax,proximity,searchString);
 
 
-		endPoint.setLimit(set_limit);
-		endPoint.setMax_limit(max_limit);
-		endPoint.setOffset(set_offset);
+		endPoint.setLimit(limit);
+		endPoint.setMax_limit(GlobalConstants.max_limit);
+		endPoint.setOffset(offset);
 
 
 		ArrayList<Shop> shopsList = null;
@@ -531,11 +544,6 @@ public class ShopResource {
 				.build();
 
 	}
-
-
-
-
-
 
 
 

@@ -481,8 +481,9 @@ public class DAOShopStaff {
 	{
 
 		String updateStatement = "UPDATE " + User.TABLE_NAME
-				+ " SET " + User.ROLE + "=?"
-				+ " WHERE " + User.USER_ID + " = ?";
+						    	+ " SET " + User.ROLE + "=?"
+						    	+ " WHERE " + User.USER_ID + " = ?"
+								+ " AND " + User.ROLE + " = " + GlobalConstants.ROLE_END_USER_CODE;
 
 
 		String insertPermissions = "INSERT INTO " + ShopStaffPermissions.TABLE_NAME

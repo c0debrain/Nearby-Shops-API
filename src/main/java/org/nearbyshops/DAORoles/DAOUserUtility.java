@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Shop;
 import org.nearbyshops.ModelRoles.ShopStaffPermissions;
+import org.nearbyshops.ModelRoles.User;
 
 import java.sql.*;
 
@@ -11,7 +12,6 @@ public class DAOUserUtility {
 
 
     private HikariDataSource dataSource = Globals.getDataSource();
-
 
 
 
@@ -85,8 +85,6 @@ public class DAOUserUtility {
 
         return shopID;
     }
-
-
 
     public int getShopIDforShopStaff(int shopStaffID) {
 
@@ -163,6 +161,101 @@ public class DAOUserUtility {
         }
 
         return shopID;
+    }
+
+
+
+
+    public int getUserID(String username)
+    {
+
+
+        String queryPassword = "SELECT "
+
+                + User.USER_ID + ","
+                + User.USERNAME + ","
+                + User.ROLE + ""
+
+                + " FROM " + User.TABLE_NAME
+                + " WHERE "
+                + " ( " + User.USERNAME + " = ? "
+                + " OR " + " CAST ( " +  User.USER_ID + " AS text ) " + " = ? "
+                + " OR " + " ( " + User.E_MAIL + " = ?" + ")"
+                + " OR " + " ( " + User.PHONE + " = ?" + ")" + ")";
+
+
+
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+
+        int userID = -1;
+
+        try {
+
+//            System.out.println(query);
+
+            connection = dataSource.getConnection();
+            statement = connection.prepareStatement(queryPassword);
+
+            int i = 0;
+            statement.setString(++i,username); // username
+            statement.setString(++i,username); // userID
+            statement.setString(++i,username); // email
+            statement.setString(++i,username); // phone
+
+
+            rs = statement.executeQuery();
+
+            while(rs.next())
+            {
+                userID = rs.getInt(User.USER_ID);
+            }
+
+
+            //System.out.println("Total itemCategories queried " + itemCategoryList.size());
+
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally
+
+        {
+
+            try {
+                if(rs!=null)
+                {rs.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(statement!=null)
+                {statement.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+
+
+        return userID;
     }
 
 

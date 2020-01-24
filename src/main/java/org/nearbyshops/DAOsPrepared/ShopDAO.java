@@ -1328,22 +1328,27 @@ public class ShopDAO {
 
 
 
-		if(limit !=null)
-		{
 
-			String queryPartLimitOffset = "";
+		queryJoin = queryJoin + " LIMIT " + limit + " " + " OFFSET " + offset;
 
-			if(offset!=null)
-			{
-				queryPartLimitOffset = " LIMIT " + limit + " " + " OFFSET " + offset;
 
-			}else
-			{
-				queryPartLimitOffset = " LIMIT " + limit + " " + " OFFSET " + 0;
-			}
 
-			queryJoin = queryJoin + queryPartLimitOffset;
-		}
+//		if(limit !=null)
+//		{
+//
+//			String queryPartLimitOffset = "";
+//
+//			if(offset!=null)
+//			{
+//				queryPartLimitOffset = " LIMIT " + limit + " " + " OFFSET " + offset;
+//
+//			}else
+//			{
+//				queryPartLimitOffset = " LIMIT " + limit + " " + " OFFSET " + 0;
+//			}
+//
+//			queryJoin = queryJoin + queryPartLimitOffset;
+//		}
 
 
 
