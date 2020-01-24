@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Shop;
+import org.nearbyshops.ModelRoles.DeliveryGuyData;
 import org.nearbyshops.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.ModelRoles.User;
 
@@ -17,159 +18,6 @@ public class DAOShopStaff {
 
 	private HikariDataSource dataSource = Globals.getDataSource();
 
-
-
-	public Shop getShopIDForShopAdmin(int shopAdminID)
-	{
-		String query =  " SELECT " + Shop.TABLE_NAME + "." + Shop.SHOP_ID + "" +
-				" FROM " + Shop.TABLE_NAME +
-				" WHERE " + Shop.SHOP_ADMIN_ID + " = " + shopAdminID ;
-
-
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet rs = null;
-		Shop shop = null;
-
-		try {
-
-			connection = dataSource.getConnection();
-			statement = connection.createStatement();
-
-			rs = statement.executeQuery(query);
-
-			while(rs.next())
-			{
-
-				shop = new Shop();
-
-				shop.setShopID(rs.getInt(Shop.SHOP_ID));
-				shop.setShopAdminID(shopAdminID);
-			}
-
-
-//			System.out.println("Total Shops queried " + shopList.size());
-
-
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-		finally
-
-		{
-
-			try {
-				if(rs!=null)
-				{rs.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(statement!=null)
-				{statement.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(connection!=null)
-				{connection.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return shop;
-	}
-
-
-
-	public int getShopIDforShopStaff(int shopStaffID) {
-
-		String query = "SELECT " + ShopStaffPermissions.SHOP_ID + ""
-					+ " FROM "   + ShopStaffPermissions.TABLE_NAME
-					+ " WHERE "  + ShopStaffPermissions.STAFF_ID + " = ?";
-
-
-
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet rs = null;
-
-
-		//Distributor distributor = null;
-		int shopID = -1;
-
-		try {
-
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(query);
-
-			statement.setObject(1,shopStaffID);
-
-			rs = statement.executeQuery();
-
-
-			while(rs.next())
-			{
-				shopID = rs.getInt(ShopStaffPermissions.SHOP_ID);
-			}
-
-
-
-
-			//System.out.println("Total itemCategories queried " + itemCategoryList.size());
-
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally
-
-		{
-
-			try {
-				if (rs != null) {
-					rs.close();
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if (statement != null) {
-					statement.close();
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if (connection != null) {
-					connection.close();
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return shopID;
-	}
 
 
 
@@ -628,7 +476,8 @@ public class DAOShopStaff {
 
 
 
-	public int upgradeUserToShopStaff(int userID, int shopID, int secretCode, int role)
+
+	public int upgradeUserToStaff(int userID, int shopID, int secretCode, int role)
 	{
 
 		String updateStatement = "UPDATE " + User.TABLE_NAME
@@ -643,8 +492,17 @@ public class DAOShopStaff {
 				+ ") values(?,?)"
 				+ " ON CONFLICT (" + ShopStaffPermissions.STAFF_ID + ")"
 				+ " DO UPDATE "
-				+ " SET "
-				+ ShopStaffPermissions.SHOP_ID + "= excluded." + ShopStaffPermissions.SHOP_ID ;
+				+ " SET " + ShopStaffPermissions.SHOP_ID + "= excluded." + ShopStaffPermissions.SHOP_ID ;
+
+
+		String insertDeliveryData = "INSERT INTO " + DeliveryGuyData.TABLE_NAME
+				+ "("
+				+ DeliveryGuyData.STAFF_USER_ID + ","
+				+ DeliveryGuyData.SHOP_ID + ""
+				+ ") values(?,?)"
+				+ " ON CONFLICT (" + DeliveryGuyData.STAFF_USER_ID + ")"
+				+ " DO UPDATE "
+				+ " SET " + DeliveryGuyData.SHOP_ID + "= excluded." + DeliveryGuyData.SHOP_ID ;
 
 
 
@@ -670,12 +528,25 @@ public class DAOShopStaff {
 			rowCountUpdated = statement.executeUpdate();
 
 
-			statement = connection.prepareStatement(insertPermissions,PreparedStatement.RETURN_GENERATED_KEYS);
-			i = 0;
+			if(role==GlobalConstants.ROLE_SHOP_STAFF_CODE)
+			{
+				statement = connection.prepareStatement(insertPermissions,PreparedStatement.RETURN_GENERATED_KEYS);
+				i = 0;
 
-			statement.setObject(++i,userID);
-			statement.setObject(++i,shopID);
-			statement.executeUpdate();
+				statement.setObject(++i,userID);
+				statement.setObject(++i,shopID);
+				statement.executeUpdate();
+
+			}
+			else if(role==GlobalConstants.ROLE_DELIVERY_GUY_SELF_CODE)
+			{
+				statement = connection.prepareStatement(insertDeliveryData,PreparedStatement.RETURN_GENERATED_KEYS);
+				i = 0;
+
+				statement.setObject(++i,userID);
+				statement.setObject(++i,shopID);
+				statement.executeUpdate();
+			}
 
 
 			connection.commit();

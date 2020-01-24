@@ -1183,8 +1183,6 @@ public class DAOUserNew {
 
 
 
-
-
         if(shopID!=null)
         {
 
@@ -1196,7 +1194,6 @@ public class DAOUserNew {
             {
                 queryJoin = queryJoin + " AND ( " + ShopStaffPermissions.TABLE_NAME + "." + ShopStaffPermissions.SHOP_ID + " = ? )";
             }
-
 
 
 //            + " AND ( " + User.TABLE_NAME + "." + User.ROLE + " = " + GlobalConstants.ROLE_SHOP_STAFF_CODE + " AND " +  ShopStaffPermissions.TABLE_NAME + "." + ShopStaffPermissions.SHOP_ID + " = ? )"

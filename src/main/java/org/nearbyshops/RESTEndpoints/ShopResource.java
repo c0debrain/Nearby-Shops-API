@@ -8,7 +8,6 @@ import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
 import org.nearbyshops.Model.Shop;
 import org.nearbyshops.ModelEndpoint.ShopEndPoint;
-import org.nearbyshops.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.ModelRoles.StaffPermissions;
 import org.nearbyshops.ModelRoles.User;
 
@@ -198,8 +197,7 @@ public class ShopResource {
 
 		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
-			shopID = shop.getShopID();
+			shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
 		}
 		else if(user.getRole()==GlobalConstants.ROLE_STAFF_CODE)
 		{
@@ -581,8 +579,11 @@ public class ShopResource {
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
 	public Response getShopForShopAdmin()
 	{
+		User user = ((User) Globals.accountApproved);
 
-		Shop shop = Globals.daoShopStaff.getShopForShopAdmin(((User) Globals.accountApproved).getUserID());
+		Shop shop = Globals.daoShopStaff.getShopForShopAdmin(user.getUserID());
+
+
 
 		if(shop!= null)
 		{

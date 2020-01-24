@@ -210,13 +210,11 @@ public class OrderResource {
 		{
 			if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 			{
-				Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
-				shopID = shop.getShopID();
-
+				shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
 			}
 			else if(user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
 			{
-				shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
+				shopID = Globals.daoUserUtility.getShopIDforShopStaff(user.getUserID());
 			}
 
 		}

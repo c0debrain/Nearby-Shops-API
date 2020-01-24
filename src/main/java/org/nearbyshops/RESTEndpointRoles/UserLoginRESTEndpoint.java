@@ -480,10 +480,8 @@ public class UserLoginRESTEndpoint {
 
             if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
             {
-                Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
-                shopID = shop.getShopID();
+                shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
             }
-
 
 
             if(limit >= GlobalConstants.max_limit)
@@ -524,8 +522,6 @@ public class UserLoginRESTEndpoint {
                     .entity(endPoint)
                     .build();
     }
-
-
 
 
 

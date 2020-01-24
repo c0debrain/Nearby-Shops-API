@@ -51,15 +51,12 @@ public class ShopItemResource {
 
 		if(shopAdmin.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-
-			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(shopAdmin.getUserID());
-			shopID = shop.getShopID();
-
+			shopID = Globals.daoUserUtility.getShopIDForShopAdmin(shopAdmin.getUserID());
 		}
 		else if(shopAdmin.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
 		{
 
-			shopID = Globals.daoShopStaff.getShopIDforShopStaff(shopAdmin.getUserID());
+			shopID = Globals.daoUserUtility.getShopIDforShopStaff(shopAdmin.getUserID());
 			ShopStaffPermissions permissions = Globals.daoShopStaff.getShopStaffPermissions(shopAdmin.getUserID());
 
 
@@ -127,7 +124,7 @@ public class ShopItemResource {
 
 		if(user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE) {
 
-			int shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
+			int shopID = Globals.daoUserUtility.getShopIDforShopStaff(user.getUserID());
 			ShopStaffPermissions permissions = Globals.daoShopStaff.getShopStaffPermissions(user.getUserID());
 
 
@@ -148,7 +145,7 @@ public class ShopItemResource {
 		}
 		else if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-			int shopID = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID()).getShopID();
+			int shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
 
 
 			for(ShopItem shopItem : itemList)
@@ -201,15 +198,12 @@ public class ShopItemResource {
 
 		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-
-			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
-			shopID = shop.getShopID();
-
+			shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
 		}
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
 		{
 
-			shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
+			shopID = Globals.daoUserUtility.getShopIDforShopStaff(user.getUserID());
 			ShopStaffPermissions permissions = Globals.daoShopStaff.getShopStaffPermissions(user.getUserID());
 
 
@@ -267,15 +261,12 @@ public class ShopItemResource {
 
 		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-
-			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
-			shopID = shop.getShopID();
-
+			shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
 		}
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
 		{
 
-			shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
+			shopID = Globals.daoUserUtility.getShopIDforShopStaff(user.getUserID());
 			ShopStaffPermissions permissions = Globals.daoShopStaff.getShopStaffPermissions(user.getUserID());
 
 
@@ -322,13 +313,12 @@ public class ShopItemResource {
 
 		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-			Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
-			shopID = shop.getShopID();
+			shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
 		}
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
 		{
 
-			shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
+			shopID = Globals.daoUserUtility.getShopIDforShopStaff(user.getUserID());
 			ShopStaffPermissions permissions = Globals.daoShopStaff.getShopStaffPermissions(user.getUserID());
 
 			if (!permissions.isPermitUpdateItemsInShop()) {
@@ -378,7 +368,7 @@ public class ShopItemResource {
 
 		if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
-			 shopID = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID()).getShopID();
+			 shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
 
 		}
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
@@ -394,7 +384,7 @@ public class ShopItemResource {
 			}
 
 
-			shopID = Globals.daoShopStaff.getShopIDforShopStaff(user.getUserID());
+			shopID = Globals.daoUserUtility.getShopIDforShopStaff(user.getUserID());
 		}
 
 

@@ -380,8 +380,7 @@ public class DAOLoginUsingOTP {
 
         String updateStatement = "UPDATE " + User.TABLE_NAME
 
-                + " SET "
-                + User.PASSWORD + "=?,"
+                + " SET " + User.PASSWORD + "=?,"
 
                 + User.E_MAIL + "=?,"
                 + User.PHONE + "=?,"
@@ -391,7 +390,8 @@ public class DAOLoginUsingOTP {
                 + User.IS_ACCOUNT_PRIVATE + "=?,"
                 + User.ABOUT + "=?"
 
-                + " WHERE " + " ( " + " ( " + User.E_MAIL + " = ?" + ")" + " OR " + " ( " + User.PHONE + " = ?" + ")" + ")";
+                + " WHERE "
+                + " ( " + " ( " + User.E_MAIL + " = ?" + ")" + " OR " + " ( " + User.PHONE + " = ?" + ")" + ")";
 
 
 

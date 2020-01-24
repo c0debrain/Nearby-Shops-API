@@ -3,16 +3,12 @@ package org.nearbyshops.RESTEndpoints;
 import net.coobird.thumbnailator.Thumbnails;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.nearbyshops.DAOsPrepared.ItemImagesDAO;
 import org.nearbyshops.DAOsPrepared.ShopImageDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
-import org.nearbyshops.Model.ItemImage;
 import org.nearbyshops.Model.Shop;
 import org.nearbyshops.Model.ShopImage;
-import org.nearbyshops.ModelEndpoint.ItemImageEndPoint;
-import org.nearbyshops.ModelEndpoint.OrderEndPoint;
 import org.nearbyshops.ModelEndpoint.ShopImageEndPoint;
 import org.nearbyshops.ModelRoles.User;
 
@@ -27,7 +23,6 @@ import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 
 
 @Path("/api/v1/ShopImage")
@@ -48,8 +43,8 @@ public class ShopImageResource {
 
         User user = (User) Globals.accountApproved;
 
-        Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
-        shopImage.setShopID(shop.getShopID());
+        int shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
+        shopImage.setShopID(shopID);
 
 
         rowCount = Globals.shopImageDAO.saveShopImage(shopImage,true);
@@ -90,10 +85,7 @@ public class ShopImageResource {
 
         User user = (User) Globals.accountApproved;
 
-
-        Shop shop = Globals.daoShopStaff.getShopIDForShopAdmin(user.getUserID());
-        shopImage.setShopID(shop.getShopID());
-
+        shopImage.setShopID(Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID()));
 
         int rowCount = shopImageDAO.updateShopImage(shopImage);
 

@@ -1,14 +1,9 @@
 package org.nearbyshops.RESTEndpointRoles;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
 import org.nearbyshops.ModelRoles.ShopStaffPermissions;
-import org.nearbyshops.ModelRoles.StaffPermissions;
 import org.nearbyshops.ModelRoles.User;
 
 import javax.annotation.security.RolesAllowed;
@@ -17,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static org.nearbyshops.Globals.Globals.daoShopStaff;
-import static org.nearbyshops.Globals.Globals.daoStaff;
+import static org.nearbyshops.Globals.Globals.daoUserUtility;
 
 /**
  * Created by sumeet on 30/8/17.
@@ -66,7 +61,7 @@ public class ShopStaffLoginRESTEndpoint {
     {
 
         int shopAdminID = ((User)Globals.accountApproved).getUserID();
-        int shopID = daoShopStaff.getShopIDForShopAdmin(shopAdminID).getShopID();
+        int shopID = daoUserUtility.getShopIDForShopAdmin(shopAdminID);
         permissions.setShopID(shopID);
 
 
@@ -99,10 +94,10 @@ public class ShopStaffLoginRESTEndpoint {
     {
 
         int shopAdminID = ((User)Globals.accountApproved).getUserID();
-        int shopID = daoShopStaff.getShopIDForShopAdmin(shopAdminID).getShopID();
+        int shopID = daoUserUtility.getShopIDForShopAdmin(shopAdminID);
 
 
-        int rowCount = daoShopStaff.upgradeUserToShopStaff(userID,shopID,0,role);
+        int rowCount = daoShopStaff.upgradeUserToStaff(userID,shopID,0,role);
 
 
         try {
