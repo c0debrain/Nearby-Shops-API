@@ -71,10 +71,12 @@ public class Main {
         GlobalConfig.loadGlobalConfiguration();
 
 //        createDB();
-//        upgradeTables();
+        upgradeTables();
+
 
         createTables();
         startJettyServer();
+
 
 
         setupFirebaseAdminSDK();
@@ -395,9 +397,11 @@ public class Main {
             statement = connection.createStatement();
 
 
-//            statement.executeUpdate(Shop.addColumns);
+            statement.executeUpdate(User.upgradeTableSchema);
+//            statement.executeUpdate(Shop.removeNotNull);
 
-            statement.executeUpdate(Shop.removeNotNull);
+
+
 
 
             System.out.println("Tables Upgrade Complete ... !");
@@ -438,7 +442,6 @@ public class Main {
         }
 
     }
-
 
 
 

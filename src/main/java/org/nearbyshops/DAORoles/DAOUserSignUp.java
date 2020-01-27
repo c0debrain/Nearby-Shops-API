@@ -61,6 +61,7 @@ public class DAOUserSignUp {
 
                 + User.NAME + ","
                 + User.GENDER + ","
+                + User.SECRET_CODE + ","
 
                 + User.PROFILE_IMAGE_URL + ","
                 + User.ROLE + ","
@@ -70,7 +71,7 @@ public class DAOUserSignUp {
                 + User.ABOUT + ""
                 + ") "
                 + " Select "
-                + " ?,? ,?,? ,?,?,?,?,?,? "
+                + " ?,? ,?,?,? ,?,?,?,?,?,? "
                 + " from " + EmailVerificationCode.TABLE_NAME
                 + " WHERE "
                 + "("
@@ -93,6 +94,7 @@ public class DAOUserSignUp {
 
                 + User.NAME + ","
                 + User.GENDER + ","
+                + User.SECRET_CODE + ","
 
                 + User.PROFILE_IMAGE_URL + ","
                 + User.ROLE + ","
@@ -102,7 +104,7 @@ public class DAOUserSignUp {
                 + User.ABOUT + ""
                 + ") "
                 + " Select "
-                + " ?,? ,?,? ,?,?,?,?,?,? "
+                + " ?,? ,?,?,? ,?,?,?,?,?,? "
                 + " from " + PhoneVerificationCode.TABLE_NAME
                 + " WHERE "
                 + "("
@@ -254,6 +256,7 @@ public class DAOUserSignUp {
 
                 statement.setString(++i,user.getName());
                 statement.setObject(++i,user.getGender());
+                statement.setObject(++i,Globals.generateOTP(5));
 
                 statement.setString(++i,user.getProfileImagePath());
                 statement.setObject(++i,user.getRole());
@@ -301,6 +304,7 @@ public class DAOUserSignUp {
 
                 statement.setString(++i, user.getName());
                 statement.setObject(++i, user.getGender());
+                statement.setObject(++i,Globals.generateOTP(5));
 
                 statement.setString(++i, user.getProfileImagePath());
                 statement.setObject(++i, user.getRole());

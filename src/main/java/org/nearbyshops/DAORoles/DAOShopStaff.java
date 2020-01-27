@@ -483,7 +483,9 @@ public class DAOShopStaff {
 		String updateStatement = "UPDATE " + User.TABLE_NAME
 						    	+ " SET " + User.ROLE + "=?"
 						    	+ " WHERE " + User.USER_ID + " = ?"
-								+ " AND " + User.ROLE + " = " + GlobalConstants.ROLE_END_USER_CODE;
+								+ " AND " + User.SECRET_CODE + " = ?";
+
+//		+ " AND " + User.ROLE + " = " + GlobalConstants.ROLE_END_USER_CODE
 
 
 		String insertPermissions = "INSERT INTO " + ShopStaffPermissions.TABLE_NAME
@@ -525,6 +527,7 @@ public class DAOShopStaff {
 
 			statement.setInt(++i,role);
 			statement.setObject(++i,userID);
+			statement.setObject(++i,secretCode);
 
 			rowCountUpdated = statement.executeUpdate();
 

@@ -30,6 +30,8 @@ public class User {
     public static final String PHONE = "PHONE";
     public static final String NAME = "NAME";
 
+    public static final String SECRET_CODE = "SECRET_CODE";
+
     public static final String GENDER = "GENDER";
     public static final String PROFILE_IMAGE_URL = "PROFILE_IMAGE_URL";
     public static final String ROLE = "ROLE";
@@ -76,6 +78,8 @@ public class User {
                     + " " + User.PHONE + " text UNIQUE,"
                     + " " + User.NAME + " text,"
 
+                    + " " + User.SECRET_CODE + " int not null default 123456,"
+
                     + " " + User.GENDER + " boolean,"
 
                     + " " + User.PROFILE_IMAGE_URL + " text,"
@@ -109,6 +113,12 @@ public class User {
 
 
 
+	public static final String upgradeTableSchema =
+			"ALTER TABLE IF EXISTS " + User.TABLE_NAME
+					+ " ADD COLUMN IF NOT EXISTS " + User.SECRET_CODE + " int not null default 123456";
+//                    + " DROP COLUMN IF EXISTS " + User.SECRET_CODE ;
+
+
 
     // Instance Variables
     private int userID;
@@ -121,6 +131,7 @@ public class User {
     private String email;
     private String phone;
     private String name;
+    private int secretCode;
 
     private Boolean gender;
     private String profileImagePath;
@@ -191,6 +202,14 @@ public class User {
 
     // Getters and Setters
 
+
+    public int getSecretCode() {
+        return secretCode;
+    }
+
+    public void setSecretCode(int secretCode) {
+        this.secretCode = secretCode;
+    }
 
     public String getRt_phone_country_code() {
         return rt_phone_country_code;

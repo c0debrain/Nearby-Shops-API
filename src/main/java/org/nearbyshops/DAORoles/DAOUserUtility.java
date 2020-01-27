@@ -164,8 +164,6 @@ public class DAOUserUtility {
     }
 
 
-
-
     public int getUserID(String username)
     {
 

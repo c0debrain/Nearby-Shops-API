@@ -522,6 +522,7 @@ public class DAOUserNew {
 //                + User.E_MAIL + "=?,"
 //                + User.PHONE + "=?,"
                 + User.NAME + "=?,"
+                + User.SECRET_CODE + "=?,"
                 + User.GENDER + "=?,"
 
                 + User.PROFILE_IMAGE_URL + "=?,"
@@ -549,6 +550,7 @@ public class DAOUserNew {
 //            statement.setString(++i,user.getPhone());
 
             statement.setString(++i,user.getName());
+            statement.setInt(++i,user.getSecretCode());
             statement.setObject(++i,user.getGender());
 
             statement.setString(++i,user.getProfileImagePath());
@@ -910,6 +912,7 @@ public class DAOUserNew {
                 + User.E_MAIL + ","
                 + User.PHONE + ","
                 + User.NAME + ","
+                + User.SECRET_CODE + ","
                 + User.GENDER + ","
                 + User.PROFILE_IMAGE_URL + ","
                 + User.ROLE + ","
@@ -951,6 +954,7 @@ public class DAOUserNew {
                 user.setEmail(rs.getString(User.E_MAIL));
                 user.setPhone(rs.getString(User.PHONE));
                 user.setName(rs.getString(User.NAME));
+                user.setSecretCode(rs.getInt(User.SECRET_CODE));
                 user.setGender(rs.getBoolean(User.GENDER));
                 user.setProfileImagePath(rs.getString(User.PROFILE_IMAGE_URL));
                 user.setRole(rs.getInt(User.ROLE));
@@ -1012,6 +1016,7 @@ public class DAOUserNew {
                 + User.PHONE + ","
 //                + User.IS_PHONE_VERIFIED + ","
                 + User.NAME + ","
+                + User.SECRET_CODE + ","
                 + User.GENDER + ","
                 + User.PROFILE_IMAGE_URL + ","
                 + User.ROLE + ","
@@ -1080,6 +1085,7 @@ public class DAOUserNew {
                 user.setPhone(rs.getString(User.PHONE));
 //                user.setPhoneVerified(rs.getBoolean(User.IS_PHONE_VERIFIED));
                 user.setName(rs.getString(User.NAME));
+                user.setSecretCode(rs.getInt(User.SECRET_CODE));
                 user.setGender(rs.getBoolean(User.GENDER));
                 user.setProfileImagePath(rs.getString(User.PROFILE_IMAGE_URL));
                 user.setRole(rs.getInt(User.ROLE));
@@ -1429,6 +1435,7 @@ public class DAOUserNew {
                 + User.E_MAIL + ","
                 + User.PHONE + ","
                 + User.NAME + ","
+                + User.SECRET_CODE + ","
                 + User.GENDER + ","
                 + User.PROFILE_IMAGE_URL + ","
                 + User.ROLE + ","
@@ -1470,6 +1477,7 @@ public class DAOUserNew {
                 user.setEmail(rs.getString(User.E_MAIL));
                 user.setPhone(rs.getString(User.PHONE));
                 user.setName(rs.getString(User.NAME));
+                user.setSecretCode(rs.getInt(User.SECRET_CODE));
                 user.setGender(rs.getBoolean(User.GENDER));
                 user.setProfileImagePath(rs.getString(User.PROFILE_IMAGE_URL));
                 user.setRole(rs.getInt(User.ROLE));

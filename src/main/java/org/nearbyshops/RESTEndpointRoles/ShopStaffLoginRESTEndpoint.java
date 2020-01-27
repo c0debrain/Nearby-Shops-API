@@ -87,10 +87,11 @@ public class ShopStaffLoginRESTEndpoint {
 
 
     @PUT
-    @Path("/UpgradeUser/{emailorphone}/{Role}")
+    @Path("/UpgradeUser/{emailorphone}/{Role}/{SecretCode}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response upgradeUserToShopStaff(@PathParam("emailorphone")String emailorphone,@PathParam("Role")int role)
+    public Response upgradeUserToShopStaff(@PathParam("emailorphone")String emailorphone,@PathParam("Role")int role,
+                                           @PathParam("SecretCode")int secretCode)
     {
 
         int shopAdminID = ((User)Globals.accountApproved).getUserID();
@@ -98,7 +99,7 @@ public class ShopStaffLoginRESTEndpoint {
 
 
         int userID = daoUserUtility.getUserID(emailorphone);
-        int rowCount = daoShopStaff.upgradeUserToStaff(userID,shopID,0,role);
+        int rowCount = daoShopStaff.upgradeUserToStaff(userID,shopID,secretCode,role);
 
 
 
