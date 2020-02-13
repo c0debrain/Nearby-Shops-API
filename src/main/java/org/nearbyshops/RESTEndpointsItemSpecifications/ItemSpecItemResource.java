@@ -1,10 +1,10 @@
 package org.nearbyshops.RESTEndpointsItemSpecifications;
 
 
-import org.nearbyshops.DAOPreparedItemSpecification.ItemSpecificationItemDAO;
+import org.nearbyshops.DAOItemSpecification.ItemSpecificationItemDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelItemSpecification.ItemSpecificationItem;
+import org.nearbyshops.Model.ModelItemSpecification.ItemSpecificationItem;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;

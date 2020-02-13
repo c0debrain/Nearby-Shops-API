@@ -2,8 +2,8 @@ package org.nearbyshops.DAOBilling;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelBilling.Transaction;
-import org.nearbyshops.ModelBilling.TransactionEndpoint;
+import org.nearbyshops.Model.ModelBilling.Transaction;
+import org.nearbyshops.Model.ModelBilling.TransactionEndpoint;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

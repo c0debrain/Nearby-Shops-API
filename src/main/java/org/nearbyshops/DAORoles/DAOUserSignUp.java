@@ -3,9 +3,11 @@ package org.nearbyshops.DAORoles;
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
+import org.nearbyshops.Model.ModelRoles.EmailVerificationCode;
+import org.nearbyshops.Model.ModelRoles.PhoneVerificationCode;
+import org.nearbyshops.Model.ModelRoles.User;
 import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelBilling.Transaction;
-import org.nearbyshops.ModelRoles.*;
+import org.nearbyshops.Model.ModelBilling.Transaction;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -721,6 +723,101 @@ public class DAOUserSignUp {
 
 
 
+    public void createAdminUsingEmail(User user, boolean getRowCount)
+    {
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        int idOfInsertedRow = -1;
+        int rowCountItems = -1;
+
+
+        String insertItemSubmission = "INSERT INTO "
+                + User.TABLE_NAME
+                + "("
+                + User.ROLE + ","
+                + User.E_MAIL + ","
+                + User.PASSWORD + ""
+                + ") values(?,?,?)";
+
+
+
+
+        try {
+
+            connection = dataSource.getConnection();
+            connection.setAutoCommit(false);
+
+
+            statement = connection.prepareStatement(insertItemSubmission,PreparedStatement.RETURN_GENERATED_KEYS);
+            int i = 0;
+
+            statement.setObject(++i,GlobalConstants.ROLE_ADMIN_CODE);
+            statement.setString(++i,user.getEmail());
+            statement.setString(++i,user.getPassword());
+
+
+
+            rowCountItems = statement.executeUpdate();
+
+
+            ResultSet rs = statement.getGeneratedKeys();
+
+            if(rs.next())
+            {
+                idOfInsertedRow = rs.getInt(1);
+            }
+
+
+            connection.commit();
+
+
+
+            System.out.println("Admin profile Created : Row count : " + rowCountItems);
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+            if (connection != null) {
+                try {
+
+                    idOfInsertedRow=-1;
+                    rowCountItems = 0;
+
+                    connection.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        finally
+        {
+
+            if (statement != null) {
+                try {
+                    statement.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+
+    }
+
 
     public void createAdmin(User user, boolean getRowCount)
     {
@@ -819,16 +916,14 @@ public class DAOUserSignUp {
     }
 
 
-
-
-    public void updateAdminUsername(User user)
+    public void updateAdminEmail(User user)
     {
 
         String updateStatement = "UPDATE " + User.TABLE_NAME
 
                 + " SET "
 
-                + User.USERNAME + "=?,"
+                + User.E_MAIL + "=?,"
                 + User.PASSWORD + "=?"
 
                 + " WHERE " + User.ROLE + " = " + GlobalConstants.ROLE_ADMIN_CODE;
@@ -887,81 +982,6 @@ public class DAOUserSignUp {
             }
         }
 
-    }
-
-
-
-    public boolean checkRoleExists(int role)
-    {
-
-        String query = "SELECT " + User.USERNAME
-                    + " FROM " + User.TABLE_NAME
-                    + " WHERE " + User.ROLE + " = ?";
-
-
-        Connection connection = null;
-        PreparedStatement statement = null;
-        ResultSet rs = null;
-
-        System.out.println("Checked User Role  : " + role);
-
-//		ShopAdmin shopAdmin = null;
-
-
-
-        try {
-
-            connection = dataSource.getConnection();
-            statement = connection.prepareStatement(query);
-
-            int i = 0;
-            statement.setObject(++i,role);
-
-            rs = statement.executeQuery();
-
-
-            while(rs.next())
-            {
-
-                return true;
-            }
-
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } finally
-
-        {
-
-            try {
-                if(rs!=null)
-                {rs.close();}
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-            try {
-
-                if(statement!=null)
-                {statement.close();}
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-
-            try {
-
-                if(connection!=null)
-                {connection.close();}
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-
-        return false;
     }
 
 }

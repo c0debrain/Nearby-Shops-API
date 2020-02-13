@@ -3,7 +3,7 @@ package org.nearbyshops.DAOOrders;
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Order;
-import org.nearbyshops.ModelOrderStatus.OrderStatusHomeDelivery;
+import org.nearbyshops.Model.ModelOrderStatus.OrderStatusHomeDelivery;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -12,7 +12,6 @@ import java.sql.SQLException;
 public class DAOOrderDeliveryGuy {
 
     private HikariDataSource dataSource = Globals.getDataSource();
-
 
 
 

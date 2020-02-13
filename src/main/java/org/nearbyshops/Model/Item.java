@@ -1,7 +1,7 @@
 package org.nearbyshops.Model;
 
 
-import org.nearbyshops.ModelStats.ItemStats;
+import org.nearbyshops.Model.ModelStats.ItemStats;
 
 import java.sql.Timestamp;
 

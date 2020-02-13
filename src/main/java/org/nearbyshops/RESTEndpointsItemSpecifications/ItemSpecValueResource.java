@@ -3,13 +3,13 @@ package org.nearbyshops.RESTEndpointsItemSpecifications;
 import net.coobird.thumbnailator.Thumbnails;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.nearbyshops.DAOPreparedItemSpecification.ItemSpecValueDAOJoinOuter;
-import org.nearbyshops.DAOPreparedItemSpecification.ItemSpecificationValueDAO;
+import org.nearbyshops.DAOItemSpecification.ItemSpecValueDAOJoinOuter;
+import org.nearbyshops.DAOItemSpecification.ItemSpecificationValueDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
-import org.nearbyshops.ModelItemSpecification.EndPoints.ItemSpecValueEndPoint;
-import org.nearbyshops.ModelItemSpecification.ItemSpecificationValue;
+import org.nearbyshops.Model.ModelItemSpecification.EndPoints.ItemSpecValueEndPoint;
+import org.nearbyshops.Model.ModelItemSpecification.ItemSpecificationValue;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;

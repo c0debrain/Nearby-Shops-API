@@ -3,7 +3,7 @@ package org.nearbyshops.DAOsPrepared;
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.ItemImage;
-import org.nearbyshops.ModelEndpoint.ItemImageEndPoint;
+import org.nearbyshops.Model.ModelEndpoint.ItemImageEndPoint;
 
 import java.sql.*;
 import java.util.ArrayList;

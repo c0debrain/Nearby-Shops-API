@@ -3,11 +3,11 @@ package org.nearbyshops.DAOOrders;
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Order;
-import org.nearbyshops.ModelDelivery.DeliveryAddress;
+import org.nearbyshops.Model.ModelDelivery.DeliveryAddress;
 
-import org.nearbyshops.ModelEndpoint.OrderEndPoint;
-import org.nearbyshops.ModelOrderStatus.OrderStatusHomeDelivery;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelEndpoint.OrderEndPoint;
+import org.nearbyshops.Model.ModelOrderStatus.OrderStatusHomeDelivery;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -3,9 +3,8 @@ package org.nearbyshops.DAORoles;
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelAnalytics.ItemAnalytics;
-import org.nearbyshops.ModelRoles.User;
-import org.nearbyshops.ModelRoles.UserMarkets;
+import org.nearbyshops.Model.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.UserMarkets;
 
 import java.sql.*;
 
@@ -385,6 +384,7 @@ public class DAOLoginUsingOTP {
                 + User.E_MAIL + "=?,"
                 + User.PHONE + "=?,"
                 + User.NAME + "=?,"
+                + User.SECRET_CODE + "=?,"
                 + User.GENDER + "=?,"
 
                 + User.IS_ACCOUNT_PRIVATE + "=?,"
@@ -416,6 +416,7 @@ public class DAOLoginUsingOTP {
             statement.setString(++i,user.getEmail());
             statement.setString(++i,user.getPhone());
             statement.setString(++i,user.getName());
+            statement.setInt(++i,user.getSecretCode());
             statement.setBoolean(++i,user.getGender());
 
             statement.setBoolean(++i,user.isAccountPrivate());
@@ -580,6 +581,7 @@ public class DAOLoginUsingOTP {
                 + User.E_MAIL + ","
                 + User.PHONE + ","
                 + User.NAME + ","
+                + User.SECRET_CODE + ","
                 + User.GENDER + ","
 
                 + User.IS_ACCOUNT_PRIVATE + ","
@@ -615,6 +617,7 @@ public class DAOLoginUsingOTP {
             statement.setString(++i,user.getEmail());
             statement.setString(++i,user.getPhone());
             statement.setString(++i,user.getName());
+            statement.setInt(++i,user.getSecretCode());
             statement.setBoolean(++i,user.getGender());
 
             statement.setBoolean(++i,user.isAccountPrivate());
@@ -745,6 +748,7 @@ public class DAOLoginUsingOTP {
                 + User.E_MAIL + "=?,"
                 + User.PHONE + "=?,"
                 + User.NAME + "=?,"
+                + User.SECRET_CODE + "=?,"
                 + User.GENDER + "=?,"
 
                 + User.IS_ACCOUNT_PRIVATE + "=?,"
@@ -777,6 +781,7 @@ public class DAOLoginUsingOTP {
             statement.setString(++i,user.getEmail());
             statement.setString(++i,user.getPhone());
             statement.setString(++i,user.getName());
+            statement.setInt(++i,user.getSecretCode());
             statement.setBoolean(++i,user.getGender());
 
             statement.setBoolean(++i,user.isAccountPrivate());
@@ -822,8 +827,6 @@ public class DAOLoginUsingOTP {
 
         return rowCountUpdated;
     }
-
-
 
 
 

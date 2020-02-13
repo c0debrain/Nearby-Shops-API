@@ -1,8 +1,8 @@
 package org.nearbyshops.Model;
 
-import org.nearbyshops.ModelDelivery.DeliveryAddress;
-import org.nearbyshops.ModelRoles.User;
-import org.nearbyshops.ModelStats.OrderStats;
+import org.nearbyshops.Model.ModelDelivery.DeliveryAddress;
+import org.nearbyshops.Model.ModelRoles.User;
+import org.nearbyshops.Model.ModelStats.OrderStats;
 
 import java.sql.Timestamp;
 

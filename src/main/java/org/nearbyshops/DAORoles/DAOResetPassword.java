@@ -2,7 +2,7 @@ package org.nearbyshops.DAORoles;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import java.sql.*;
 

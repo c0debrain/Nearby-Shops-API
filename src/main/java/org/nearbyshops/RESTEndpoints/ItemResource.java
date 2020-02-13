@@ -12,10 +12,10 @@ import org.nearbyshops.Model.Image;
 import org.nearbyshops.Model.Item;
 import org.nearbyshops.Model.ItemCategory;
 import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelEndpoint.ItemCategoryEndPoint;
-import org.nearbyshops.ModelEndpoint.ItemEndPoint;
-import org.nearbyshops.ModelRoles.StaffPermissions;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelEndpoint.ItemCategoryEndPoint;
+import org.nearbyshops.Model.ModelEndpoint.ItemEndPoint;
+import org.nearbyshops.Model.ModelRoles.StaffPermissions;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;

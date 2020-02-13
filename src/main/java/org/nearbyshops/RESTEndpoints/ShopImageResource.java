@@ -7,10 +7,9 @@ import org.nearbyshops.DAOsPrepared.ShopImageDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
-import org.nearbyshops.Model.Shop;
 import org.nearbyshops.Model.ShopImage;
-import org.nearbyshops.ModelEndpoint.ShopImageEndPoint;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelEndpoint.ShopImageEndPoint;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;

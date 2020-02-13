@@ -4,9 +4,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelRoles.DeliveryGuyData;
-import org.nearbyshops.ModelRoles.ShopStaffPermissions;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.DeliveryGuyData;
+import org.nearbyshops.Model.ModelRoles.ShopStaffPermissions;
+import org.nearbyshops.Model.ModelRoles.User;
 
 
 

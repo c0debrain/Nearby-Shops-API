@@ -41,7 +41,7 @@ public class GlobalConfig {
         GlobalConstants.POSTGRES_PASSWORD = configuration.getString("postgres.password");
 
 
-        GlobalConstants.ADMIN_USERNAME = configuration.getString("admin_username");
+        GlobalConstants.ADMIN_EMAIL = configuration.getString("admin_email");
         GlobalConstants.ADMIN_PASSWORD = configuration.getString("admin_password");
 
         GlobalConstants.SMTP_SERVER_URL = configuration.getString("smtp_server_url");

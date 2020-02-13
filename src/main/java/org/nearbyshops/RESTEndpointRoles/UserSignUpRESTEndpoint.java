@@ -4,7 +4,9 @@ import org.nearbyshops.DAORoles.DAOUserSignUp;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Globals.SendSMS;
-import org.nearbyshops.ModelRoles.*;
+import org.nearbyshops.Model.ModelRoles.EmailVerificationCode;
+import org.nearbyshops.Model.ModelRoles.PhoneVerificationCode;
+import org.nearbyshops.Model.ModelRoles.User;
 import org.simplejavamail.email.Email;
 import org.simplejavamail.email.EmailBuilder;
 

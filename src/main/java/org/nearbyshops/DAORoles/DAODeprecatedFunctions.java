@@ -3,10 +3,10 @@ package org.nearbyshops.DAORoles;
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
+import org.nearbyshops.Model.ModelRoles.*;
 import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelBilling.Transaction;
-import org.nearbyshops.ModelRoles.*;
-import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
+import org.nearbyshops.Model.ModelBilling.Transaction;
+import org.nearbyshops.Model.ModelRoles.Endpoints.UserEndpoint;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

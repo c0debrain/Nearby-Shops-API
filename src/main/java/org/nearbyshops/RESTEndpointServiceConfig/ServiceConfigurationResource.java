@@ -1,11 +1,11 @@
 package org.nearbyshops.RESTEndpointServiceConfig;
 
 import net.coobird.thumbnailator.Thumbnails;
-import org.nearbyshops.DAOPreparedSettings.ServiceConfigurationDAOPrepared;
+import org.nearbyshops.DAOSettings.ServiceConfigurationDAOPrepared;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
-import org.nearbyshops.ModelSettings.ServiceConfigurationLocal;
+import org.nearbyshops.Model.ModelSettings.ServiceConfigurationLocal;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;

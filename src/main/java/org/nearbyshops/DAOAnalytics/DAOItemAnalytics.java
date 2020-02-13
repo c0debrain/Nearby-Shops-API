@@ -2,13 +2,11 @@ package org.nearbyshops.DAOAnalytics;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelAnalytics.ItemAnalytics;
-import org.nearbyshops.ModelAnalytics.ItemAnalyticsEndpoint;
-import org.nearbyshops.ModelReviewItem.FavouriteItem;
+import org.nearbyshops.Model.ModelAnalytics.ItemAnalytics;
+import org.nearbyshops.Model.ModelAnalytics.ItemAnalyticsEndpoint;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class DAOItemAnalytics {
 

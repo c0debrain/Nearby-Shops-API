@@ -3,11 +3,10 @@ package org.nearbyshops.DAOsPrepared;
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.ShopImage;
-import org.nearbyshops.ModelEndpoint.ShopImageEndPoint;
+import org.nearbyshops.Model.ModelEndpoint.ShopImageEndPoint;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.List;
 
 public class ShopImageDAO {
 

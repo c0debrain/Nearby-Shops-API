@@ -3,8 +3,8 @@ package org.nearbyshops.RESTEndpointBilling;
 
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelBilling.TransactionEndpoint;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelBilling.TransactionEndpoint;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.GET;

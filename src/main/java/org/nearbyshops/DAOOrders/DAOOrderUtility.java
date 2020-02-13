@@ -4,8 +4,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Order;
 import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.Endpoints.UserEndpoint;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -16,10 +16,7 @@ import java.util.ArrayList;
 public class DAOOrderUtility {
 
 
-
-
     private HikariDataSource dataSource = Globals.getDataSource();
-
 
 
     // fetch delivery guys assigned to the orders in the given shop with given status

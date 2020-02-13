@@ -2,12 +2,12 @@ package org.nearbyshops.RESTEndpointReviewItem;
 
 
 
-import org.nearbyshops.DAOPreparedReviewItem.ItemReviewDAOPrepared;
+import org.nearbyshops.DAOReviewItem.ItemReviewDAOPrepared;
 import org.nearbyshops.DAORoles.DAOUserNew;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelEndpointReview.ItemReviewEndPoint;
-import org.nearbyshops.ModelReviewItem.ItemReview;
-import org.nearbyshops.ModelReviewItem.ItemReviewStatRow;
+import org.nearbyshops.Model.ModelEndpointReview.ItemReviewEndPoint;
+import org.nearbyshops.Model.ModelReviewItem.ItemReview;
+import org.nearbyshops.Model.ModelReviewItem.ItemReviewStatRow;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

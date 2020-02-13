@@ -1,18 +1,14 @@
 package org.nearbyshops.DAORoles;
 
 import com.zaxxer.hikari.HikariDataSource;
-import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelRoles.DeliveryGuyData;
-import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
-import org.nearbyshops.ModelRoles.ShopStaffPermissions;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.DeliveryGuyData;
+import org.nearbyshops.Model.ModelRoles.ShopStaffPermissions;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 
 public class DAODeliveryGuy {

@@ -3,8 +3,8 @@ package org.nearbyshops.DAORoles;
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelRoles.ShopStaffPermissions;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.ShopStaffPermissions;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import java.sql.*;
 
@@ -256,6 +256,80 @@ public class DAOUserUtility {
         return userID;
     }
 
+
+
+    public boolean checkRoleExists(int role)
+    {
+
+        String query = "SELECT " + User.USERNAME
+                + " FROM " + User.TABLE_NAME
+                + " WHERE " + User.ROLE + " = ?";
+
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+        System.out.println("Checked User Role  : " + role);
+
+//		ShopAdmin shopAdmin = null;
+
+
+
+        try {
+
+            connection = dataSource.getConnection();
+            statement = connection.prepareStatement(query);
+
+            int i = 0;
+            statement.setObject(++i,role);
+
+            rs = statement.executeQuery();
+
+
+            while(rs.next())
+            {
+
+                return true;
+            }
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally
+
+        {
+
+            try {
+                if(rs!=null)
+                {rs.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(statement!=null)
+                {statement.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return false;
+    }
 
 
 }

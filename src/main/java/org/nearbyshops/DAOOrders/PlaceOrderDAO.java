@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.*;
-import org.nearbyshops.ModelStats.CartStats;
+import org.nearbyshops.Model.ModelStats.CartStats;
 
 import java.sql.*;
 import java.util.List;

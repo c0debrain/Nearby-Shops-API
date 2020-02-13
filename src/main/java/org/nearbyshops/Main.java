@@ -9,22 +9,22 @@ import org.nearbyshops.Globals.GlobalConfig;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.*;
-import org.nearbyshops.ModelAnalytics.ItemAnalytics;
-import org.nearbyshops.ModelAnalytics.ShopAnalytics;
-import org.nearbyshops.ModelBilling.Transaction;
-import org.nearbyshops.ModelDelivery.DeliveryAddress;
-import org.nearbyshops.ModelItemSpecification.ItemSpecificationItem;
-import org.nearbyshops.ModelItemSpecification.ItemSpecificationName;
-import org.nearbyshops.ModelItemSpecification.ItemSpecificationValue;
-import org.nearbyshops.ModelOneSignal.OneSignalIDs;
-import org.nearbyshops.ModelReviewItem.FavouriteItem;
-import org.nearbyshops.ModelReviewItem.ItemReview;
-import org.nearbyshops.ModelReviewItem.ItemReviewThanks;
-import org.nearbyshops.ModelReviewShop.FavouriteShop;
-import org.nearbyshops.ModelReviewShop.ShopReview;
-import org.nearbyshops.ModelReviewShop.ShopReviewThanks;
-import org.nearbyshops.ModelRoles.*;
-import org.nearbyshops.ModelSettings.ServiceConfigurationLocal;
+import org.nearbyshops.Model.ModelAnalytics.ItemAnalytics;
+import org.nearbyshops.Model.ModelAnalytics.ShopAnalytics;
+import org.nearbyshops.Model.ModelBilling.Transaction;
+import org.nearbyshops.Model.ModelDelivery.DeliveryAddress;
+import org.nearbyshops.Model.ModelItemSpecification.ItemSpecificationItem;
+import org.nearbyshops.Model.ModelItemSpecification.ItemSpecificationName;
+import org.nearbyshops.Model.ModelItemSpecification.ItemSpecificationValue;
+import org.nearbyshops.Model.ModelOneSignal.OneSignalIDs;
+import org.nearbyshops.Model.ModelReviewItem.FavouriteItem;
+import org.nearbyshops.Model.ModelReviewItem.ItemReview;
+import org.nearbyshops.Model.ModelReviewItem.ItemReviewThanks;
+import org.nearbyshops.Model.ModelReviewShop.FavouriteShop;
+import org.nearbyshops.Model.ModelReviewShop.ShopReview;
+import org.nearbyshops.Model.ModelReviewShop.ShopReviewThanks;
+import org.nearbyshops.Model.ModelRoles.*;
+import org.nearbyshops.Model.ModelSettings.ServiceConfigurationLocal;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -178,24 +178,20 @@ public class Main {
             // Create admin account with given username and password if it does not exit | or update in case admin account exist
 
             User admin = new User();
-            admin.setUsername(GlobalConstants.ADMIN_USERNAME);
+            admin.setEmail(GlobalConstants.ADMIN_EMAIL);
             admin.setRole(1);
             admin.setPassword(GlobalConstants.ADMIN_PASSWORD);
 
 
-            System.out.println("Admin Username : " + GlobalConstants.ADMIN_USERNAME + " | " + " Admin Password : " + GlobalConstants.ADMIN_PASSWORD);
+            System.out.println("Admin Username : " + GlobalConstants.ADMIN_EMAIL + " | " + " Admin Password : " + GlobalConstants.ADMIN_PASSWORD);
 
 
 
-            boolean adminRoleExist = Globals.daoUserSignUp.checkRoleExists(GlobalConstants.ROLE_ADMIN_CODE);
+            boolean adminRoleExist = Globals.daoUserUtility.checkRoleExists(GlobalConstants.ROLE_ADMIN_CODE);
 
-            if(adminRoleExist)
+            if(!adminRoleExist)
             {
-                Globals.daoUserSignUp.updateAdminUsername(admin);
-            }
-            else
-            {
-                Globals.daoUserSignUp.createAdmin(admin,true);
+                Globals.daoUserSignUp.createAdminUsingEmail(admin,true);
             }
 
 

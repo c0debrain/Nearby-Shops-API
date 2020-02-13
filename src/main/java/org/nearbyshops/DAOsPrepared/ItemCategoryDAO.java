@@ -7,7 +7,7 @@ import org.nearbyshops.Model.Item;
 import org.nearbyshops.Model.ItemCategory;
 import org.nearbyshops.Model.Shop;
 import org.nearbyshops.Model.ShopItem;
-import org.nearbyshops.ModelEndpoint.ItemCategoryEndPoint;
+import org.nearbyshops.Model.ModelEndpoint.ItemCategoryEndPoint;
 
 import java.sql.*;
 import java.util.ArrayList;

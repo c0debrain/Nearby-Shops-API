@@ -6,17 +6,14 @@ import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Order;
 import org.nearbyshops.Model.OrderItem;
 import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelBilling.Transaction;
-import org.nearbyshops.ModelOrderStatus.OrderStatusHomeDelivery;
-import org.nearbyshops.ModelOrderStatus.OrderStatusPickFromShop;
-import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelBilling.Transaction;
+import org.nearbyshops.Model.ModelOrderStatus.OrderStatusHomeDelivery;
+import org.nearbyshops.Model.ModelOrderStatus.OrderStatusPickFromShop;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class DAOOrderStaff {
 
@@ -906,7 +903,6 @@ public class DAOOrderStaff {
 
         return updatedRows;
     }
-
 
 
 

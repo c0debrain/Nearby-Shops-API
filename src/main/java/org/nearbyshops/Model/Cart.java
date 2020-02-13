@@ -1,6 +1,6 @@
 package org.nearbyshops.Model;
 
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.User;
 
 /**
  * Created by sumeet on 30/5/16.
@@ -38,8 +38,6 @@ public class Cart {
     private int cartID;
     private int endUserID;
     private int shopID;
-
-
 
 
 

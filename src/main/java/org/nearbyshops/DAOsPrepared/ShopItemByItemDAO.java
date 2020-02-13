@@ -4,8 +4,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.*;
-import org.nearbyshops.ModelEndpoint.ShopItemEndPoint;
-import org.nearbyshops.ModelReviewShop.ShopReview;
+import org.nearbyshops.Model.ModelEndpoint.ShopItemEndPoint;
+import org.nearbyshops.Model.ModelReviewShop.ShopReview;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

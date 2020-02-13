@@ -10,10 +10,9 @@ import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Globals.SendSMS;
 import org.nearbyshops.Model.Order;
-import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
-import org.nearbyshops.ModelRoles.ShopStaffPermissions;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.Endpoints.UserEndpoint;
+import org.nearbyshops.Model.ModelRoles.ShopStaffPermissions;
+import org.nearbyshops.Model.ModelRoles.User;
 import org.simplejavamail.email.Email;
 import org.simplejavamail.email.EmailBuilder;
 

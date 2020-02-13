@@ -8,14 +8,12 @@ import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
 import org.nearbyshops.Model.ItemImage;
-import org.nearbyshops.ModelEndpoint.ItemImageEndPoint;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelEndpoint.ItemImageEndPoint;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.xml.bind.JAXBElement;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;

@@ -4,7 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Item;
 import org.nearbyshops.Model.OrderItem;
-import org.nearbyshops.ModelEndpoint.OrderItemEndPoint;
+import org.nearbyshops.Model.ModelEndpoint.OrderItemEndPoint;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -95,6 +95,9 @@ public class OrderItemService {
 		return rowCount;
 	}
 	
+
+
+
 
 	public int updateOrderItem(OrderItem orderItem)
 	{

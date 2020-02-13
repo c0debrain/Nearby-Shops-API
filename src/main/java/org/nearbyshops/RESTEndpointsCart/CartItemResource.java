@@ -102,6 +102,9 @@ public class CartItemResource {
 	{
 
 
+
+
+
 		if(endUserID>0 && shopID>0)
 		{
 
@@ -144,6 +147,8 @@ public class CartItemResource {
 
 		if(rowCount >= 1)
 		{
+
+//			System.out.println("Update Cart Success !");
 
 			return Response.status(Status.OK)
 					.build();

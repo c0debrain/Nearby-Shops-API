@@ -3,7 +3,7 @@ package org.nearbyshops.RESTEndpointsOrder;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.OrderItem;
-import org.nearbyshops.ModelEndpoint.OrderItemEndPoint;
+import org.nearbyshops.Model.ModelEndpoint.OrderItemEndPoint;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;

@@ -1,12 +1,10 @@
 package org.nearbyshops.DAORoles;
 
-import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelRoles.*;
-import org.nearbyshops.ModelRoles.Endpoints.UserEndpoint;
-import org.nearbyshops.RESTEndpointsCart.DeliveryAddressResource;
+import org.nearbyshops.Model.ModelRoles.*;
+import org.nearbyshops.Model.ModelRoles.Endpoints.UserEndpoint;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

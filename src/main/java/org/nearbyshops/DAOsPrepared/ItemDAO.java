@@ -7,11 +7,11 @@ import org.nearbyshops.Model.Item;
 import org.nearbyshops.Model.ItemCategory;
 import org.nearbyshops.Model.Shop;
 import org.nearbyshops.Model.ShopItem;
-import org.nearbyshops.ModelEndpoint.ItemEndPoint;
-import org.nearbyshops.ModelItemSpecification.ItemSpecificationItem;
-import org.nearbyshops.ModelItemSpecification.ItemSpecificationValue;
-import org.nearbyshops.ModelReviewItem.ItemReview;
-import org.nearbyshops.ModelStats.ItemStats;
+import org.nearbyshops.Model.ModelEndpoint.ItemEndPoint;
+import org.nearbyshops.Model.ModelItemSpecification.ItemSpecificationItem;
+import org.nearbyshops.Model.ModelItemSpecification.ItemSpecificationValue;
+import org.nearbyshops.Model.ModelReviewItem.ItemReview;
+import org.nearbyshops.Model.ModelStats.ItemStats;
 
 import java.sql.*;
 import java.util.ArrayList;

@@ -1,9 +1,9 @@
 package org.nearbyshops.RESTEndpointReviewItem;
 
-import org.nearbyshops.DAOPreparedReviewItem.FavoriteItemDAOPrepared;
+import org.nearbyshops.DAOReviewItem.FavoriteItemDAOPrepared;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelEndpointReview.FavouriteItemEndpoint;
-import org.nearbyshops.ModelReviewItem.FavouriteItem;
+import org.nearbyshops.Model.ModelEndpointReview.FavouriteItemEndpoint;
+import org.nearbyshops.Model.ModelReviewItem.FavouriteItem;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

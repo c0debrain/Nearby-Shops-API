@@ -1,9 +1,9 @@
 package org.nearbyshops.RESTEndpointReviewShop;
 
-import org.nearbyshops.DAOPreparedReviewShop.ShopReviewThanksDAOPrepared;
+import org.nearbyshops.DAOReviewShop.ShopReviewThanksDAOPrepared;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelEndpointReview.ShopReviewThanksEndpoint;
-import org.nearbyshops.ModelReviewShop.ShopReviewThanks;
+import org.nearbyshops.Model.ModelEndpointReview.ShopReviewThanksEndpoint;
+import org.nearbyshops.Model.ModelReviewShop.ShopReviewThanks;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;

@@ -5,16 +5,14 @@ package org.nearbyshops.RESTEndpointRoles;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Globals.SendSMS;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.User;
 import org.simplejavamail.email.Email;
 import org.simplejavamail.email.EmailBuilder;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.math.BigInteger;
 import java.sql.Timestamp;
-import java.util.Random;
 
 import static org.nearbyshops.Globals.Globals.generateOTP;
 import static org.nearbyshops.Globals.Globals.getMailerInstance;

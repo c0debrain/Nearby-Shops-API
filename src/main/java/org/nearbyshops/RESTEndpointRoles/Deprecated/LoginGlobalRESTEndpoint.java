@@ -1,26 +1,10 @@
 package org.nearbyshops.RESTEndpointRoles.Deprecated;
 
-import okhttp3.Credentials;
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import org.nearbyshops.DAORoles.DAOLoginUsingOTP;
 import org.nearbyshops.DAORoles.DAOPhoneVerificationCodes;
 import org.nearbyshops.DAORoles.DAOUserNew;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelRoles.User;
-
-import javax.ws.rs.*;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import java.io.IOException;
-import java.math.BigInteger;
-import java.util.Base64;
-import java.util.StringTokenizer;
-
-
-
-
 
 
 //@Path("/api/v1/User/LoginGlobal")

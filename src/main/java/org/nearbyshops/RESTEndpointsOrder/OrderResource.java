@@ -7,9 +7,8 @@ import com.google.firebase.messaging.Notification;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Order;
-import org.nearbyshops.Model.Shop;
-import org.nearbyshops.ModelEndpoint.OrderEndPoint;
-import org.nearbyshops.ModelRoles.User;
+import org.nearbyshops.Model.ModelEndpoint.OrderEndPoint;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Singleton;
@@ -169,7 +168,6 @@ public class OrderResource {
 
 
 
-
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_SHOP_STAFF,GlobalConstants.ROLE_END_USER,GlobalConstants.ROLE_ADMIN})
@@ -260,9 +258,9 @@ public class OrderResource {
 
 
 
-
+//
 //		try {
-//			Thread.sleep(1000);
+//			Thread.sleep(3000);
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		}
@@ -273,8 +271,6 @@ public class OrderResource {
 				.entity(endpoint)
 				.build();
 	}
-
-
 
 
 

@@ -16,7 +16,7 @@ public class GlobalConstants {
 	public static String POSTGRES_PASSWORD;
 
 
-	public static String ADMIN_USERNAME;
+	public static String ADMIN_EMAIL;
 	public static String ADMIN_PASSWORD;
 
 

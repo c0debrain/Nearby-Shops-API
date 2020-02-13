@@ -2,7 +2,7 @@ package org.nearbyshops.RESTEndpointsCart;
 
 import org.nearbyshops.DAOsPrepared.ShopDAO;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.ModelStats.CartStats;
+import org.nearbyshops.Model.ModelStats.CartStats;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
