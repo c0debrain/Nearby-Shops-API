@@ -95,12 +95,11 @@ public class UserLoginRESTEndpoint {
 
 
 
-
-
+    
 
     @PUT
     @Path("/UpdateOneSignalID/{OneSignalID}")
-    @RolesAllowed({GlobalConstants.ROLE_END_USER,GlobalConstants.ROLE_SHOP_ADMIN,GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_ADMIN})
+    @RolesAllowed({GlobalConstants.ROLE_END_USER})
     public Response updateOneSignalID(@PathParam("OneSignalID") String oneSignalID)
     {
 

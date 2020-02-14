@@ -68,16 +68,15 @@ public class ShopResource {
 
 
 
+
+
 	@PUT
 	@Path("/UpdateByAdmin/{ShopID}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
 	public Response updateShopByAdmin(Shop shop, @PathParam("ShopID")int ShopID)
 	{
-
-
 		shop.setShopID(ShopID);
-		
 		int rowCount = shopDAO.updateShopByAdmin(shop);
 
 
@@ -238,36 +237,25 @@ public class ShopResource {
 
 
 
+
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("/QuerySimple")
 	public Response getShopListSimple(
 			@QueryParam("UnderReview")Boolean underReview,
-            @QueryParam("Enabled")Boolean enabled,
-            @QueryParam("Waitlisted") Boolean waitlisted,
-            @QueryParam("FilterByVisibility") Boolean filterByVisibility,
+            @QueryParam("Enabled")Boolean enabled, @QueryParam("Waitlisted") Boolean waitlisted,
             @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
-            @QueryParam("deliveryRangeMax")Double deliveryRangeMax,
-            @QueryParam("deliveryRangeMin")Double deliveryRangeMin,
-            @QueryParam("proximity")Double proximity,
             @QueryParam("SearchString") String searchString,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit") Integer limit, @QueryParam("Offset") int offset
+            @QueryParam("Limit") int limit, @QueryParam("Offset") int offset
 	)
 	{
 
-		final int max_limit = 100;
 
-		if(limit!=null)
+		if(limit >= GlobalConstants.max_limit)
 		{
-			if(limit>=max_limit)
-			{
-				limit = max_limit;
-			}
-		}
-		else {
-
-			limit = 30;
+			limit = GlobalConstants.max_limit;
 		}
 
 
@@ -276,15 +264,14 @@ public class ShopResource {
 		ShopEndPoint endPoint = shopDAO.getShopsListQuerySimple(
 									underReview,
 									enabled,waitlisted,
-									filterByVisibility,
 									latCenter,lonCenter,
-									deliveryRangeMin,deliveryRangeMax,
-									proximity,searchString,
-									sortBy,limit,offset);
+									searchString, sortBy,
+									limit,offset
+		);
 
 
 		endPoint.setLimit(limit);
-		endPoint.setMax_limit(max_limit);
+		endPoint.setMax_limit(GlobalConstants.max_limit);
 		endPoint.setOffset(offset);
 
 
@@ -547,18 +534,15 @@ public class ShopResource {
 
 
 	@GET
-	@Path("/{ShopID}")
+	@Path("/GetShopDetails/{ShopID}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getShop(@PathParam("ShopID")int shopID,
                             @QueryParam("latCenter")double latCenter, @QueryParam("lonCenter")double lonCenter)
 	{
-		Shop shop = shopDAO.getShop(shopID,latCenter,lonCenter);
-		
+		Shop shop = shopDAO.getShopDetails(shopID,latCenter,lonCenter);
+
 		if(shop!= null)
 		{
-
-
-
 			return Response.status(Status.OK)
 					.entity(shop)
 					.build();
@@ -578,10 +562,8 @@ public class ShopResource {
 
 
 
-
-
 	@GET
-	@Path("/GetForShopAdmin")
+	@Path("/GetShopForShopAdmin")
 	@Produces(MediaType.APPLICATION_JSON)
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
 	public Response getShopForShopAdmin()
@@ -695,10 +677,12 @@ public class ShopResource {
 	private static final double MAX_IMAGE_SIZE_MB = 2;
 
 
+
+
 	@POST
 	@Path("/Image")
 	@Consumes({MediaType.APPLICATION_OCTET_STREAM})
-	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
+	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_ADMIN})
 	public Response uploadImage(InputStream in, @HeaderParam("Content-Length") long fileSize,
                                 @QueryParam("PreviousImageName") String previousImageName
 	) throws Exception
@@ -817,9 +801,10 @@ public class ShopResource {
 
 
 
+
 	@DELETE
 	@Path("/Image/{name}")
-	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
+	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN,GlobalConstants.ROLE_ADMIN})
 	public Response deleteImageFile(@PathParam("name")String fileName)
 	{
 

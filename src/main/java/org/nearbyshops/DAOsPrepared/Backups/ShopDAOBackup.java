@@ -1,20 +1,20 @@
-package org.nearbyshops.DAOsPrepared;
+package org.nearbyshops.DAOsPrepared.Backups;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Item;
 import org.nearbyshops.Model.ItemCategory;
-import org.nearbyshops.Model.Shop;
-import org.nearbyshops.Model.ShopItem;
 import org.nearbyshops.Model.ModelEndpoint.ShopEndPoint;
 import org.nearbyshops.Model.ModelReviewShop.ShopReview;
 import org.nearbyshops.Model.ModelRoles.User;
+import org.nearbyshops.Model.Shop;
+import org.nearbyshops.Model.ShopItem;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-public class ShopDAO {
+public class ShopDAOBackup {
 
 
 	private HikariDataSource dataSource = Globals.getDataSource();
@@ -571,20 +571,15 @@ public class ShopDAO {
 
 		String query = " ";
 
+//		boolean distancePreset = false;
 
-
+//		if(latCenter!=null & lonCenter!=null)
+//		{
 		query = "SELECT "
 				+ " (6371.01 * acos(cos( radians(" + latCenter + ")) * cos( radians(" + Shop.LAT_CENTER + " )) * cos(radians( "
 				+ Shop.LON_CENTER + ") - radians("
 				+ lonCenter + "))" + " + sin( radians(" + latCenter + ")) * sin(radians(" + Shop.LAT_CENTER + "))))" + " as distance ,"
 
-
-				+ User.TABLE_NAME + "." + User.PHONE + ","
-				+ User.TABLE_NAME + "." + User.NAME + ","
-				+ Shop.TABLE_NAME + "." + Shop.ACCOUNT_BALANCE + ","
-				+ Shop.TABLE_NAME + "." + Shop.EXTENDED_CREDIT_LIMIT + ","
-				+ Shop.TABLE_NAME + "." + Shop.SHOP_WAITLISTED + ","
-				+ Shop.TABLE_NAME + "." + Shop.SHOP_ENABLED + ","
 
 				+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + ","
 				+ Shop.TABLE_NAME + "." + Shop.SHOP_NAME + ","
@@ -609,20 +604,12 @@ public class ShopDAO {
 				+ Shop.TABLE_NAME + "." + Shop.PICK_FROM_SHOP_AVAILABLE + ","
 				+ Shop.TABLE_NAME + "." + Shop.HOME_DELIVERY_AVAILABLE + ","
 
-
 				+  "avg(" + ShopReview.TABLE_NAME + "." + ShopReview.RATING + ") as avg_rating" + ","
 				+  "count( DISTINCT " + ShopReview.TABLE_NAME + "." + ShopReview.END_USER_ID + ") as rating_count" + ""
 
-				+ " FROM " + Shop.TABLE_NAME
-				+ " INNER JOIN " + User.TABLE_NAME + " ON ( " + Shop.TABLE_NAME + "." + Shop.SHOP_ADMIN_ID + " = " + User.TABLE_NAME + "." + User.USER_ID + ")"
-				+ " LEFT OUTER JOIN " + ShopReview.TABLE_NAME  + " ON (" + ShopReview.TABLE_NAME + "." + ShopReview.SHOP_ID + " = " + Shop.TABLE_NAME + "." + Shop.SHOP_ID + ")"
+				+ " FROM " + ShopReview.TABLE_NAME
+				+ " RIGHT OUTER JOIN " + Shop.TABLE_NAME + " ON (" + ShopReview.TABLE_NAME + "." + ShopReview.SHOP_ID + " = " + Shop.TABLE_NAME + "." + Shop.SHOP_ID + ")"
 				+ " WHERE "	+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + "= " + ShopID;
-
-
-//				+ " FROM " + ShopReview.TABLE_NAME
-//				+ " INNER JOIN " + User.TABLE_NAME + " ON ( " + Shop.TABLE_NAME + "." + Shop.SHOP_ADMIN_ID + " = " + User.TABLE_NAME + "." + User.USER_ID + ")"
-//				+ " RIGHT OUTER JOIN " + Shop.TABLE_NAME + " ON (" + ShopReview.TABLE_NAME + "." + ShopReview.SHOP_ID + " = " + Shop.TABLE_NAME + "." + Shop.SHOP_ID + ")"
-//				+ " WHERE "	+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + "= " + ShopID;
 
 
 
@@ -630,8 +617,8 @@ public class ShopDAO {
 		query = query
 
 				+ " group by "
-				+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + ","
-				+ User.TABLE_NAME + "." + User.USER_ID ;
+				+ "distance,"
+				+ Shop.TABLE_NAME + "." + Shop.SHOP_ID ;
 
 		/*
 		+ ","
@@ -692,13 +679,7 @@ public class ShopDAO {
 			while(rs.next())
 			{
 
-
-				User shopAdmin = new User();
-				shopAdmin.setPhone(rs.getString(User.PHONE));
-				shopAdmin.setName(rs.getString(User.NAME));
-
 				shop = new Shop();
-
 
 				shop.setRt_distance(rs.getDouble("distance"));
 				shop.setRt_rating_avg(rs.getFloat("avg_rating"));
@@ -726,15 +707,6 @@ public class ShopDAO {
 				shop.setOpen(rs.getBoolean(Shop.IS_OPEN));
 				shop.setPickFromShopAvailable(rs.getBoolean(Shop.PICK_FROM_SHOP_AVAILABLE));
 				shop.setHomeDeliveryAvailable(rs.getBoolean(Shop.HOME_DELIVERY_AVAILABLE));
-
-				shop.setAccountBalance(rs.getFloat(Shop.ACCOUNT_BALANCE));
-				shop.setExtendedCreditLimit(rs.getFloat(Shop.EXTENDED_CREDIT_LIMIT));
-				shop.setShopEnabled(rs.getBoolean(Shop.SHOP_ENABLED));
-				shop.setShopWaitlisted(rs.getBoolean(Shop.SHOP_WAITLISTED));
-
-				shop.setShopAdminProfile(shopAdmin);
-
-
 
 			}
 
@@ -846,6 +818,7 @@ public class ShopDAO {
 
 
 
+
 	public int deleteShop(int shopID)
 	{
 		
@@ -907,14 +880,21 @@ public class ShopDAO {
 	public ShopEndPoint getShopsListQuerySimple(
 			Boolean underReview,
 			Boolean enabled, Boolean waitlisted,
+			Boolean filterByVisibility,
 			Double latCenter, Double lonCenter,
+			Double deliveryRangeMin,Double deliveryRangeMax,
+			Double proximity,
 			String searchString,
 			String sortBy,
-			int limit, int offset
+			Integer limit, Integer offset
 	)
 	{
 
 		String query = "";
+		String queryJoin = "";
+
+		// flag for tracking whether to put "AND" or "WHERE"
+//		boolean isFirst = true;
 
 
 		String queryNormal = "SELECT "
@@ -924,32 +904,163 @@ public class ShopDAO {
 				+ lonCenter + "))"
 				+ " + sin( radians(" + latCenter + ")) * sin(radians(lat_center))) as distance" + ","
 
-
+				+ Shop.TABLE_NAME + "." + Shop.SHOP_ADMIN_ID + ","
 				+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + ","
 				+ Shop.SHOP_NAME + ","
 
 				+  "avg(" + ShopReview.TABLE_NAME + "." + ShopReview.RATING + ") as avg_rating" + ","
 				+  "count( DISTINCT " + ShopReview.TABLE_NAME + "." + ShopReview.END_USER_ID + ") as rating_count" + ","
 
+				+ Shop.DELIVERY_RANGE + ","
+				+ Shop.TABLE_NAME + "." + Shop.LAT_CENTER + ","
+				+ Shop.TABLE_NAME + "." + Shop.LON_CENTER + ","
+
 				+ "count(*) over() AS full_count " + ","
 
 				+ Shop.DELIVERY_CHARGES + ","
+				+ Shop.BILL_AMOUNT_FOR_FREE_DELIVERY + ","
 				+ Shop.PICK_FROM_SHOP_AVAILABLE + ","
 				+ Shop.HOME_DELIVERY_AVAILABLE + ","
 
+				+ Shop.SHOP_ENABLED + ","
+				+ Shop.SHOP_WAITLISTED + ","
 
 				+ Shop.LOGO_IMAGE_PATH + ","
+
 				+ Shop.SHOP_ADDRESS + ","
 				+ Shop.CITY + ","
+				+ Shop.PINCODE + ","
+				+ Shop.LANDMARK + ","
 
-				+ Shop.IS_OPEN + ""
+				+ Shop.CUSTOMER_HELPLINE_NUMBER + ","
+				+ Shop.DELIVERY_HELPLINE_NUMBER + ","
+
+				+ Shop.SHORT_DESCRIPTION + ","
+				+ Shop.LONG_DESCRIPTION + ","
+
+//				+ Shop.TIMESTAMP_CREATED + " as shop_create_time ,"
+				+ Shop.TABLE_NAME + "." + Shop.TIMESTAMP_CREATED + " as shop_create_time ,"
+				+ Shop.IS_OPEN + ","
+
+				+ Shop.TABLE_NAME + "." + Shop.ACCOUNT_BALANCE + " as shop_account_balance,"
+				+ Shop.TABLE_NAME + "." + Shop.EXTENDED_CREDIT_LIMIT + " as extended_credit_limit,"
+
+
+
+//				+ User.TABLE_NAME + "." + User.USER_ID + ","
+//				+ User.TABLE_NAME + "." + User.USERNAME + ","
+//				+ User.TABLE_NAME + "." + User.E_MAIL + ","
+				+ User.TABLE_NAME + "." + User.PHONE + ","
+
+				+ User.TABLE_NAME + "." + User.NAME + ""
+//				+ User.TABLE_NAME + "." + User.GENDER + ","
+
+//				+ User.TABLE_NAME + "." + User.PROFILE_IMAGE_URL + ","
+//				+ User.TABLE_NAME + "." + User.IS_ACCOUNT_PRIVATE + ","
+//				+ User.TABLE_NAME + "." + User.ABOUT + ","
+
+//				+ User.TABLE_NAME + "." + User.TIMESTAMP_CREATED + " as profile_create_time "
+
+
+
+//				+  "avg(" + ShopReview.TABLE_NAME + "." + ShopReview.RATING + ") as avg_rating" + ","
+//				+  "count( DISTINCT " + ShopReview.TABLE_NAME + "." + ShopReview.END_USER_ID + ") as rating_count" + ""
 
 				+ " FROM " + Shop.TABLE_NAME
+				+ " INNER JOIN " + User.TABLE_NAME + " ON ( " + Shop.TABLE_NAME + "." + Shop.SHOP_ADMIN_ID + " = " + User.TABLE_NAME + "." + User.USER_ID + ")"
 				+ " LEFT OUTER JOIN " + ShopReview.TABLE_NAME  + " ON (" + ShopReview.TABLE_NAME + "." + ShopReview.SHOP_ID + " = " + Shop.TABLE_NAME + "." + Shop.SHOP_ID + ")"
 				+ " WHERE TRUE ";
 
 
 
+		// Visibility Filter : Apply
+		if(filterByVisibility!=null && filterByVisibility && latCenter != null && lonCenter != null)
+		{
+
+			String queryPartlatLonCenter = "";
+
+//			queryNormal = queryNormal + " WHERE ";
+
+
+			// reset the flag
+//			isFirst = false;
+
+
+			queryNormal = queryNormal + " AND ";
+
+			queryPartlatLonCenter = queryPartlatLonCenter + " 6371.01 * acos( cos( radians("
+					+ latCenter + ")) * cos( radians( lat_center) ) * cos(radians( lon_center ) - radians("
+					+ lonCenter + "))"
+					+ " + sin( radians(" + latCenter + ")) * sin(radians(lat_center))) <= delivery_range ";
+
+
+
+			queryNormal = queryNormal + queryPartlatLonCenter;
+
+		}
+
+
+
+		// Delivery Range Filter : apply
+		if(deliveryRangeMin != null || deliveryRangeMax != null){
+
+			// apply delivery range filter
+			String queryPartDeliveryRange = "";
+
+			queryPartDeliveryRange = queryPartDeliveryRange
+					+ Shop.TABLE_NAME + "." + Shop.DELIVERY_RANGE + " BETWEEN " + deliveryRangeMin + " AND " + deliveryRangeMax;
+
+
+//			if(isFirst)
+//			{
+//				queryNormal = queryNormal + " WHERE " + queryPartDeliveryRange;
+//
+//				// reset the flag
+//				isFirst = false;
+//
+//			}else
+//			{
+//				queryNormal = queryNormal + " AND " + queryPartDeliveryRange;
+//			}
+
+
+			queryNormal = queryNormal + " AND " + queryPartDeliveryRange;
+
+		}
+
+
+		// Proximity Filter
+		if(proximity != null)
+		{
+			// proximity > 0 && (deliveryRangeMax==0 || (deliveryRangeMax > 0 && proximity <= deliveryRangeMax))
+
+			String queryPartProximity = "";
+//			String queryPartProximityTwo = "";
+
+
+			// filter using Haversine formula using SQL math functions
+			queryPartProximity = queryPartProximity
+					+ " (6371.01 * acos(cos( radians(" + latCenter + ")) * cos( radians(" + Shop.LAT_CENTER + " )) * cos(radians( "
+					+ Shop.LON_CENTER + ") - radians(" + lonCenter + "))" + " + sin( radians(" + latCenter + ")) * sin(radians("
+					+ Shop.LAT_CENTER + ")))) <= " + proximity ;
+
+
+			queryNormal = queryNormal + " AND " + queryPartProximity;
+
+
+//			if(isFirst)
+//			{
+//				queryNormal = queryNormal + " WHERE " + queryPartProximity;
+//
+//				// reset the flag
+//				isFirst = false;
+//
+//			}else
+//			{
+//				queryNormal = queryNormal + " AND " + queryPartProximity;
+//			}
+
+		}
 
 
 
@@ -962,6 +1073,21 @@ public class ShopDAO {
 
 
 			queryNormal = queryNormal + " AND " + queryPartSearch;
+
+
+//			if(isFirst)
+//			{
+////				queryJoin = queryJoin + " WHERE " + queryPartSearch;
+//
+//				queryNormal = queryNormal + " WHERE " + queryPartSearch;
+//
+//				isFirst = false;
+//			}
+//			else
+//			{
+//				queryNormal = queryNormal + " AND " + queryPartSearch;
+//			}
+
 
 		}
 
@@ -985,16 +1111,32 @@ public class ShopDAO {
 		if(waitlisted !=null)
 		{
 			queryNormal = queryNormal + " AND " + Shop.SHOP_WAITLISTED + " = "  + waitlisted;
+
+//			if(isFirst)
+//			{
+//				queryNormal = queryNormal + " WHERE " + Shop.SHOP_WAITLISTED + " = "  + waitlisted;
+//
+//				isFirst = false;
+//			}
+//			else
+//			{
+//				queryNormal = queryNormal + " AND " + Shop.SHOP_WAITLISTED + " = "  + waitlisted;
+//			}
 		}
 
 
 
 
+		/*
+
+
+		*/
 
 		String queryGroupBy = "";
 
 		queryGroupBy = queryGroupBy + " group by "
-				+ Shop.TABLE_NAME + "." + Shop.SHOP_ID ;
+				+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + ","
+				+ User.TABLE_NAME + "." + User.USER_ID ;
 
 
 		queryNormal = queryNormal + queryGroupBy;
@@ -1018,8 +1160,23 @@ public class ShopDAO {
 
 
 
+		if(limit !=null)
+		{
 
-		queryNormal = queryNormal + " LIMIT " + limit + " " + " OFFSET " + offset;
+			String queryPartLimitOffset = "";
+
+			if(offset!=null)
+			{
+				queryPartLimitOffset = " LIMIT " + limit + " " + " OFFSET " + offset;
+
+			}else
+			{
+				queryPartLimitOffset = " LIMIT " + limit + " " + " OFFSET " + 0;
+			}
+
+
+			queryNormal = queryNormal + queryPartLimitOffset;
+		}
 
 
 
@@ -1049,28 +1206,75 @@ public class ShopDAO {
 			while(rs.next())
 			{
 
+				User shopAdmin = new User();
+
+//				shopAdmin.setUserID(rs.getInt(User.USER_ID));
+//				shopAdmin.setUsername(rs.getString(User.USERNAME));
+//				shopAdmin.setEmail(rs.getString(User.E_MAIL));
+				shopAdmin.setPhone(rs.getString(User.PHONE));
+				shopAdmin.setName(rs.getString(User.NAME));
+//				shopAdmin.setGender(rs.getBoolean(User.GENDER));
+
+
+//				shopAdmin.setProfileImagePath(rs.getString(User.PROFILE_IMAGE_URL));
+//				shopAdmin.setAccountPrivate(rs.getBoolean(User.IS_ACCOUNT_PRIVATE));
+//				shopAdmin.setAbout(rs.getString(User.ABOUT));
+
+//				shopAdmin.setTimestampCreated(rs.getTimestamp("profile_create_time"));
+
+
+
 				Shop shop = new Shop();
 
 				shop.setRt_distance(rs.getDouble("distance"));
 				shop.setRt_rating_avg(rs.getFloat("avg_rating"));
 				shop.setRt_rating_count(rs.getFloat("rating_count"));
 
+				shop.setShopAdminID(rs.getInt(Shop.SHOP_ADMIN_ID));
 				shop.setShopID(rs.getInt(Shop.SHOP_ID));
 
 				shop.setShopName(rs.getString(Shop.SHOP_NAME));
+				shop.setDeliveryRange(rs.getDouble(Shop.DELIVERY_RANGE));
+				shop.setLatCenter(rs.getFloat(Shop.LAT_CENTER));
+				shop.setLonCenter(rs.getFloat(Shop.LON_CENTER));
 
 				shop.setDeliveryCharges(rs.getFloat(Shop.DELIVERY_CHARGES));
+				shop.setBillAmountForFreeDelivery(rs.getInt(Shop.BILL_AMOUNT_FOR_FREE_DELIVERY));
 				shop.setPickFromShopAvailable(rs.getBoolean(Shop.PICK_FROM_SHOP_AVAILABLE));
 				shop.setHomeDeliveryAvailable(rs.getBoolean(Shop.HOME_DELIVERY_AVAILABLE));
+
+				shop.setShopEnabled(rs.getBoolean(Shop.SHOP_ENABLED));
+				shop.setShopWaitlisted(rs.getBoolean(Shop.SHOP_WAITLISTED));
 
 				shop.setLogoImagePath(rs.getString(Shop.LOGO_IMAGE_PATH));
 
 				shop.setShopAddress(rs.getString(Shop.SHOP_ADDRESS));
 				shop.setCity(rs.getString(Shop.CITY));
+				shop.setPincode(rs.getLong(Shop.PINCODE));
+				shop.setLandmark(rs.getString(Shop.LANDMARK));
+
+				shop.setCustomerHelplineNumber(rs.getString(Shop.CUSTOMER_HELPLINE_NUMBER));
+				shop.setDeliveryHelplineNumber(rs.getString(Shop.DELIVERY_HELPLINE_NUMBER));
+
+				shop.setShortDescription(rs.getString(Shop.SHORT_DESCRIPTION));
+				shop.setLongDescription(rs.getString(Shop.LONG_DESCRIPTION));
+
+//				shop.setTimestampCreated(rs.getTimestamp(Shop.TIMESTAMP_CREATED));
+//				shop.setTimestampCreated(rs.getTimestamp("shop_create_time"));
 
 				shop.setOpen(rs.getBoolean(Shop.IS_OPEN));
 
+				shop.setTimestampCreated(rs.getTimestamp("shop_create_time"));
+				shop.setExtendedCreditLimit(rs.getDouble("extended_credit_limit"));
+				shop.setAccountBalance(rs.getDouble("shop_account_balance"));
+
+
 				endPoint.setItemCount(rs.getInt("full_count"));
+
+				shop.setShopAdminProfile(shopAdmin);
+
+
+
 
 
 				shopList.add(shop);

@@ -68,6 +68,8 @@ public class ShopImageDAO {
             if(rs.next())
             {
                 idOfInsertedRow = rs.getInt(1);
+
+                shopImage.setShopImageID(idOfInsertedRow);
             }
 
 

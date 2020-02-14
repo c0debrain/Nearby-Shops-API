@@ -36,7 +36,7 @@ public class PlaceOrderDAO {
 
         Cart cart = Globals.cartService.readCart(cartID);
         List<CartStats> cartStats = Globals.cartStatsDAO.getCartStats(cart.getEndUserID(),cartID,cart.getShopID());
-        Shop shop = Globals.shopDAO.getShop(cart.getShopID(),null,null);
+        Shop shop = Globals.shopDAO.getShopDetails(cart.getShopID(),null,null);
 
 
         int orderID = -1;

@@ -50,9 +50,6 @@ public class ShopImageResource {
 
 
 
-
-
-
         if(rowCount ==1)
         {
 
@@ -70,7 +67,6 @@ public class ShopImageResource {
 
         return null;
     }
-
 
 
 

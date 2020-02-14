@@ -34,7 +34,7 @@ public class CartStatsResource {
 		{
 			for(CartStats cartStatsItem: cartStats)
 			{
-				cartStatsItem.setShop(shopDAO.getShop(cartStatsItem.getShopID(),latCenter,lonCenter));
+				cartStatsItem.setShop(shopDAO.getShopDetails(cartStatsItem.getShopID(),latCenter,lonCenter));
 			}
 
 		}
