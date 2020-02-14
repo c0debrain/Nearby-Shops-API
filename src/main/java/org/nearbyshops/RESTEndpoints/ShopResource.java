@@ -40,23 +40,21 @@ public class ShopResource {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
+	@RolesAllowed({GlobalConstants.ROLE_END_USER})
 	public Response createShop(Shop shop)
 	{
 
-		int idOfInsertedRow = shopDAO.insertShop(shop);
+		User user = (User) Globals.accountApproved;
 
+		int idOfInsertedRow = shopDAO.insertShop(shop,user.getUserID());
 		shop.setShopID(idOfInsertedRow);
 		
 		
 		if(idOfInsertedRow >=1)
 		{
-
 			return Response.status(Status.CREATED)
-					.location(URI.create("/api/Shop/" + idOfInsertedRow))
 					.entity(shop)
 					.build();
-
 		}
 		else {
 
@@ -64,10 +62,9 @@ public class ShopResource {
 			return Response.status(Status.NOT_MODIFIED)
 					.build();
 		}
-
-
 	}
 	
+
 
 
 
@@ -581,6 +578,8 @@ public class ShopResource {
 
 
 
+
+
 	@GET
 	@Path("/GetForShopAdmin")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -589,6 +588,8 @@ public class ShopResource {
 	{
 		User user = ((User) Globals.accountApproved);
 
+
+//		System.out.println("User Role " + user.getRole() + " User :" + user.getEmail());
 		Shop shop = Globals.daoShopStaff.getShopForShopAdmin(user.getUserID());
 
 

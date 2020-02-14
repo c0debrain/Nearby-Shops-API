@@ -606,7 +606,6 @@ public class DAOShopStaff {
 
 		Connection connection = null;
 		PreparedStatement statement = null;
-
 		int rowCount = -1;
 
 
@@ -633,7 +632,6 @@ public class DAOShopStaff {
 
 			connection = dataSource.getConnection();
 			connection.setAutoCommit(false);
-
 			int i = 0;
 
 
@@ -670,7 +668,6 @@ public class DAOShopStaff {
 
 
 					rowCount = 0;
-
 					connection.rollback();
 				} catch (SQLException e1) {
 					e1.printStackTrace();
