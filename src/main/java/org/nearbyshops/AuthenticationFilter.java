@@ -3,7 +3,7 @@ package org.nearbyshops;
 
 
 
-import org.nearbyshops.DAORoles.DAOUserNew;
+import org.nearbyshops.DAOs.DAORoles.DAOUserNew;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.ModelRoles.User;

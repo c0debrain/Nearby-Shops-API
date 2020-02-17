@@ -3,7 +3,7 @@ package org.nearbyshops.RESTEndpoints;
 import net.coobird.thumbnailator.Thumbnails;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.nearbyshops.DAOsPrepared.ItemCategoryDAO;
+import org.nearbyshops.DAOs.ItemCategoryDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
@@ -90,7 +90,7 @@ public class ItemCategoryResource {
 	}
 
 
-	
+
 	
 	@DELETE
 	@Path("/{ItemCategoryID}")
@@ -497,9 +497,6 @@ public class ItemCategoryResource {
 			list = itemCategoryDAO.getItemCategoriesJoinRecursive(
 					shopID, parentID, parentIsNull,
 					latCenter, lonCenter,
-					deliveryRangeMin,
-					deliveryRangeMax,
-					proximity,
 					shopEnabled,
 					searchString,
 					sortBy,
@@ -863,9 +860,6 @@ public class ItemCategoryResource {
 
 		return response;
 	}
-
-
-
 
 
 }

@@ -1,14 +1,15 @@
-package org.nearbyshops.RESTEndpoints;
+package org.nearbyshops.RESTEndpoints.RESTEndpointsItemSpecifications;
 
 import net.coobird.thumbnailator.Thumbnails;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.nearbyshops.DAOs.DAOImages.ItemImagesDAO;
+import org.nearbyshops.DAOs.DAOItemSpecification.ItemSpecValueDAOJoinOuter;
+import org.nearbyshops.DAOs.DAOItemSpecification.ItemSpecificationValueDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
-import org.nearbyshops.Model.ItemImage;
-import org.nearbyshops.Model.ModelEndpoint.ItemImageEndPoint;
+import org.nearbyshops.Model.ModelItemSpecification.EndPoints.ItemSpecValueEndPoint;
+import org.nearbyshops.Model.ModelItemSpecification.ItemSpecificationValue;
 
 import javax.annotation.security.RolesAllowed;
 import javax.ws.rs.*;
@@ -24,50 +25,57 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 /**
- * Created by sumeet on 28/2/17.
+ * Created by sumeet on 3/3/17.
  */
 
 
 
+@Path("/api/v1/ItemSpecificationValue")
+public class ItemSpecValueResource {
 
-@Path("/api/v1/ItemImage")
-public class ItemImageResource {
+//    private ItemImagesDAO itemImagesDAO = Globals.itemImagesDAO;
 
-    private ItemImagesDAO itemImagesDAO = Globals.itemImagesDAO;
+    private ItemSpecValueDAOJoinOuter itemSpecValueDAOJoinOuter = Globals.itemSpecValueDAOJoinOuter;
+    private ItemSpecificationValueDAO itemSpecificationValueDAO = Globals.itemSpecificationValueDAO;
+
+
 
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response createItemImage(ItemImage itemImage)
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
+    public Response saveItemSpecValue(ItemSpecificationValue itemSpecValue)
     {
         int idOfInsertedRow = -1;
 
+//        if(Globals.accountApproved instanceof Admin)
+//        {
+//
+//        }
 
-
-        idOfInsertedRow = itemImagesDAO.saveItemImage(itemImage,false);
+        idOfInsertedRow = itemSpecificationValueDAO.saveItemSpecValue(itemSpecValue);
 
 
 
         if(idOfInsertedRow >=1)
         {
-            itemImage.setImageID(idOfInsertedRow);
+            itemSpecValue.setId(idOfInsertedRow);
 
             return Response.status(Response.Status.CREATED)
-                    .location(URI.create("/api/v1/ItemImage/" + idOfInsertedRow))
-                    .entity(itemImage)
+                    .entity(itemSpecValue)
                     .build();
 
-        }else {
+        }else if(idOfInsertedRow <= 0)
+        {
 
             return Response.status(Response.Status.NOT_MODIFIED)
-                    .entity(null)
                     .build();
         }
 
-    }
 
+        return null;
+    }
 
 
 
@@ -77,31 +85,60 @@ public class ItemImageResource {
     @Path("/{ImageID}")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
-    public Response updateItemImage(ItemImage itemImage, @PathParam("ImageID")int imageID)
+    public Response updateItemSpec(ItemSpecificationValue itemSpecValue, @PathParam("ImageID")int imageID)
     {
 
 
+//        if(Globals.accountApproved instanceof Staff) {
+//
+//            Staff staff = (Staff) Globals.accountApproved;
+//
+//            if(staff.isPermitUpdateOnlyItemsAddedBySelf())
+//            {
+//
+//                if(Globals.staffItemDAO.checkStaffItem(itemImage.getItemID(),staff.getUserID())==null)
+//                {
+//                    // Item not added by self
+//                    throw new ForbiddenException("Not Permitted");
+//                }
+//
+//            }
+//            else if (staff.isPermitUpdateItems())
+//            {
+//
+//            }
+//            else
+//            {
+//                throw new ForbiddenException("Not Permitted");
+//            }
+//
+//        }
 
 
-        itemImage.setImageID(imageID);
-        int rowCount = itemImagesDAO.updateItemImage(itemImage);
 
+
+        itemSpecValue.setId(imageID);
+
+        int rowCount = itemSpecificationValueDAO.updateItemSpecName(itemSpecValue);
 
 
         if(rowCount >= 1)
         {
 
             return Response.status(Response.Status.OK)
+                    .entity(null)
                     .build();
         }
         if(rowCount == 0)
         {
 
             return Response.status(Response.Status.NOT_MODIFIED)
+                    .entity(null)
                     .build();
         }
 
         return null;
+
     }
 
 
@@ -109,25 +146,66 @@ public class ItemImageResource {
 
 
     @DELETE
-    @Path("/{ImageID}")
+    @Path("/{ItemSpecNameID}")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
-    public Response deleteImage(@PathParam("ImageID")int imageID)
+    public Response deleteItemSpecValue(@PathParam("ItemSpecNameID")int itemSpecNameID)
     {
 
 
-        ItemImage itemImage = itemImagesDAO.getItemImageForItemID(imageID);
+        ItemSpecificationValue itemSpecValue = itemSpecValueDAOJoinOuter.getItemSpecValueImageFilename(
+                itemSpecNameID
+        );
 
 
-        int rowCount = itemImagesDAO.deleteItemImage(itemImage.getImageID());
+
+
+
+//        if(Globals.accountApproved instanceof Staff) {
+//
+//            // checking permission
+//            Staff staff = (Staff) Globals.accountApproved;
+//
+//
+//            if(staff.isPermitDeleteOnlyItemsAddedBySelf())
+//            {
+//
+//
+//                if(Globals.staffItemDAO.checkStaffItem(itemImage.getItemID(),staff.getUserID())==null)
+//                {
+//                    throw new ForbiddenException("Not Permitted");
+//                }
+//            }
+//            else if (staff.isPermitDeleteItems())
+//            {
+//
+//            }
+//            else
+//            {
+//                throw new ForbiddenException("Not Permitted");
+//            }
+//        }
+//
+//
 
 
 
 
-        if(rowCount >= 1)
+//        Item item = itemDAO.getItemImageURL(itemID);
+
+        int rowCount = itemSpecificationValueDAO.deleteItemSpecValue(itemSpecNameID);
+
+//        System.out.println("Image FIle : " + itemImage.getImageFilename());
+
+
+
+        if(itemSpecValue !=null && rowCount>=1)
         {
-            deleteImageFileInternal(itemImage.getImageFilename());
+            // delete successful delete the image also
+//            System.out.println("Image FIle : " + itemSpecValue.getImageFilename());
+            deleteImageFileInternal(itemSpecValue.getImageFilename());
         }
+
 
 
 
@@ -154,50 +232,53 @@ public class ItemImageResource {
 
 
     @GET
+    @Path("/OuterJoin")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getItemImages(
-            @QueryParam("ItemID")Integer itemID,
+    public Response getItemSpecName(
+            @QueryParam("ItemSpecID")Integer itemSpecID,
+            @QueryParam("ItemCatID")Integer itemCatID,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit")Integer limit, @QueryParam("Offset")int offset,
-            @QueryParam("metadata_only")Boolean metaonly)
+            @QueryParam("Limit")Integer limit, @QueryParam("Offset")Integer offset,
+            @QueryParam("GetRowCount")Boolean getRowCount)
     {
 
+        int set_limit = 30;
+        int set_offset = 0;
+        final int max_limit = 100;
 
-
-        if(limit!=null && limit >= GlobalConstants.max_limit)
+        if(limit!= null)
         {
-            limit = GlobalConstants.max_limit;
+
+            if (limit >= max_limit) {
+
+                set_limit = max_limit;
+            }
+            else
+            {
+
+                set_limit = limit;
+            }
+
         }
 
-
-
-
-        ItemImageEndPoint endPoint = itemImagesDAO.getEndPointMetadata(itemID);
-
-
-        List<ItemImage> list = null;
-
-
-        if(metaonly==null || (!metaonly)) {
-
-            list =
-                    itemImagesDAO.getItemImages(
-                            itemID,
-                            sortBy,limit,offset
-                    );
-
-            endPoint.setResults(list);
-        }
-
-
-
-
-        if(limit!=null)
+        if(offset!=null)
         {
-            endPoint.setLimit(limit);
-            endPoint.setOffset(offset);
-            endPoint.setMax_limit(GlobalConstants.max_limit);
+            set_offset = offset;
         }
+
+        ItemSpecValueEndPoint endPoint = new ItemSpecValueEndPoint();
+
+        endPoint.setLimit(set_limit);
+        endPoint.setMax_limit(max_limit);
+        endPoint.setOffset(set_offset);
+
+        if(getRowCount!=null && getRowCount)
+        {
+            endPoint.setItemCount(itemSpecValueDAOJoinOuter.getRowCount(itemSpecID,itemCatID));
+        }
+
+
+        endPoint.setResults(itemSpecValueDAOJoinOuter.getItemSpecValue(itemSpecID,itemCatID,sortBy,limit,offset));
 
 
 
@@ -218,13 +299,53 @@ public class ItemImageResource {
 
 
 
+    @GET
+    @Path("/SpecValuesForFilters")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getItemSpecsForFilters(
+            @QueryParam("ItemSpecID") Integer itemSpecID,
+            @QueryParam("ItemCatID") Integer itemCatID,
+            @QueryParam("ShopID") Integer shopID,
+            @QueryParam("latCenter") Double latCenter, @QueryParam("lonCenter") Double lonCenter,
+            @QueryParam("SearchString") String searchString)
+    {
+
+
+
+        List<ItemSpecificationValue> list = Globals.itemSpecValueDAOInnerJoin.getItemSpecNameForFilters(
+                itemSpecID,itemCatID,shopID,latCenter,lonCenter,searchString,null,null,null
+        );
+
+
+
+//		try {
+//			Thread.sleep(1000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
+
+
+        //Marker
+
+        return Response.status(Response.Status.OK)
+                .entity(list)
+                .build();
+    }
+
+
+
+
+
+
+
 
 
 
 
 
     // Image Utility Methods
-    public static void deleteImageFileInternal(String fileName)
+
+    public static boolean deleteImageFileInternal(String fileName)
     {
         boolean deleteStatus = false;
 
@@ -238,8 +359,6 @@ public class ItemImageResource {
             // delete thumbnails
             Files.deleteIfExists(BASE_DIR.resolve("three_hundred_" + fileName + ".jpg"));
             Files.deleteIfExists(BASE_DIR.resolve("five_hundred_" + fileName + ".jpg"));
-            Files.deleteIfExists(BASE_DIR.resolve("seven_hundred_" + fileName + ".jpg"));
-            Files.deleteIfExists(BASE_DIR.resolve("nine_hundred_" + fileName + ".jpg"));
 
 
         } catch (IOException e) {
@@ -248,9 +367,8 @@ public class ItemImageResource {
         }
 
 
+        return deleteStatus;
     }
-
-
 
 
 
@@ -258,7 +376,7 @@ public class ItemImageResource {
     {
         try
         {
-            serviceURL = serviceURL + "/api/v1/ItemImage/Image/" + imageID;
+            serviceURL = serviceURL + "/api/v1/ItemSpecificationValue/Image/" + imageID;
 
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder()
@@ -351,18 +469,16 @@ public class ItemImageResource {
 
 
 
-
-
     // Image MEthods
 
-    private static final java.nio.file.Path BASE_DIR = Paths.get("./images/ItemImages");
+    private static final java.nio.file.Path BASE_DIR = Paths.get("./images/ItemSpecValue");
     private static final double MAX_IMAGE_SIZE_MB = 2;
 
 
     @POST
     @Path("/Image")
     @Consumes({MediaType.APPLICATION_OCTET_STREAM})
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF, GlobalConstants.ROLE_SHOP_ADMIN})
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
     public Response uploadImage(InputStream in, @HeaderParam("Content-Length") long fileSize,
                                 @QueryParam("PreviousImageName") String previousImageName
     ) throws Exception
@@ -374,8 +490,7 @@ public class ItemImageResource {
             Files.deleteIfExists(BASE_DIR.resolve(previousImageName));
             Files.deleteIfExists(BASE_DIR.resolve("three_hundred_" + previousImageName + ".jpg"));
             Files.deleteIfExists(BASE_DIR.resolve("five_hundred_" + previousImageName + ".jpg"));
-            Files.deleteIfExists(BASE_DIR.resolve("seven_hundred_" + previousImageName + ".jpg"));
-            Files.deleteIfExists(BASE_DIR.resolve("nine_hundred_" + previousImageName + ".jpg"));
+
         }
 
 
@@ -429,9 +544,7 @@ public class ItemImageResource {
 
 
 
-
-
-    private static void createThumbnails(String filename)
+    static void createThumbnails(String filename)
     {
         try {
 
@@ -448,23 +561,14 @@ public class ItemImageResource {
                     .toFile(new File(BASE_DIR.toString() + "/" + "five_hundred_" + filename));
 
 
-            Thumbnails.of(BASE_DIR.toString() + "/" + filename)
-                    .size(700,700)
-                    .outputFormat("jpg")
-                    .toFile(new File(BASE_DIR.toString() + "/" + "seven_hundred_" + filename));
-
-
-            Thumbnails.of(BASE_DIR.toString() + "/" + filename)
-                    .size(900,900)
-                    .outputFormat("jpg")
-                    .toFile(new File(BASE_DIR.toString() + "/" + "nine_hundred_" + filename));
-
 
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+
 
 
 
@@ -494,7 +598,7 @@ public class ItemImageResource {
 
     @DELETE
     @Path("/Image/{name}")
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF, GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_SHOP_STAFF})
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
     public Response deleteImageFile(@PathParam("name")String fileName)
     {
 
@@ -512,8 +616,6 @@ public class ItemImageResource {
             // delete thumbnails
             Files.deleteIfExists(BASE_DIR.resolve("three_hundred_" + fileName + ".jpg"));
             Files.deleteIfExists(BASE_DIR.resolve("five_hundred_" + fileName + ".jpg"));
-            Files.deleteIfExists(BASE_DIR.resolve("seven_hundred_" + fileName + ".jpg"));
-            Files.deleteIfExists(BASE_DIR.resolve("nine_hundred_" + fileName + ".jpg"));
 
 
         } catch (IOException e) {
@@ -533,7 +635,5 @@ public class ItemImageResource {
 
         return response;
     }
-
-
 
 }

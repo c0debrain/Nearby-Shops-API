@@ -3,7 +3,7 @@ package org.nearbyshops.RESTEndpoints;
 import net.coobird.thumbnailator.Thumbnails;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.nearbyshops.DAOsPrepared.ShopImageDAO;
+import org.nearbyshops.DAOs.DAOImages.ShopImageDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;

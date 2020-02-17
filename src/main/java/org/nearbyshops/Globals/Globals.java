@@ -4,25 +4,27 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.nearbyshops.DAOAnalytics.DAOItemAnalytics;
-import org.nearbyshops.DAOBilling.DAOAddBalance;
-import org.nearbyshops.DAOBilling.DAOTransaction;
-import org.nearbyshops.DAOCartOrder.CartItemService;
-import org.nearbyshops.DAOCartOrder.CartService;
-import org.nearbyshops.DAOCartOrder.CartStatsDAO;
-import org.nearbyshops.DAOCartOrder.DeliveryAddressService;
-import org.nearbyshops.DAOItemSpecification.*;
-import org.nearbyshops.DAOOrders.*;
-import org.nearbyshops.DAOReviewItem.FavoriteItemDAOPrepared;
-import org.nearbyshops.DAOReviewItem.ItemReviewDAOPrepared;
-import org.nearbyshops.DAOReviewItem.ItemReviewThanksDAOPrepared;
-import org.nearbyshops.DAOReviewShop.FavoriteBookDAOPrepared;
-import org.nearbyshops.DAOReviewShop.ShopReviewDAOPrepared;
-import org.nearbyshops.DAOReviewShop.ShopReviewThanksDAOPrepared;
-import org.nearbyshops.DAOSettings.ServiceConfigurationDAOPrepared;
-import org.nearbyshops.DAOPushNotifications.DAOOneSignal;
-import org.nearbyshops.DAORoles.*;
-import org.nearbyshops.DAOsPrepared.*;
+import org.nearbyshops.DAOs.DAOAnalytics.DAOItemAnalytics;
+import org.nearbyshops.DAOs.DAOBilling.DAOAddBalance;
+import org.nearbyshops.DAOs.DAOBilling.DAOTransaction;
+import org.nearbyshops.DAOs.DAOCartOrder.CartItemService;
+import org.nearbyshops.DAOs.DAOCartOrder.CartService;
+import org.nearbyshops.DAOs.DAOCartOrder.CartStatsDAO;
+import org.nearbyshops.DAOs.DAOCartOrder.DeliveryAddressService;
+import org.nearbyshops.DAOs.DAOImages.ItemImagesDAO;
+import org.nearbyshops.DAOs.DAOImages.ShopImageDAO;
+import org.nearbyshops.DAOs.DAOItemSpecification.*;
+import org.nearbyshops.DAOs.DAOOrders.*;
+import org.nearbyshops.DAOs.DAOReviewItem.FavoriteItemDAOPrepared;
+import org.nearbyshops.DAOs.DAOReviewItem.ItemReviewDAOPrepared;
+import org.nearbyshops.DAOs.DAOReviewItem.ItemReviewThanksDAOPrepared;
+import org.nearbyshops.DAOs.DAOReviewShop.FavoriteBookDAOPrepared;
+import org.nearbyshops.DAOs.DAOReviewShop.ShopReviewDAOPrepared;
+import org.nearbyshops.DAOs.DAOReviewShop.ShopReviewThanksDAOPrepared;
+import org.nearbyshops.DAOs.DAOSettings.ServiceConfigurationDAO;
+import org.nearbyshops.DAOs.DAOPushNotifications.DAOOneSignal;
+import org.nearbyshops.DAOs.*;
+import org.nearbyshops.DAOs.DAORoles.*;
 import org.simplejavamail.mailer.Mailer;
 import org.simplejavamail.mailer.MailerBuilder;
 
@@ -91,7 +93,7 @@ public class Globals {
     public static DAOPhoneVerificationCodes daoPhoneVerificationCodes=new DAOPhoneVerificationCodes();
 
 
-    public static ServiceConfigurationDAOPrepared serviceConfigDAO = new ServiceConfigurationDAOPrepared();
+    public static ServiceConfigurationDAO serviceConfigDAO = new ServiceConfigurationDAO();
 
     // static reference for holding security accountApproved
 

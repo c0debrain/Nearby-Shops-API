@@ -1,8 +1,8 @@
 package org.nearbyshops.RESTEndpoints;
 
 import net.coobird.thumbnailator.Thumbnails;
-import org.nearbyshops.DAOBilling.DAOAddBalance;
-import org.nearbyshops.DAOsPrepared.ShopDAO;
+import org.nearbyshops.DAOs.DAOBilling.DAOAddBalance;
+import org.nearbyshops.DAOs.ShopDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
@@ -64,8 +64,6 @@ public class ShopResource {
 		}
 	}
 	
-
-
 
 
 
@@ -235,309 +233,11 @@ public class ShopResource {
 
 
 
-
-
-
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	@Path("/QuerySimple")
-	public Response getShopListSimple(
-			@QueryParam("UnderReview")Boolean underReview,
-            @QueryParam("Enabled")Boolean enabled, @QueryParam("Waitlisted") Boolean waitlisted,
-            @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
-            @QueryParam("SearchString") String searchString,
-            @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit") int limit, @QueryParam("Offset") int offset
-	)
-	{
-
-
-		if(limit >= GlobalConstants.max_limit)
-		{
-			limit = GlobalConstants.max_limit;
-		}
-
-
-
-
-		ShopEndPoint endPoint = shopDAO.getShopsListQuerySimple(
-									underReview,
-									enabled,waitlisted,
-									latCenter,lonCenter,
-									searchString, sortBy,
-									limit,offset
-		);
-
-
-		endPoint.setLimit(limit);
-		endPoint.setMax_limit(GlobalConstants.max_limit);
-		endPoint.setOffset(offset);
-
-
-		/*try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
-
-
-
-		//Marker
-		return Response.status(Status.OK)
-				.entity(endPoint)
-				.build();
-	}
-
-
-
-
-//	@QueryParam("SearchString") String searchString,
-//	@QueryParam("SortBy") String sortBy,
-//	@QueryParam("Limit") Integer limit, @QueryParam("Offset") Integer offset,
-
-	@GET
-	@Path("/ForShopFilters")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getShopForFilters(
-            @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
-            @QueryParam("deliveryRangeMax")Double deliveryRangeMax,
-            @QueryParam("deliveryRangeMin")Double deliveryRangeMin,
-            @QueryParam("proximity")Double proximity,
-            @QueryParam("metadata_only")Boolean metaonly
-	)
-	{
-
-
-
-		final int max_limit = 100;
-
-//		if(limit!=null)
-//		{
-//			if(limit>=max_limit)
-//			{
-//				limit = max_limit;
-//			}
-//		}
-//		else
-//		{
-//			limit = 30;
-//		}
-
-
-
-		ShopEndPoint endPoint = shopDAO.getEndPointMetadataFilterShops(latCenter,lonCenter,deliveryRangeMin,deliveryRangeMax,proximity);
-
-//		ShopEndPoint endPoint = new ShopEndPoint();
-
-		endPoint.setLimit(0);
-		endPoint.setMax_limit(max_limit);
-		endPoint.setOffset(0);
-
-		endPoint.setResults(shopDAO.getShopsForShopFiltersPrepared(latCenter,lonCenter, deliveryRangeMin,deliveryRangeMax, proximity));
-
-
-		/*try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
-
-
-
-		//Marker
-		return Response.status(Status.OK)
-				.entity(endPoint)
-				.build();
-	}
-
-
-
-
-
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response getShops(
-            @QueryParam("LeafNodeItemCategoryID")Integer itemCategoryID,
-            @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
-            @QueryParam("deliveryRangeMax")Double deliveryRangeMax,
-            @QueryParam("deliveryRangeMin")Double deliveryRangeMin,
-            @QueryParam("proximity")Double proximity,
-            @QueryParam("SearchString") String searchString,
-            @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit") int limit, @QueryParam("Offset") int offset,
-            @QueryParam("metadata_only")Boolean metaonly
-	)
-	{
-
-
-		//
-//		int set_limit = 30;
-//		int set_offset = 0;
-//		final int max_limit = 100;
-//
-//
-//		if(limit!= null) {
-//
-//			if (limit >= max_limit) {
-//
-//				set_limit = max_limit;
-//			}
-//			else
-//			{
-//
-//				set_limit = limit;
-//			}
-//		}
-//
-
-//		if(offset!=null)
-//		{
-//			set_offset = offset;
-//		}
-
-
-
-		if(limit >= GlobalConstants.max_limit)
-		{
-			limit = GlobalConstants.max_limit;
-		}
-
-
-
-
-
-
-		ShopEndPoint endPoint = shopDAO.getEndPointMetadata(itemCategoryID,
-				latCenter,lonCenter,deliveryRangeMin,deliveryRangeMax,proximity,searchString);
-
-
-		endPoint.setLimit(limit);
-		endPoint.setMax_limit(GlobalConstants.max_limit);
-		endPoint.setOffset(offset);
-
-
-		ArrayList<Shop> shopsList = null;
-
-
-		/*try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
-
-
-		if(metaonly==null || (!metaonly)) {
-
-
-			shopsList = shopDAO.getShopListQueryJoin(itemCategoryID,
-					latCenter,lonCenter,deliveryRangeMin,deliveryRangeMax,proximity,searchString,sortBy,
-					limit,offset);
-
-			endPoint.setResults(shopsList);
-		}
-
-
-		//Marker
-		return Response.status(Status.OK)
-				.entity(endPoint)
-				.build();
-	}
-
-
-
-
-
-	@GET
-	@Path("/FilterByItemCat/{ItemCategoryID}")
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response filterShopsByItemCategory(
-            @PathParam("ItemCategoryID")Integer itemCategoryID,
-            @QueryParam("DistributorID")Integer distributorID,
-            @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
-            @QueryParam("deliveryRangeMax")Double deliveryRangeMax,
-            @QueryParam("deliveryRangeMin")Double deliveryRangeMin,
-            @QueryParam("proximity")Double proximity,
-            @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit") Integer limit, @QueryParam("Offset") Integer offset,
-            @QueryParam("metadata_only")Boolean metaonly)
-	{
-
-
-		int set_limit = 30;
-		int set_offset = 0;
-		final int max_limit = 100;
-
-
-		if(limit!= null) {
-
-			if (limit >= max_limit) {
-
-				set_limit = max_limit;
-			}
-			else
-			{
-
-				set_limit = limit;
-			}
-
-		}
-
-		if(offset!=null)
-		{
-			set_offset = offset;
-		}
-
-
-		ShopEndPoint endPoint = shopDAO.endPointMetadataFilterShops(itemCategoryID,distributorID,
-				 latCenter,lonCenter,deliveryRangeMin,deliveryRangeMax,proximity);
-
-
-		endPoint.setLimit(set_limit);
-		endPoint.setMax_limit(max_limit);
-		endPoint.setOffset(set_offset);
-
-
-		ArrayList<Shop> shopsList = null;
-
-
-		if(metaonly==null || (!metaonly)) {
-
-
-			shopsList = shopDAO.filterShopsByItemCategory(
-					itemCategoryID, distributorID,
-					latCenter,lonCenter,
-					deliveryRangeMin,deliveryRangeMax,
-					proximity,sortBy, limit,offset
-			);
-
-			endPoint.setResults(shopsList);
-		}
-
-/*
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
-
-
-		//Marker
-		return Response.status(Status.OK)
-				.entity(endPoint)
-				.build();
-
-	}
-
-
-
-
-
 	@GET
 	@Path("/GetShopDetails/{ShopID}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response getShop(@PathParam("ShopID")int shopID,
-                            @QueryParam("latCenter")double latCenter, @QueryParam("lonCenter")double lonCenter)
+	public Response getShopDetails(@PathParam("ShopID")int shopID,
+								   @QueryParam("latCenter")double latCenter, @QueryParam("lonCenter")double lonCenter)
 	{
 		Shop shop = shopDAO.getShopDetails(shopID,latCenter,lonCenter);
 
@@ -546,15 +246,15 @@ public class ShopResource {
 			return Response.status(Status.OK)
 					.entity(shop)
 					.build();
-			
+
 		}
 		else
 		{
 
 			return Response.status(Status.NO_CONTENT)
 					.build();
-			
-		}	
+
+		}
 	}
 
 
@@ -595,12 +295,15 @@ public class ShopResource {
 
 
 
-	@PUT
-	@Path("/BecomeASeller")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@RolesAllowed({GlobalConstants.ROLE_END_USER})
+
+
+	//	@PUT
+//	@Path("/BecomeASeller")
+//	@Consumes(MediaType.APPLICATION_JSON)
+//	@RolesAllowed({GlobalConstants.ROLE_END_USER})
 	public Response becomeASeller()
 	{
+		// this is deprecated and no longer required ... create shop method has replaced it
 
 		User user = (User) Globals.accountApproved;
 
@@ -668,6 +371,217 @@ public class ShopResource {
 
 	}
 
+
+
+
+
+
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Path("/QuerySimple")
+	public Response getShopListSimple(
+			@QueryParam("UnderReview")Boolean underReview,
+            @QueryParam("Enabled")Boolean enabled, @QueryParam("Waitlisted") Boolean waitlisted,
+            @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
+            @QueryParam("SearchString") String searchString,
+            @QueryParam("SortBy") String sortBy,
+            @QueryParam("Limit") int limit, @QueryParam("Offset") int offset,
+			@QueryParam("GetRowCount")boolean getRowCount,
+			@QueryParam("MetadataOnly")boolean getOnlyMetaData
+	)
+	{
+
+
+		if(limit >= GlobalConstants.max_limit)
+		{
+			limit = GlobalConstants.max_limit;
+		}
+
+
+
+		ShopEndPoint endPoint = shopDAO.getShopsListQuerySimple(
+									underReview,
+									enabled,waitlisted,
+									latCenter,lonCenter,
+									searchString, sortBy,
+									limit,offset, getRowCount,getOnlyMetaData
+		);
+
+
+		endPoint.setLimit(limit);
+		endPoint.setMax_limit(GlobalConstants.max_limit);
+		endPoint.setOffset(offset);
+
+
+		/*try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
+
+
+
+		//Marker
+		return Response.status(Status.OK)
+				.entity(endPoint)
+				.build();
+	}
+
+
+
+
+
+
+
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getShops(
+            @QueryParam("LeafNodeItemCategoryID")Integer itemCategoryID,
+            @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
+            @QueryParam("deliveryRangeMax")Double deliveryRangeMax,
+            @QueryParam("deliveryRangeMin")Double deliveryRangeMin,
+            @QueryParam("proximity")Double proximity,
+            @QueryParam("SearchString") String searchString,
+            @QueryParam("SortBy") String sortBy,
+            @QueryParam("Limit") int limit, @QueryParam("Offset") int offset,
+			@QueryParam("GetRowCount")boolean getRowCount,
+			@QueryParam("MetadataOnly")boolean getOnlyMetaData
+	)
+	{
+
+
+
+		if(limit >= GlobalConstants.max_limit)
+		{
+			limit = GlobalConstants.max_limit;
+		}
+
+
+
+		ShopEndPoint endPoint = shopDAO.getShopListQueryJoin(itemCategoryID,
+				latCenter,lonCenter,
+				deliveryRangeMin,deliveryRangeMax,proximity,
+				searchString,sortBy,
+				limit,offset,
+				getRowCount,getOnlyMetaData);
+
+
+
+
+		endPoint.setLimit(limit);
+		endPoint.setOffset(offset);
+		endPoint.setMax_limit(GlobalConstants.max_limit);
+
+
+
+		//Marker
+		return Response.status(Status.OK)
+				.entity(endPoint)
+				.build();
+	}
+
+
+
+
+
+	@GET
+	@Path("/FilterByItemCat/{ItemCategoryID}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response filterShopsByItemCategory(
+            @PathParam("ItemCategoryID")Integer itemCategoryID,
+            @QueryParam("DistributorID")Integer distributorID,
+            @QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
+            @QueryParam("deliveryRangeMax")Double deliveryRangeMax,
+            @QueryParam("deliveryRangeMin")Double deliveryRangeMin,
+            @QueryParam("proximity")Double proximity,
+            @QueryParam("SortBy") String sortBy,
+            @QueryParam("Limit") int limit, @QueryParam("Offset") int offset,
+			@QueryParam("GetRowCount")boolean getRowCount,
+			@QueryParam("MetadataOnly")boolean getOnlyMetaData
+	)
+	{
+
+
+
+		if(limit >= GlobalConstants.max_limit)
+		{
+			limit = GlobalConstants.max_limit;
+		}
+
+
+		ShopEndPoint endPoint = shopDAO.filterShopsByItemCategory(
+				itemCategoryID,
+				latCenter,lonCenter,
+				deliveryRangeMin,deliveryRangeMax,
+				proximity,sortBy,
+				limit,offset,
+				getRowCount,getOnlyMetaData
+		);
+
+
+
+		endPoint.setLimit(limit);
+		endPoint.setOffset(offset);
+		endPoint.setMax_limit(GlobalConstants.max_limit);
+
+
+/*
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
+
+
+		//Marker
+		return Response.status(Status.OK)
+				.entity(endPoint)
+				.build();
+
+	}
+
+
+
+
+
+
+
+
+
+//	@QueryParam("SearchString") String searchString,
+//	@QueryParam("SortBy") String sortBy,
+//	@QueryParam("Limit") Integer limit, @QueryParam("Offset") Integer offset,
+
+	@GET
+	@Path("/ForShopFilters")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response getShopForFilters(
+			@QueryParam("latCenter")Double latCenter, @QueryParam("lonCenter")Double lonCenter,
+			@QueryParam("deliveryRangeMax")Double deliveryRangeMax,
+			@QueryParam("deliveryRangeMin")Double deliveryRangeMin,
+			@QueryParam("proximity")Double proximity,
+			@QueryParam("GetRowCount")boolean getRowCount,
+			@QueryParam("MetadataOnly")boolean getOnlyMetaData
+	)
+	{
+
+
+		shopDAO.getShopsForShopFiltersPrepared(latCenter,lonCenter, deliveryRangeMin,deliveryRangeMax, proximity);
+
+		/*try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}*/
+
+
+
+		//Marker
+		return Response.status(Status.OK)
+//				.entity(endPoint)
+				.build();
+	}
 
 
 
@@ -796,8 +710,6 @@ public class ShopResource {
 
 		return null;
 	}
-
-
 
 
 

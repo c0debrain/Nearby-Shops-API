@@ -3,9 +3,9 @@ package org.nearbyshops.RESTEndpoints;
 import net.coobird.thumbnailator.Thumbnails;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.nearbyshops.DAOsPrepared.ItemCategoryDAO;
-import org.nearbyshops.DAOsPrepared.ItemDAO;
-import org.nearbyshops.DAOsPrepared.ItemDAOJoinOuter;
+import org.nearbyshops.DAOs.ItemCategoryDAO;
+import org.nearbyshops.DAOs.ItemDAO;
+import org.nearbyshops.DAOs.ItemDAOJoinOuter;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Image;
@@ -349,7 +349,7 @@ public class ItemResource {
             @QueryParam("proximity")Double proximity,
             @QueryParam("SearchString")String searchString,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit")Integer limit, @QueryParam("Offset")int offset,
+            @QueryParam("Limit")int limit, @QueryParam("Offset")int offset,
 			@QueryParam("GetRowCount")boolean getRowCount,
 			@QueryParam("MetadataOnly")boolean getOnlyMetaData)
 	{
@@ -358,7 +358,7 @@ public class ItemResource {
 		List<ItemCategory> subcategories;
 
 
-		if(limit!=null && limit >= GlobalConstants.max_limit)
+		if(limit >= GlobalConstants.max_limit)
 		{
 			limit = GlobalConstants.max_limit;
 		}
@@ -387,9 +387,6 @@ public class ItemResource {
 				subcategories = itemCategoryDAO.getItemCategoriesJoinRecursive(
 						shopID, itemCategoryID, null,
 						latCenter, lonCenter,
-						deliveryRangeMin,
-						deliveryRangeMax,
-						proximity,
 						true,
 						searchString,
 						ItemCategory.CATEGORY_ORDER,
@@ -404,14 +401,10 @@ public class ItemResource {
 
 
 
-		if(limit!=null)
-		{
-			endPoint.setLimit(limit);
-			endPoint.setOffset(offset);
-			endPoint.setMax_limit(GlobalConstants.max_limit);
-		}
 
-
+		endPoint.setLimit(limit);
+		endPoint.setOffset(offset);
+		endPoint.setMax_limit(GlobalConstants.max_limit);
 
 
 
@@ -427,12 +420,6 @@ public class ItemResource {
 
 
 
-
-
-
-
-	//@QueryParam("ShopID")Integer shopID,
-
 	@GET
 	@Path("/OuterJoin")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -442,52 +429,28 @@ public class ItemResource {
             @QueryParam("IsDetached")Boolean parentIsNull,
             @QueryParam("SearchString") String searchString,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit")Integer limit, @QueryParam("Offset")int offset,
-            @QueryParam("metadata_only")Boolean metaonly)
+            @QueryParam("Limit")int limit, @QueryParam("Offset")int offset,
+			@QueryParam("GetRowCount")boolean getRowCount,
+			@QueryParam("MetadataOnly")boolean getOnlyMetaData)
 	{
 
 
-		List<ItemCategory> subcategories;
 
 
+		if (limit >= GlobalConstants.max_limit) {
 
-		final int max_limit = 100;
-
-
-
-		if (limit!= null && limit >= max_limit) {
-
-			limit = max_limit;
+			limit = GlobalConstants.max_limit;
 		}
 
 
 
 
-
-		ItemEndPoint endPoint = itemDAOJoinOuter.getEndPointMetadata(itemCategoryID,parentIsNull,searchString);
-
-		endPoint.setLimit(limit);
-		endPoint.setMax_limit(max_limit);
-		endPoint.setOffset(offset);
-
-		List<Item> list = null;
-
-
-		if(metaonly==null || (!metaonly)) {
-
-			list =
-					itemDAOJoinOuter.getItems(
-							itemCategoryID,
-							parentIsNull,searchString,
-							sortBy,limit,offset
-					);
-
-			endPoint.setResults(list);
-		}
-
-
-
-
+		ItemEndPoint endPoint = itemDAOJoinOuter.getItems(
+				itemCategoryID,
+				parentIsNull,searchString,
+				sortBy,limit,offset,
+				getRowCount,getOnlyMetaData
+		);;
 
 
 
@@ -507,6 +470,13 @@ public class ItemResource {
 
 
 
+		endPoint.setLimit(limit);
+		endPoint.setMax_limit(GlobalConstants.max_limit);
+		endPoint.setOffset(offset);
+
+
+
+
 
 //		try {
 //			Thread.sleep(1000);
@@ -516,18 +486,10 @@ public class ItemResource {
 
 
 		//Marker
-
 		return Response.status(Status.OK)
 				.entity(endPoint)
 				.build();
 	}
-
-
-
-
-
-
-
 
 
 

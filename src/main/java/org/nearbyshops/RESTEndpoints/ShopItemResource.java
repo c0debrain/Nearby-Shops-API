@@ -1,9 +1,9 @@
 package org.nearbyshops.RESTEndpoints;
 
-import org.nearbyshops.DAOsPrepared.ItemCategoryDAO;
-import org.nearbyshops.DAOsPrepared.ShopItemByItemDAO;
-import org.nearbyshops.DAOsPrepared.ShopItemByShopDAO;
-import org.nearbyshops.DAOsPrepared.ShopItemDAO;
+import org.nearbyshops.DAOs.ItemCategoryDAO;
+import org.nearbyshops.DAOs.ShopItemByItemDAO;
+import org.nearbyshops.DAOs.ShopItemByShopDAO;
+import org.nearbyshops.DAOs.ShopItemDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.ItemCategory;
@@ -447,8 +447,9 @@ public class ShopItemResource {
 		);
 
 
+
 		endPoint.setLimit(limit);
-//		endPoint.setMax_limit(max_limit);
+		endPoint.setMax_limit(GlobalConstants.max_limit);
 		endPoint.setOffset(offset);
 
 
@@ -485,171 +486,85 @@ public class ShopItemResource {
             @QueryParam("SearchString") String searchString,
             @QueryParam("ShopEnabled")Boolean shopEnabled,
             @QueryParam("SortBy") String sortBy,
-            @QueryParam("Limit") Integer limit, @QueryParam("Offset") int offset,
-            @QueryParam("metadata_only")Boolean metaonly,
-            @QueryParam("GetExtras")Boolean getExtras
+			@QueryParam("Limit") int limit, @QueryParam("Offset") int offset,
+			@QueryParam("GetRowCount")boolean getRowCount,
+			@QueryParam("MetadataOnly")boolean getOnlyMetaData
 	)
 	{
 
-		final int max_limit = 100;
-
-		if(limit!=null)
-		{
-			if(limit>=max_limit)
-			{
-				limit = max_limit;
-			}
-		}
-		else
-		{
-			limit = 30;
-		}
+		ShopItemEndPoint endPoint = null;
 
 
-		ShopItemEndPoint endPoint;
-
-
-		if(getExtras!=null && getExtras)
+		if(ShopID!=null && itemID == null)
 		{
 
-			if(ShopID!=null && itemID == null)
-			{
-				endPoint = shopItemByShopDAO.getEndpointMetadata(
-						ItemCategoryID,
-						ShopID,
-						latCenter,lonCenter,
-						deliveryRangeMin,deliveryRangeMax,
-						proximity,endUserID,
-						isFilledCart,isOutOfStock,
-						priceEqualsZero, searchString,
-						shopEnabled
-				);
-			}
-			else if(itemID !=null && ShopID==null)
-			{
-				endPoint = shopItemByItemDAO.getEndpointMetadata(
-						ItemCategoryID,
-						itemID,
-						latCenter,lonCenter,
-						deliveryRangeMin,deliveryRangeMax,
-						proximity,endUserID,
-						isFilledCart,isOutOfStock,priceEqualsZero
-				);
-
-			}
-			else
-			{
-				endPoint = shopItemDAO.getEndpointMetadata(
-						ItemCategoryID,
-						ShopID,itemID,
-						latCenter,lonCenter,
-						deliveryRangeMin,deliveryRangeMax,
-						proximity,endUserID,
-						isFilledCart,isOutOfStock,priceEqualsZero,
-						searchString);
-			}
-
-		}
-		else
-		{
-			endPoint = shopItemDAO.getEndpointMetadata(
+			endPoint = shopItemByShopDAO.getShopItems(
 					ItemCategoryID,
-					ShopID,itemID,
-					latCenter,lonCenter,
+					ShopID,
+					latCenter, lonCenter,
 					deliveryRangeMin,deliveryRangeMax,
-					proximity,endUserID,
-					isFilledCart,isOutOfStock,priceEqualsZero,
-					searchString);
+					proximity, endUserID,
+					isFilledCart,
+					isOutOfStock,
+					priceEqualsZero,
+					shopEnabled,
+					searchString,
+					sortBy,limit,offset,
+					getRowCount,getOnlyMetaData
+			);
+
+
 		}
+		else if(itemID !=null && ShopID==null)
+		{
+
+
+			endPoint = shopItemByItemDAO.getShopItems(
+					ItemCategoryID,
+					itemID,
+					latCenter, lonCenter,
+					deliveryRangeMin,deliveryRangeMax,
+					proximity, endUserID,
+					isFilledCart,
+					isOutOfStock,
+					priceEqualsZero,
+					sortBy,
+					limit,offset,
+					getRowCount,getOnlyMetaData
+			);
+
+		}
+		else
+		{
+
+			endPoint = shopItemDAO.getShopItems(
+					ItemCategoryID,
+					ShopID, itemID,
+					latCenter, lonCenter,
+					deliveryRangeMin,deliveryRangeMax,
+					proximity, endUserID,
+					isFilledCart,
+					isOutOfStock,
+					priceEqualsZero,
+					searchString,
+					sortBy,
+					limit,offset,
+					getRowCount,getOnlyMetaData
+			);
+
+		}
+
+
+
+
+
 
 
 		endPoint.setLimit(limit);
-		endPoint.setMax_limit(max_limit);
+		endPoint.setMax_limit(GlobalConstants.max_limit);
 		endPoint.setOffset(offset);
 
 
-		ArrayList<ShopItem> shopItemsList = null;
-
-
-		if(metaonly==null || (!metaonly)) {
-
-
-
-			if(getExtras!=null && getExtras)
-			{
-
-				if(ShopID!=null && itemID == null)
-				{
-
-					shopItemsList = shopItemByShopDAO.getShopItems(
-							ItemCategoryID,
-							ShopID,
-							latCenter, lonCenter,
-							deliveryRangeMin,deliveryRangeMax,
-							proximity, endUserID,
-							isFilledCart,
-							isOutOfStock,
-							priceEqualsZero,
-							shopEnabled,
-							searchString,
-							sortBy,limit,offset
-					);
-				}
-				else if(itemID !=null && ShopID==null)
-				{
-
-					shopItemsList = shopItemByItemDAO.getShopItems(
-							ItemCategoryID,
-							itemID,
-							latCenter, lonCenter,
-							deliveryRangeMin,deliveryRangeMax,
-							proximity, endUserID,
-							isFilledCart,
-							isOutOfStock,
-							priceEqualsZero,
-							sortBy,
-							limit,offset
-					);
-
-				}
-				else
-				{
-
-					shopItemsList = shopItemDAO.getShopItems(
-							ItemCategoryID,
-							ShopID, itemID,
-							latCenter, lonCenter,
-							deliveryRangeMin,deliveryRangeMax,
-							proximity, endUserID,
-							isFilledCart,
-							isOutOfStock,
-							priceEqualsZero,
-							searchString,
-							sortBy,
-							limit,offset);
-
-				}
-
-			}
-			else
-			{
-				shopItemsList = shopItemDAO.getShopItems(
-						ItemCategoryID,
-						ShopID, itemID,
-						latCenter, lonCenter,
-						deliveryRangeMin,deliveryRangeMax,
-						proximity, endUserID,
-						isFilledCart,
-						isOutOfStock,
-						priceEqualsZero,
-						searchString,
-						sortBy,
-						limit,offset);
-
-			}
-
-			endPoint.setResults(shopItemsList);
-		}
 
 //		try {
 //			Thread.sleep(1000);
@@ -669,9 +584,6 @@ public class ShopItemResource {
 			subcategories = itemCategoryDAO.getItemCategoriesJoinRecursive(
 					ShopID, ItemCategoryID, null,
 					latCenter, lonCenter,
-					deliveryRangeMin,
-					deliveryRangeMax,
-					proximity,
 					true,
 					searchString,
 					ItemCategory.CATEGORY_ORDER,
