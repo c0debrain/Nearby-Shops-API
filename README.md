@@ -4,10 +4,6 @@ Nearby Shops API (JSON based REST API)
 This is the server side part of the Nearby Shops open-source project. For more information about this project please visit https://nearbyshops.org | Developers Visit : https://developer.nearbyshops.org
 
 
-Screenshots
------------
-<img src="https://nearbyshops.org/images/3.png" width="208">   <img src="https://nearbyshops.org/images/5.png" width="208"> <img src="https://nearbyshops.org/images/6.png" width="208">
-
 Installation Guide
 --------------------
 Installation guide is available for installing Nearby Shops API on the Could Hosting Service like Digital Ocean or AWS using Ubuntu 16.04 Server.
@@ -40,6 +36,12 @@ Download
 Get it from Google play store
 
 <a href="https://play.google.com/store/apps/details?id=org.nearbyshops.enduserappnew"><img class="alignnone" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" alt="Get it on Google Play" width="219" height="90" /></a>
+
+
+
+Screenshots
+-----------
+<img src="https://nearbyshops.org/images/3.png" width="208">   <img src="https://nearbyshops.org/images/5.png" width="208"> <img src="https://nearbyshops.org/images/6.png" width="208">
 
 
 Get paid to Contribute
