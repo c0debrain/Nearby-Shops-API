@@ -106,8 +106,8 @@ public class ShopDAO {
 				statement.setObject(++i,shop.getPickFromShopAvailable());
 				statement.setObject(++i,shop.getHomeDeliveryAvailable());
 
-				statement.setObject(++i,shop.getShopEnabled());
-				statement.setObject(++i,shop.getShopWaitlisted());
+				statement.setObject(++i,null);
+				statement.setObject(++i,false);
 
 				statement.setString(++i,shop.getLogoImagePath());
 
@@ -124,7 +124,6 @@ public class ShopDAO {
 
 
 				statement.setObject(++i,shop.isOpen());
-
 				statement.setObject(++i,shopAdminID);
 
 
@@ -186,7 +185,87 @@ public class ShopDAO {
 		
 		return rowIdOfInsertedRow;
 	}
-	
+
+
+	public int deleteShop(int shopID)
+	{
+
+		int shopAdminID = Globals.daoUserUtility.getUserIDforShopAdmin(shopID);
+
+
+
+		String deleteStatement = "DELETE FROM " + Shop.TABLE_NAME
+				+ " WHERE " + Shop.SHOP_ID + "= ?";
+
+
+		// shop is deleted therefore change users role from shop admin to end user
+		String updateRole =  " UPDATE " + User.TABLE_NAME
+				+ " SET " + User.ROLE + " = " + GlobalConstants.ROLE_END_USER_CODE
+				+ " WHERE " + User.TABLE_NAME + "." + User.USER_ID + " = ? "
+				+ " AND " + User.TABLE_NAME + "." + User.ROLE + " = " + GlobalConstants.ROLE_SHOP_ADMIN_CODE;
+
+
+
+
+		Connection connection= null;
+		PreparedStatement statement = null;
+		int rowCountDeleted = 0;
+		try {
+
+			connection = dataSource.getConnection();
+
+			statement = connection.prepareStatement(deleteStatement);
+			statement.setObject(1,shopID);
+
+			rowCountDeleted = statement.executeUpdate();
+
+
+			if(rowCountDeleted==1)
+			{
+				statement = connection.prepareStatement(updateRole);
+
+				statement.setObject(1,shopAdminID);
+				statement.executeUpdate();
+			}
+
+
+			connection.close();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		finally
+
+		{
+
+			try {
+
+				if(statement!=null)
+				{statement.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+
+				if(connection!=null)
+				{connection.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+
+		return rowCountDeleted;
+	}
+
+
+
+
 
 
 
@@ -843,62 +922,6 @@ public class ShopDAO {
 
 	}
 
-
-
-
-	public int deleteShop(int shopID)
-	{
-		
-		String deleteStatement = "DELETE FROM " + Shop.TABLE_NAME
-				+ " WHERE " + Shop.SHOP_ID + "= ?";
-		
-		
-		Connection connection= null;
-		PreparedStatement statement = null;
-		int rowCountDeleted = 0;
-		try {
-			
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(deleteStatement);
-			statement.setObject(1,shopID);
-
-
-			rowCountDeleted = statement.executeUpdate();
-//			System.out.println(" Deleted Count: " + rowCountDeleted);
-			
-			connection.close();
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		finally
-		
-		{
-			
-			try {
-			
-				if(statement!=null)
-				{statement.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			try {
-				
-				if(connection!=null)
-				{connection.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	
-		
-		return rowCountDeleted;
-	}
 
 
 

@@ -164,6 +164,79 @@ public class DAOUserUtility {
     }
 
 
+    public int getUserIDforShopAdmin(int shopID) {
+
+        String query = "SELECT " + Shop.SHOP_ADMIN_ID + ""
+                + " FROM "   + Shop.TABLE_NAME
+                + " WHERE "  + Shop.SHOP_ID + " = ?";
+
+
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+
+
+        try {
+
+            connection = dataSource.getConnection();
+            statement = connection.prepareStatement(query);
+
+            statement.setObject(1,shopID);
+
+            rs = statement.executeQuery();
+
+
+            while(rs.next())
+            {
+                shopID = rs.getInt(Shop.SHOP_ADMIN_ID);
+            }
+
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally
+
+        {
+
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if (statement != null) {
+                    statement.close();
+                }
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if (connection != null) {
+                    connection.close();
+                }
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return shopID;
+    }
+
+
+
     public int getUserID(String username)
     {
 
