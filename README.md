@@ -4,18 +4,6 @@ Nearby Shops API (JSON based REST API)
 This is the server side part of the Nearby Shops open-source project. For more information about this project please visit https://nearbyshops.org | Developers Visit : https://developer.nearbyshops.org
 
 
-A note to potential Contributors
-----------------------------------
-This repository is due for some code cleanup and refactoring. When that cleanup is done the code will become more easy to understand and comprehend. You can still go ahead and study the code. But be aware that you may not see a production quality organized code. 
-
-You are free to review the code and welcome to suggest the best technologies/ libraries to use in the backend side and how can we improve the code in this repository. 
-
-If you're an experienced backend developer your inputs will be highly valuable to improve the project code !
-
-To give your suggestion ... get in touch with us on our forum http://forum.nearbyshops.org
-
-
-
 Screenshots
 -----------
 <img src="https://nearbyshops.org/images/3.png" width="208">   <img src="https://nearbyshops.org/images/5.png" width="208"> <img src="https://nearbyshops.org/images/6.png" width="208">
@@ -40,7 +28,7 @@ The server side component is a JSON Based Rest API built with Java
 
 Third Party Integrations
 -------------------------
-SMS-OTP Integration using msg91, One-Signal (for push notifications)
+E-mail Integration using Simple Java Mail, SMS-OTP Integration using msg91, One-Signal (for push notifications)
 
 Please visit our integrations guide for more information about integrations : https://developer.nearbyshops.org/integrations/e-mail-integration.html
 
@@ -59,7 +47,7 @@ Get paid to Contribute
 
 Developer time is valuable and its not fair to expect developers to contribute their time without being reasonably compensated. 
 
-We may have some strategy / plan to compensate the contributors. 
+If you want to contribute to the project and get compensated please get in touch with us !
 
 
 Community and Discussion Forum
