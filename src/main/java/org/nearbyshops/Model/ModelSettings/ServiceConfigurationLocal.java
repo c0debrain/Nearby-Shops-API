@@ -135,7 +135,7 @@ public class ServiceConfigurationLocal {
     private double latCenter;
     private double lonCenter;
 
-    private int serviceRange;
+    private double serviceRange;
 //    private Integer shopDeliveryRangeMax;
 
     private Timestamp created;
@@ -355,11 +355,12 @@ public class ServiceConfigurationLocal {
         this.lonCenter = lonCenter;
     }
 
-    public int getServiceRange() {
+
+    public double getServiceRange() {
         return serviceRange;
     }
 
-    public void setServiceRange(int serviceRange) {
+    public void setServiceRange(double serviceRange) {
         this.serviceRange = serviceRange;
     }
 

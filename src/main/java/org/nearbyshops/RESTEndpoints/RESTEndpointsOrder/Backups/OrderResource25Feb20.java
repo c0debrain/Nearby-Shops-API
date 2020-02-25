@@ -1,4 +1,4 @@
-package org.nearbyshops.RESTEndpoints.RESTEndpointsOrder;
+package org.nearbyshops.RESTEndpoints.RESTEndpointsOrder.Backups;
 
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
@@ -6,22 +6,20 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.Model.Order;
 import org.nearbyshops.Model.ModelEndpoint.OrderEndPoint;
 import org.nearbyshops.Model.ModelRoles.User;
+import org.nearbyshops.Model.Order;
 
 import javax.annotation.security.RolesAllowed;
-import javax.inject.Singleton;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 
-
-@Singleton
-@Path("/api/Order")
-public class OrderResource {
+//@Singleton
+//@Path("/api/Order")
+public class OrderResource25Feb20 {
 
 
 
@@ -32,62 +30,138 @@ public class OrderResource {
 	public Response createOrder(Order order, @QueryParam("CartID") int cartID)
 	{
 
-		int orderId = Globals.pladeOrderDAO.placeOrderNew(order, cartID);
+//		Order orderResult = Globals.orderService.placeOrder(order,cartID);
 
-		if (orderId != -1) {
-
-			Order orderResult = Globals.orderService.getOrderDetails(orderId);
-
-
-
-			// send push notification
-			if(GlobalConstants.push_notification_provider==1)
-			{
-
-				// send notification using fcm
-				String topic = GlobalConstants.market_id_for_fcm + "shop_" + orderResult.getShopID();
-
-				// See documentation on defining a message payload.
-				Message message = Message.builder()
-						.setNotification(new Notification("Order Received", "You have received an order. Please check the order and respond to the customer !"))
-						.putData("notification_type",GlobalConstants.NOTIFICATION_ORDER_RECIEVED)
-						.setTopic(topic)
-						.build();
+//		try
+//		{
 
 
 
+			int orderId = Globals.pladeOrderDAO.placeOrderNew(order, cartID);
 
-				System.out.println("Topic : " + topic);
+			if (orderId != -1) {
 
+				Order orderResult = Globals.orderService.getOrderDetails(orderId);
 
-				try {
-
-
-					String response = FirebaseMessaging.getInstance().send(message);
-					System.out.println("Sent Notification : " + response);
+//			Globals.broadcastMessageToShop("Order Number : " + String.valueOf(orderId) + " Has been received !",orderResult.getShopID());
 
 
-				} catch (FirebaseMessagingException e) {
-					e.printStackTrace();
+
+				// send push notification
+				if(GlobalConstants.push_notification_provider==1)
+				{
+					// send notification using fcm
+
+
+					String topic = GlobalConstants.market_id_for_fcm + "shop_" + orderResult.getShopID();
+
+					// See documentation on defining a message payload.
+					Message message = Message.builder()
+							.setNotification(new Notification("Order Received", "You have received an order. Please check the order and respond to the customer !"))
+							.putData("notification_type",GlobalConstants.NOTIFICATION_ORDER_RECIEVED)
+							.setTopic(topic)
+							.build();
+
+
+
+
+					System.out.println("Topic : " + topic);
+
+
+					try {
+
+
+						String response = FirebaseMessaging.getInstance().send(message);
+						System.out.println("Sent Notification : " + response);
+
+
+					} catch (FirebaseMessagingException e) {
+						e.printStackTrace();
+					}
+
+
+
+				}
+				else if(GlobalConstants.push_notification_provider==2)
+				{
+//					// send notification using one_signal
+//
+//
+//
+//					oneSignalNotifications.sendNotificationToEndUser(
+//							orderResult.getEndUserID(),
+//							GlobalConstants.url_for_notification_icon_value,
+//							null,
+//							null,
+//							10,
+//							"Order Placed",
+//							"Your order has been placed successfully !",
+//							1,
+//							DAOOneSignal.ORDER_PLACED,
+//							null
+//					);
+//
+//
+//
+//					try
+//					{
+//
+////					System.out.println("Shop ID : " + orderResult.getShopID());
+//
+////					int shopAdminID = Globals.daoShopStaff.getAdminIDforShop(orderResult.getShopID());
+////					String shopAdminPlayerID = oneSignalNotifications.getPlayerID(shopAdminID).getRt_oneSignalPlayerID();
+//
+//
+//						String shopAdminPlayerID = oneSignalNotifications.getPlayerIDforShopAdmin(orderResult.getShopID());
+//						ArrayList<String> playerIDs =  Globals.oneSignalNotifications.getPlayerIDsForShopStaff(orderResult.getShopID(),
+//								true,null,null,null,null);
+//
+//
+//						playerIDs.add(shopAdminPlayerID);
+//
+//
+//
+//						Globals.oneSignalNotifications.sendNotificationToUser(
+//								playerIDs,
+//								GlobalConstants.ONE_SIGNAL_APP_ID_SHOP_OWNER_APP,
+//								GlobalConstants.ONE_SIGNAL_API_KEY_SHOP_OWNER_APP,
+//								GlobalConstants.url_for_notification_icon_value,
+//								null,
+//								null,
+//								10,
+//								"Order Received",
+//								"Your have received an order !",
+//								1,
+//								DAOOneSignal.ORDER_PLACED,
+//								null
+//						);
+//
+
+//
+//					}
+//					catch (Exception ex)
+//					{
+//						ex.printStackTrace();
+//					}
+
+
+
 				}
 
 
 
+
+				return Response.status(Status.CREATED)
+//					.entity(orderResult)
+						.build();
+
+
 			}
+			else {
 
-
-
-
-			return Response.status(Status.CREATED)
-					.build();
-
-
-		}
-		else {
-
-			return Response.status(Status.NOT_MODIFIED)
-					.build();
-		}
+				return Response.status(Status.NOT_MODIFIED)
+						.build();
+			}
 
 	}
 
@@ -161,6 +235,8 @@ public class OrderResource {
 
 
 
+
+//		getRowCount=true;
 
 
 		OrderEndPoint endpoint = Globals.orderService.getOrdersList(

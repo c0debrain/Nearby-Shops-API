@@ -30,27 +30,21 @@ public class ItemSpecItemResource {
     public Response saveItemSpecName(ItemSpecificationItem itemSpecItem)
     {
         int idOfInsertedRow = -1;
-
-
         idOfInsertedRow = itemSpecItemDAO.saveItemSpecItem(itemSpecItem);
-
 
 
         if(idOfInsertedRow >=1)
         {
-
             return Response.status(Response.Status.CREATED)
                     .build();
-
-        }else if(idOfInsertedRow <= 0)
-        {
+        }
+        else {
 
             return Response.status(Response.Status.NOT_MODIFIED)
                     .build();
         }
 
 
-        return null;
     }
 
 

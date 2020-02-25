@@ -1,17 +1,16 @@
-package org.nearbyshops.DAOs.DAOOrders;
+package org.nearbyshops.DAOs.DAOOrders.Backups;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.Item;
-import org.nearbyshops.Model.Order;
-import org.nearbyshops.Model.OrderItem;
 import org.nearbyshops.Model.ModelEndpoint.OrderItemEndPoint;
+import org.nearbyshops.Model.OrderItem;
 
 import java.sql.*;
 import java.util.ArrayList;
 
 
-public class OrderItemService {
+public class OrderItemService25Feb20 {
 
 
 
@@ -245,7 +244,7 @@ public class OrderItemService {
 	
 	
 	
-	public OrderItemEndPoint getOrderItem(Integer orderID,
+	public ArrayList<OrderItem> getOrderItem(Integer orderID,
                                              Integer itemID,
                                              String searchString,
                                              String sortBy,
@@ -254,58 +253,76 @@ public class OrderItemService {
 
 
 
-		String query = "SELECT "
+		String query = "SELECT * FROM " + OrderItem.TABLE_NAME;
 
-				+ OrderItem.TABLE_NAME + "." + OrderItem.ORDER_ID + ","
-				+ OrderItem.TABLE_NAME + "." + OrderItem.ITEM_ID + ","
-				+ OrderItem.TABLE_NAME + "." + OrderItem.ITEM_PRICE_AT_ORDER + ","
-				+ OrderItem.TABLE_NAME + "." + OrderItem.ITEM_QUANTITY + ","
-
-				+ Item.TABLE_NAME + "." + Item.QUANTITY_UNIT + ","
-				+ Item.TABLE_NAME + "." + Item.ITEM_NAME + ","
-				+ Item.TABLE_NAME + "." + Item.ITEM_IMAGE_URL + ""
-
-				+ " FROM " + OrderItem.TABLE_NAME
-				+ " LEFT OUTER JOIN " + Item.TABLE_NAME + " ON ( " + OrderItem.TABLE_NAME + "." + OrderItem.ITEM_ID + " = " + Item.TABLE_NAME + "." + Item.ITEM_ID + " ) "
-				+ " WHERE TRUE ";
+		if(itemID==null)
+		{
+			String itemInnerJoin = " LEFT OUTER JOIN " + Item.TABLE_NAME + " ON ( " + OrderItem.TABLE_NAME + "." + OrderItem.ITEM_ID + " = " + Item.TABLE_NAME + "." + Item.ITEM_ID + " ) ";
+			query = query + itemInnerJoin;
+		}
 
 
+		boolean isFirst = true;
 
 		if(orderID != null)
 		{
-			query = query + " AND " + OrderItem.ORDER_ID + " = " + orderID;
+			query = query + " WHERE " + OrderItem.ORDER_ID + " = " + orderID;
+
+			isFirst = false;
 		}
-
-
-
 
 		if(itemID != null)
 		{
-			query = query + " AND " + OrderItem.ITEM_ID + " = " + itemID;
+			if(isFirst)
+			{
+				query = query + " WHERE " + OrderItem.ITEM_ID + " = " + itemID;
+			}
+			else
+			{
+				query = query + " AND " + OrderItem.ITEM_ID + " = " + itemID;
+			}
+
 		}
 
 
 
 
-		if(sortBy!=null && !sortBy.equals(""))
+		if(sortBy!=null)
 		{
-			query = query + " ORDER BY " + sortBy;
+			if(!sortBy.equals(""))
+			{
+				String queryPartSortBy = " ORDER BY " + sortBy;
+
+				query = query + queryPartSortBy;
+			}
 		}
-
-
 
 
 
 		if(limit != null)
 		{
-			query = query + " LIMIT " + limit + " " + " OFFSET " + offset;
+
+			String queryPartLimitOffset = "";
+
+			if(offset>0)
+			{
+				queryPartLimitOffset = " LIMIT " + limit + " " + " OFFSET " + offset;
+
+			}else
+			{
+				queryPartLimitOffset = " LIMIT " + limit + " " + " OFFSET " + 0;
+			}
+
+			query = query + queryPartLimitOffset;
 		}
 
 
 
-		ArrayList<OrderItem> orderItemList = new ArrayList<>();
 
-		OrderItemEndPoint endPoint = new OrderItemEndPoint();
+
+
+
+		ArrayList<OrderItem> orderItemList = new ArrayList<OrderItem>();
 
 
 		
@@ -335,18 +352,16 @@ public class OrderItemService {
 				{
 					Item item = new Item();
 
+					item.setItemID(rs.getInt(Item.ITEM_ID));
 					item.setItemName(rs.getString(Item.ITEM_NAME));
-					item.setQuantityUnit(rs.getString(Item.QUANTITY_UNIT));
+					item.setItemDescription(rs.getString(Item.ITEM_DESC));
+
 					item.setItemImageURL(rs.getString(Item.ITEM_IMAGE_URL));
+					item.setItemCategoryID(rs.getInt(Item.ITEM_CATEGORY_ID));
 
-
-
-//					item.setItemID(rs.getInt(Item.ITEM_ID));
-//					item.setItemDescription(rs.getString(Item.ITEM_DESC));
-//					item.setItemCategoryID(rs.getInt(Item.ITEM_CATEGORY_ID));
-//					item.setItemDescriptionLong(rs.getString(Item.ITEM_DESCRIPTION_LONG));
-//					item.setDateTimeCreated(rs.getTimestamp(Item.DATE_TIME_CREATED));
-
+					item.setItemDescriptionLong(rs.getString(Item.ITEM_DESCRIPTION_LONG));
+					item.setDateTimeCreated(rs.getTimestamp(Item.DATE_TIME_CREATED));
+					item.setQuantityUnit(rs.getString(Item.QUANTITY_UNIT));
 
 					orderItem.setItem(item);
 				}
@@ -357,9 +372,6 @@ public class OrderItemService {
 				orderItemList.add(orderItem);
 
 			}
-
-
-			endPoint.setResults(orderItemList);
 			
 
 			
@@ -399,9 +411,209 @@ public class OrderItemService {
 			}
 		}
 
+		return orderItemList;
+	}
+
+
+
+
+
+
+
+
+	public OrderItemEndPoint getEndPointMetadata(Integer orderID, Integer itemID)
+	{
+
+
+
+		String query = "SELECT "
+				+ " count(*) as item_count" + ""
+				+ " FROM " + OrderItem.TABLE_NAME;
+
+
+		/*if(itemID==null)
+		{
+			String itemInnerJoin = " INNER JOIN " + Item.TABLE_NAME + " ON ( " + OrderItemPFS.TABLE_NAME + "." + OrderItemPFS.ITEM_ID + " = " + Item.TABLE_NAME + "." + Item.ITEM_ID + " ) ";
+
+			query = query + itemInnerJoin;
+		}*/
+
+
+		boolean isFirst = true;
+
+		if(orderID != null)
+		{
+			query = query + " WHERE " + OrderItem.ORDER_ID + " = " + orderID;
+
+			isFirst = false;
+		}
+
+		if(itemID != null)
+		{
+			if(isFirst)
+			{
+				query = query + " WHERE " + OrderItem.ITEM_ID + " = " + itemID;
+			}
+			else
+			{
+				query = query + " AND " + OrderItem.ITEM_ID + " = " + itemID;
+			}
+
+		}
+
+
+
+
+//		ArrayList<OrderItemPFS> orderItemList = new ArrayList<OrderItemPFS>();
+
+
+		OrderItemEndPoint endPoint = new OrderItemEndPoint();
+
+
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet rs = null;
+
+		try {
+
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+
+			rs = statement.executeQuery(query);
+
+			while(rs.next())
+			{
+				endPoint.setItemCount(rs.getInt("item_count"));
+			}
+
+
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		finally
+		{
+
+			try {
+				if(rs!=null)
+				{rs.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+
+				if(statement!=null)
+				{statement.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+
+				if(connection!=null)
+				{connection.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 		return endPoint;
 	}
 
 
+
+
+
+	/*
+
+
+	public OrderStats getOrderStats(int orderID)
+	{
+		String query = "select " +
+				"count(item_id) as item_count, " +
+				"sum(item_price_at_order * item_quantity) as item_total," +
+				" order_id " +
+				"from order_item " +
+				"where " + "order_id= " + orderID + " group by order_id";
+
+
+
+
+
+		OrderStats orderStats = null;
+
+		Connection connection = null;
+		Statement statement = null;
+		ResultSet rs = null;
+
+		try {
+
+			connection = dataSource.getConnection();
+			statement = connection.createStatement();
+
+			rs = statement.executeQuery(query);
+
+			while(rs.next())
+			{
+
+				orderStats = new OrderStats();
+
+				orderStats.setOrderID(rs.getInt("order_id"));
+				orderStats.setItemCount(rs.getInt("item_count"));
+				orderStats.setItemTotal(rs.getInt("item_total"));
+
+			}
+
+
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		finally
+		{
+
+			try {
+				if(rs!=null)
+				{rs.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+
+				if(statement!=null)
+				{statement.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+
+				if(connection!=null)
+				{connection.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+
+
+		return orderStats;
+	}
+
+*/
 
 }

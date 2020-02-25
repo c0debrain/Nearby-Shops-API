@@ -22,10 +22,11 @@ public class OrderItemResource {
 	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_SHOP_STAFF, GlobalConstants.ROLE_END_USER})
 	public Response getOrderItem(@QueryParam("OrderID")Integer orderID,
                                  @QueryParam("ItemID")Integer itemID,
+								 @QueryParam("ShopID")Integer shopID,
+								 @QueryParam("latCenter")double latCenter, @QueryParam("lonCenter")double lonCenter,
                                  @QueryParam("SearchString")String searchString,
                                  @QueryParam("SortBy") String sortBy,
-                                 @QueryParam("Limit")Integer limit, @QueryParam("Offset")int offset,
-                                 @QueryParam("metadata_only")Boolean metaonly)
+                                 @QueryParam("Limit")Integer limit, @QueryParam("Offset")int offset)
 	{
 
 
@@ -36,23 +37,20 @@ public class OrderItemResource {
 		}
 
 
-		OrderItemEndPoint endPoint = Globals.orderItemService.getEndPointMetadata(orderID,itemID);
+
+		 OrderItemEndPoint endPoint = Globals.orderItemService.getOrderItem(
+													 orderID,itemID,
+													 searchString,sortBy,limit,offset
+											 );
 
 
-		List<OrderItem> list = null;
 
+		endPoint.setOrderDetails(Globals.daoOrderUtility.getOrderDetailsForOrderDetailsScreen(orderID));
 
-		if(metaonly==null || (!metaonly)) {
-
-			list =
-					Globals.orderItemService.getOrderItem(
-							orderID,itemID,
-							searchString,sortBy,limit,offset
-					);
-
-			endPoint.setResults(list);
+		if(shopID!=null)
+		{
+			endPoint.setShopDetails(Globals.shopDAO.getShopDetails(shopID,latCenter,lonCenter));
 		}
-
 
 
 

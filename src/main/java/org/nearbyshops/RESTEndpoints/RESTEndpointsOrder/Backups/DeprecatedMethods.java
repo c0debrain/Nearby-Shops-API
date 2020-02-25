@@ -1,4 +1,4 @@
-package org.nearbyshops.RESTEndpoints.RESTEndpointsOrder;
+package org.nearbyshops.RESTEndpoints.RESTEndpointsOrder.Backups;
 
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
@@ -63,11 +63,10 @@ public class DeprecatedMethods {
 
 
 
-            OrderEndPoint endpoint = Globals.orderService.readOrders(
+            OrderEndPoint endpoint = Globals.orderService.getOrdersList(
                     endUserID,shopID, pickFromShop,
                     homeDeliveryStatus,pickFromShopStatus,
                     deliveryGuyID,
-                    latCenter,lonCenter,
                     pendingOrders,
                     searchString,
                     sortBy,limit,offset,
@@ -148,11 +147,10 @@ public class DeprecatedMethods {
         getRowCount=true;
 
 
-        OrderEndPoint endpoint = Globals.orderService.readOrders(
+        OrderEndPoint endpoint = Globals.orderService.getOrdersList(
                 endUserID,shopID, pickFromShop,
                 homeDeliveryStatus,pickFromShopStatus,
                 deliveryGuyID,
-                latCenter,lonCenter,
                 pendingOrders,
                 searchString,
                 sortBy,limit,offset,

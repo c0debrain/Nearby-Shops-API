@@ -35,8 +35,6 @@ public class LoginUsingOTPRESTEndpoint {
     private DAOPhoneVerificationCodes daoPhoneVerificationCodes = Globals.daoPhoneVerificationCodes;
     private final OkHttpClient client = new OkHttpClient();
 
-
-
     private static final String AUTHENTICATION_SCHEME = "Basic";
 
 
@@ -280,8 +278,6 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
-
-
     @GET
     @Path("/LoginUsingGlobalCredentials")
     @Produces(MediaType.APPLICATION_JSON)
@@ -498,6 +494,9 @@ public class LoginUsingOTPRESTEndpoint {
                     .build();
         }
     }
+
+
+
 
 
 }

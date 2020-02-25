@@ -2,21 +2,294 @@ package org.nearbyshops.DAOs.DAOOrders;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.Globals;
+import org.nearbyshops.Model.ModelReviewShop.ShopReview;
 import org.nearbyshops.Model.Order;
 import org.nearbyshops.Model.Shop;
 import org.nearbyshops.Model.ModelRoles.Endpoints.UserEndpoint;
 import org.nearbyshops.Model.ModelRoles.User;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class DAOOrderUtility {
 
 
     private HikariDataSource dataSource = Globals.getDataSource();
+
+
+
+    public int checkOrderStatus(int orderID)
+    {
+
+        return 0;
+    }
+
+
+
+
+    public Shop getShopDetailsForCreateOrder(int ShopID)
+    {
+
+        String query = " ";
+
+        query = "SELECT "
+
+                + Shop.TABLE_NAME + "." + Shop.DELIVERY_CHARGES + ","
+                + Shop.TABLE_NAME + "." + Shop.BILL_AMOUNT_FOR_FREE_DELIVERY + ""
+
+                + " FROM " + Shop.TABLE_NAME
+                + " WHERE "	+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + "= " + ShopID;
+
+
+
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet rs = null;
+
+        Shop shop = null;
+        try {
+
+            connection = dataSource.getConnection();
+
+            statement = connection.createStatement();
+
+            rs = statement.executeQuery(query);
+
+
+            while(rs.next())
+            {
+                shop = new Shop();
+                shop.setDeliveryCharges(rs.getFloat(Shop.DELIVERY_CHARGES));
+                shop.setBillAmountForFreeDelivery(rs.getInt(Shop.BILL_AMOUNT_FOR_FREE_DELIVERY));
+            }
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally
+
+        {
+
+            try {
+                if(rs!=null)
+                {rs.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(statement!=null)
+                {statement.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return shop;
+    }
+
+
+
+
+    public Order getOrderDetailsForOrderDetailsScreen(int orderID)
+    {
+
+        String query = "SELECT "
+
+                    + Order.TABLE_NAME + "." + Order.ITEM_TOTAL + ","
+                    + Order.TABLE_NAME + "." + Order.APP_SERVICE_CHARGE + ","
+                    + Order.TABLE_NAME + "." + Order.DELIVERY_CHARGES + ""
+
+                    + " FROM " + Order.TABLE_NAME
+                    + " WHERE " + Order.ORDER_ID + " = " + orderID;
+
+
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet rs = null;
+
+        Order order = null;
+
+        try {
+
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            rs = statement.executeQuery(query);
+
+            while(rs.next())
+            {
+                order = new Order();
+                order.setItemTotal((Double) rs.getObject(Order.ITEM_TOTAL));
+                order.setAppServiceCharge(rs.getDouble(Order.APP_SERVICE_CHARGE));
+                order.setDeliveryCharges(rs.getDouble(Order.DELIVERY_CHARGES));
+            }
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally
+
+        {
+
+            try {
+                if(rs!=null)
+                {rs.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(statement!=null)
+                {statement.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return order;
+    }
+
+
+
+
+    public Order readStatusHomeDelivery(int orderID)
+    {
+
+        String query = "SELECT "
+
+//                + OrderPFS.ORDER_ID + ","
+//                + OrderPFS.DELIVERY_ADDRESS_ID + ","
+//                + OrderPFS.DATE_TIME_PLACED + ","
+
+//                + OrderPFS.DELIVERY_CHARGES + ","
+
+//                + Order.DELIVERY_RECEIVED + ","
+//                + OrderPFS.PAYMENT_RECEIVED + ","
+
+                + Order.DELIVERY_GUY_SELF_ID + ","
+//                + OrderPFS.END_USER_ID + ","
+//                + OrderPFS.PICK_FROM_SHOP + ","
+
+                + Order.SHOP_ID + ","
+                + Order.END_USER_ID + ","
+                + Order.STATUS_HOME_DELIVERY + ""
+//                + OrderPFS.STATUS_PICK_FROM_SHOP + ""
+
+                + " FROM " + Order.TABLE_NAME
+                + " WHERE " + Order.ORDER_ID + " = " + orderID;
+
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet rs = null;
+
+        Order order = null;
+
+        try {
+
+            connection = dataSource.getConnection();
+            statement = connection.createStatement();
+            rs = statement.executeQuery(query);
+
+            while(rs.next())
+            {
+                order = new Order();
+
+
+//                order.setDeliveryCharges(rs.getInt(OrderPFS.DELIVERY_CHARGES));
+//                order.setEndUserID(rs.getInt(OrderPFS.END_USER_ID));
+
+                order.setOrderID(orderID);
+
+//                order.setDeliveryReceived(rs.getBoolean(Order.DELIVERY_RECEIVED));
+
+                order.setShopID(rs.getInt(Order.SHOP_ID));
+                order.setStatusHomeDelivery(rs.getInt(Order.STATUS_HOME_DELIVERY));
+                order.setEndUserID(rs.getInt(Order.END_USER_ID));
+                order.setDeliveryGuySelfID(rs.getInt(Order.DELIVERY_GUY_SELF_ID));
+
+
+
+//                order.setPickFromShop(rs.getBoolean(OrderPFS.PICK_FROM_SHOP));
+//                order.setDateTimePlaced(rs.getTimestamp(OrderPFS.DATE_TIME_PLACED));
+
+
+//                order.setStatusPickFromShop(rs.getInt(OrderPFS.STATUS_PICK_FROM_SHOP));
+
+
+//                order.setPaymentReceived(rs.getBoolean(OrderPFS.PAYMENT_RECEIVED));
+//
+//               order.setDeliveryAddressID((Integer) rs.getObject(OrderPFS.DELIVERY_ADDRESS_ID));
+
+            }
+
+
+            //System.out.println("Total itemCategories queried " + itemCategoryList.size());
+
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally
+
+        {
+
+            try {
+                if(rs!=null)
+                {rs.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(statement!=null)
+                {statement.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return order;
+    }
+
 
 
     // fetch delivery guys assigned to the orders in the given shop with given status

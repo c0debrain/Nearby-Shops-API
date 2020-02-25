@@ -127,6 +127,10 @@ public class GlobalConstants {
 
 
 
+    public static final String NOTIFICATION_ORDER_RECIEVED = "NOTIFICATION_ORDER_RECIEVED";
+    public static final String NOTIFICATION_ORDER_PACKED = "NOTIFICATION_ORDER_PACKED";
+
+
 
     // role codes
     public static final int ROLE_ADMIN_CODE = 1;

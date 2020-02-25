@@ -21,8 +21,6 @@ public class ItemSpecificationItemDAO {
     private HikariDataSource dataSource = Globals.getDataSource();
 
 
-
-
     public int saveItemSpecItem(ItemSpecificationItem itemSpecificationItem)
     {
 
@@ -93,8 +91,6 @@ public class ItemSpecificationItemDAO {
     }
 
 
-
-
     public int deleteItemSpecItem(int itemID,int itemSpecValueID)
     {
 
@@ -146,8 +142,6 @@ public class ItemSpecificationItemDAO {
 
         return rowCountDeleted;
     }
-
-
 
 
 

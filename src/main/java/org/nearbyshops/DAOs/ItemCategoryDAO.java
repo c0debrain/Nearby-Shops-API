@@ -533,7 +533,7 @@ public class ItemCategoryDAO {
 				+ ItemCategory.ITEM_CATEGORY_ID + ","
 				+ ItemCategory.PARENT_CATEGORY_ID + ","
 				+ ItemCategory.IMAGE_PATH + ","
-//				+ ItemCategory.CATEGORY_ORDER + ","
+				+ ItemCategory.CATEGORY_ORDER + ","
 
 //				+ ItemCategory.ITEM_CATEGORY_DESCRIPTION + ","
 //				+ ItemCategory.ITEM_CATEGORY_DESCRIPTION_SHORT + ","
@@ -675,10 +675,10 @@ public class ItemCategoryDAO {
 				itemCategory.setParentCategoryID(rs.getInt(ItemCategory.PARENT_CATEGORY_ID));
 				itemCategory.setImagePath(rs.getString(ItemCategory.IMAGE_PATH));
 				itemCategory.setCategoryName(rs.getString(ItemCategory.ITEM_CATEGORY_NAME));
+				itemCategory.setCategoryOrder(rs.getInt(ItemCategory.CATEGORY_ORDER));
 
 
 //				itemCategory.setIsLeafNode(rs.getBoolean(ItemCategory.IS_LEAF_NODE));
-//				itemCategory.setCategoryOrder(rs.getInt(ItemCategory.CATEGORY_ORDER));
 //				itemCategory.setisAbstractNode(rs.getBoolean(ItemCategory.IS_ABSTRACT));
 //				itemCategory.setDescriptionShort(rs.getString(ItemCategory.ITEM_CATEGORY_DESCRIPTION_SHORT));
 //				itemCategory.setCategoryDescription(rs.getString(ItemCategory.ITEM_CATEGORY_DESCRIPTION));

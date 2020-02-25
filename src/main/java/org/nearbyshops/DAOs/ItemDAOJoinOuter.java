@@ -18,7 +18,6 @@ public class ItemDAOJoinOuter {
 	private HikariDataSource dataSource = Globals.getDataSource();
 
 
-
 	public ItemEndPoint getItems(
 					Integer itemCategoryID,
 					Boolean parentIsNull,
@@ -41,6 +40,7 @@ public class ItemDAOJoinOuter {
 				+ "count( DISTINCT " + ShopItem.TABLE_NAME + "." + ShopItem.ITEM_ID + ") as shop_count" + ","
 
 				+ Item.TABLE_NAME + "." + Item.ITEM_ID + ","
+				+ Item.TABLE_NAME + "." + Item.ITEM_CATEGORY_ID + ","
 				+ Item.TABLE_NAME + "." + Item.ITEM_NAME + ","
 				+ Item.TABLE_NAME + "." + Item.ITEM_IMAGE_URL + ","
 				+ Item.TABLE_NAME + "." + Item.QUANTITY_UNIT + ","
@@ -116,22 +116,17 @@ public class ItemDAOJoinOuter {
 
 
 
-
 		/*
 
 		Applying filters Ends
 
 		 */
 
-
-
-
 		queryCount = "SELECT COUNT(*) as item_count FROM (" + queryCount + ") AS temp";
 
 
 		ItemEndPoint endPoint = new ItemEndPoint();
-		ArrayList<Item> itemList = new ArrayList<Item>();
-
+		ArrayList<Item> itemList = new ArrayList<>();
 
 		Connection connection = null;
 		PreparedStatement statement = null;
@@ -156,6 +151,7 @@ public class ItemDAOJoinOuter {
 
 
 					item.setItemID(rs.getInt(Item.ITEM_ID));
+					item.setItemCategoryID(rs.getInt(Item.ITEM_CATEGORY_ID));
 					item.setItemName(rs.getString(Item.ITEM_NAME));
 					item.setItemImageURL(rs.getString(Item.ITEM_IMAGE_URL));
 					item.setQuantityUnit(rs.getString(Item.QUANTITY_UNIT));
@@ -241,6 +237,6 @@ public class ItemDAOJoinOuter {
 
 		return endPoint;
 	}
-			
+
 
 }

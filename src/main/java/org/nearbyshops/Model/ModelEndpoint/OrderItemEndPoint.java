@@ -1,6 +1,8 @@
 package org.nearbyshops.Model.ModelEndpoint;
 
+import org.nearbyshops.Model.Order;
 import org.nearbyshops.Model.OrderItem;
+import org.nearbyshops.Model.Shop;
 
 import java.util.List;
 
@@ -14,7 +16,25 @@ public class OrderItemEndPoint {
     private Integer limit;
     private Integer max_limit;
     private List<OrderItem> results;
+    private Shop shopDetails;
+    private Order orderDetails;
 
+
+    public Order getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(Order orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
+    public Shop getShopDetails() {
+        return shopDetails;
+    }
+
+    public void setShopDetails(Shop shopDetails) {
+        this.shopDetails = shopDetails;
+    }
 
     public Integer getItemCount() {
         return itemCount;

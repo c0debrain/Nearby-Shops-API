@@ -809,6 +809,7 @@ public class OrderEndpointShopStaff {
 			// See documentation on defining a message payload.
 			Message messageEndUser = Message.builder()
 					.setNotification(new Notification("Order Confirmed", "Order number " + String.valueOf(orderID) + " has been Confirmed!"))
+					.putData("notification_type",GlobalConstants.NOTIFICATION_ORDER_PACKED)
 					.setTopic(topic)
 					.build();
 
@@ -936,6 +937,7 @@ public class OrderEndpointShopStaff {
 			// See documentation on defining a message payload.
 			Message messageEndUser = Message.builder()
 					.setNotification(new Notification("Order Packed", "Order number " + String.valueOf(orderID) + " has been Packed !"))
+					.putData("notification_type",GlobalConstants.NOTIFICATION_ORDER_PACKED)
 					.setTopic(topic)
 					.build();
 
@@ -1060,6 +1062,7 @@ public class OrderEndpointShopStaff {
 			// See documentation on defining a message payload.
 			Message messageEndUser = Message.builder()
 					.setNotification(new Notification("Order Ready for Pickup", "Order number " + String.valueOf(orderID) + " is Ready for Pickup !"))
+					.putData("notification_type",GlobalConstants.NOTIFICATION_ORDER_PACKED)
 					.setTopic(topic)
 					.build();
 
@@ -1115,7 +1118,6 @@ public class OrderEndpointShopStaff {
 
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 
@@ -1180,6 +1182,7 @@ public class OrderEndpointShopStaff {
 			// See documentation on defining a message payload.
 			Message messageEndUser = Message.builder()
 					.setNotification(new Notification("Order Delivered", "Order number " + String.valueOf(orderID) + " has been delivered and amount paid !"))
+					.putData("notification_type",GlobalConstants.NOTIFICATION_ORDER_PACKED)
 					.setTopic(topic)
 					.build();
 
