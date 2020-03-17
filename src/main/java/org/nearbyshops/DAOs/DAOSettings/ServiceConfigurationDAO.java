@@ -250,7 +250,7 @@ public class ServiceConfigurationDAO {
 			updatedRows = statement.executeUpdate();
 			
 			
-			System.out.println("Total rows updated: " + updatedRows);	
+//			System.out.println("Total rows updated: " + updatedRows);
 			
 			//conn.close();
 			

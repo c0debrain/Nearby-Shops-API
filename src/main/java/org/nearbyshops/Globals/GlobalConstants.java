@@ -88,6 +88,8 @@ public class GlobalConstants {
 
     public static String[] trusted_market_aggregators_value;
 
+    public static String instanceURLSubmitted;
+
 
     public static String url_for_notification_icon_value;
 

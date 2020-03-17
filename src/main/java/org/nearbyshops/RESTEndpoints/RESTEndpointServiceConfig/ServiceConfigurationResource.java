@@ -1,6 +1,10 @@
 package org.nearbyshops.RESTEndpoints.RESTEndpointServiceConfig;
 
 import net.coobird.thumbnailator.Thumbnails;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import org.nearbyshops.DAOs.DAOSettings.ServiceConfigurationDAO;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
@@ -21,8 +25,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-
-
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 @Path("/api/ServiceConfiguration")
@@ -74,8 +78,12 @@ public class ServiceConfigurationResource {
 		serviceConfigurationLocal.setServiceID(1);
 		int rowCount =	daoPrepared.updateService(serviceConfigurationLocal);
 
+
+
+
 		if(rowCount >= 1)
 		{
+			updateMarketEntryAtSDS();
 
 			return Response.status(Status.OK)
 					.build();
@@ -381,6 +389,66 @@ public class ServiceConfigurationResource {
 
 		return response;
 	}
+
+
+
+
+
+
+
+
+
+
+
+	// utility methods
+	void updateMarketEntryAtSDS()
+	{
+		for(String url : GlobalConstants.trusted_market_aggregators_value)
+		{
+			// for each url send a ping
+			updateSDSEntry(url);
+		}
+	}
+
+
+
+	private static final OkHttpClient client = new OkHttpClient();
+
+	public void updateSDSEntry(String sdsURL)
+	{
+
+//        String credentials = Credentials.basic(username, password);
+
+
+		String url = "";
+		url = sdsURL + "/api/v1/ServiceConfiguration/UpdateService?ServiceURL=" + GlobalConstants.instanceURLSubmitted;
+
+
+//        System.out.println("Ping URL" + url);
+
+
+		Request request = new Request.Builder()
+				.url(url)
+				.build();
+
+
+		client.newCall(request).enqueue(new Callback() {
+			@Override
+			public void onFailure(Call call, IOException e) {
+
+//				System.out.println("SDS Entry Updated Failed");
+
+			}
+
+			@Override
+			public void onResponse(Call call, okhttp3.Response response) throws IOException {
+
+//				System.out.println("SDS Entry Updated Code : " + response.code());
+
+			}
+		});
+	}
+
 
 
 }

@@ -15,15 +15,8 @@ public class CartItemService {
 
 	private HikariDataSource dataSource = Globals.getDataSource();
 
-	
-	@Override
-	protected void finalize() throws Throwable {
-		// TODO Auto-generated method stub
-		super.finalize();	
-	}
-	
-	
-	
+
+
 	public int saveCartItem(CartItem cartItem)
 	{	
 		
@@ -94,8 +87,6 @@ public class CartItemService {
 		
 		return rowCount;
 	}
-
-
 
 
 
@@ -250,8 +241,6 @@ public class CartItemService {
 
 
 
-
-
 	public ArrayList<CartItem> getCartItem(Integer cartID, Integer itemID, Integer endUserID)
 	{
 
@@ -365,9 +354,6 @@ public class CartItemService {
 
 
 
-
-
-
 	public ArrayList<CartItem> getCartItem(Integer endUserID, Integer shopID)
 	{
 
@@ -471,8 +457,6 @@ public class CartItemService {
 
 		return cartItemList;
 	}
-
-
 
 
 

@@ -109,6 +109,7 @@ public class GlobalConfig {
 
         GlobalConstants.trusted_market_aggregators_value = configuration.getStringArray("trusted_market_aggregators");
 
+        GlobalConstants.instanceURLSubmitted = configuration.getString("instance_url_submitted");
 
         GlobalConstants.url_for_notification_icon_value = configuration.getString("url_for_notification_icon");
 

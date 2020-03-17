@@ -10,13 +10,7 @@ import java.util.ArrayList;
 
 public class DeliveryAddressService {
 
-	
-	@Override
-	protected void finalize() throws Throwable {
-		// TODO Auto-generated method stub
-		super.finalize();	
-	}
-	
+
 
 	private HikariDataSource dataSource = Globals.getDataSource();
 	
@@ -196,7 +190,9 @@ public class DeliveryAddressService {
 		return updatedRows;
 		
 	}
-	
+
+
+
 
 	public int deleteAddress(int deliveryAddressID)
 	{
@@ -248,9 +244,8 @@ public class DeliveryAddressService {
 		return rowsCountDeleted;
 	}
 	
-	
-	
-	
+
+
 	
 	public ArrayList<DeliveryAddress> readAddresses(Integer endUserID)
 	{

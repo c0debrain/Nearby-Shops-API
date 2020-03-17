@@ -3,6 +3,9 @@ package org.nearbyshops;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import okhttp3.Credentials;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.nearbyshops.Globals.GlobalConfig;
@@ -26,6 +29,7 @@ import org.nearbyshops.Model.ModelReviewShop.ShopReviewThanks;
 import org.nearbyshops.Model.ModelRoles.*;
 import org.nearbyshops.Model.ModelSettings.ServiceConfigurationLocal;
 
+import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,6 +40,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Main__ class.
@@ -77,6 +83,8 @@ public class Main {
         createTables();
         startJettyServer();
 
+
+        setupPing();
 
 
         setupFirebaseAdminSDK();
@@ -187,11 +195,19 @@ public class Main {
 
 
 
-            boolean adminRoleExist = Globals.daoUserUtility.checkRoleExists(GlobalConstants.ROLE_ADMIN_CODE);
 
-            if(!adminRoleExist)
+//            boolean adminRoleExist = Globals.daoUserUtility.checkRoleExists(GlobalConstants.ROLE_ADMIN_CODE);
+            int userID = Globals.daoUserUtility.getUserID(GlobalConstants.ADMIN_EMAIL);
+
+            if(userID==-1)
             {
-                Globals.daoUserSignUp.createAdminUsingEmail(admin,true);
+                // user does not exist
+                Globals.daoUserUtility.createAdminUsingEmail(admin,true);
+            }
+            else
+            {
+                // user exists so upgrade the user role to admin
+                Globals.daoUserUtility.updateUserRole(userID);
             }
 
 
@@ -272,6 +288,8 @@ public class Main {
                 defaultConfiguration.setServiceName("DEFAULT_CONFIGURATION");
                 defaultConfiguration.setISOCountryCode("IN");
                 defaultConfiguration.setCountry("India");
+                defaultConfiguration.setServiceRange(30000);
+
 
 
                 Globals.serviceConfigDAO.saveService(defaultConfiguration);
@@ -499,6 +517,83 @@ public class Main {
             e.printStackTrace();
         }
 
+
+
+    }
+
+
+
+    private static void setupPing()
+    {
+
+        TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+
+
+                for(String url : GlobalConstants.trusted_market_aggregators_value)
+                {
+                    // for each url send a ping
+                    sendPing(url);
+                }
+
+            }
+        };
+
+
+
+
+        Timer timer = new Timer();
+
+        timer.scheduleAtFixedRate(timerTask,0,30*1000);
+    }
+
+
+
+
+
+    private static final OkHttpClient client = new OkHttpClient();
+
+
+    static void sendPing(String sdsURL)
+    {
+
+//        String credentials = Credentials.basic(username, password);
+
+
+        String url = "";
+        url = sdsURL + "/api/v1/ServiceConfiguration/Ping?ServiceURL=" + GlobalConstants.instanceURLSubmitted;
+
+
+//        System.out.println("Ping URL" + url);
+
+
+        Request request = new Request.Builder()
+                .url(url)
+                .build();
+
+
+
+        try (okhttp3.Response response = client.newCall(request).execute()) {
+
+
+//            if (!response.isSuccessful())
+//            {
+//            }
+
+//            Headers responseHeaders = response.headers();
+//            for (int i = 0; i < responseHeaders.size(); i++) {
+//                System.out.println(responseHeaders.name(i) + ": " + responseHeaders.value(i));
+//            }
+
+
+
+//            System.out.println("Ping Response Code : " + response.code());
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
 
     }

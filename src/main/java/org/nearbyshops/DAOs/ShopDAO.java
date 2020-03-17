@@ -660,12 +660,14 @@ public class ShopDAO {
 
 				+ User.TABLE_NAME + "." + User.PHONE + ","
 				+ User.TABLE_NAME + "." + User.NAME + ","
+
 				+ Shop.TABLE_NAME + "." + Shop.ACCOUNT_BALANCE + ","
 				+ Shop.TABLE_NAME + "." + Shop.EXTENDED_CREDIT_LIMIT + ","
 				+ Shop.TABLE_NAME + "." + Shop.SHOP_WAITLISTED + ","
 				+ Shop.TABLE_NAME + "." + Shop.SHOP_ENABLED + ","
 
 				+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + ","
+				+ Shop.TABLE_NAME + "." + Shop.SHOP_ADMIN_ID + ","
 				+ Shop.TABLE_NAME + "." + Shop.SHOP_NAME + ","
 				+ Shop.TABLE_NAME + "." + Shop.LON_CENTER + ","
 				+ Shop.TABLE_NAME + "." + Shop.LAT_CENTER + ","
@@ -772,10 +774,6 @@ public class ShopDAO {
 			{
 
 
-				User shopAdmin = new User();
-				shopAdmin.setPhone(rs.getString(User.PHONE));
-				shopAdmin.setName(rs.getString(User.NAME));
-
 				shop = new Shop();
 
 
@@ -784,6 +782,7 @@ public class ShopDAO {
 				shop.setRt_rating_count(rs.getFloat("rating_count"));
 
 				shop.setShopID(rs.getInt(Shop.SHOP_ID));
+				shop.setShopAdminID(rs.getInt(Shop.SHOP_ADMIN_ID));
 				shop.setShopName(rs.getString(Shop.SHOP_NAME));
 				shop.setLatCenter(rs.getFloat(Shop.LAT_CENTER));
 				shop.setLonCenter(rs.getFloat(Shop.LON_CENTER));
@@ -810,6 +809,14 @@ public class ShopDAO {
 				shop.setExtendedCreditLimit(rs.getFloat(Shop.EXTENDED_CREDIT_LIMIT));
 				shop.setShopEnabled(rs.getBoolean(Shop.SHOP_ENABLED));
 				shop.setShopWaitlisted(rs.getBoolean(Shop.SHOP_WAITLISTED));
+
+
+
+				User shopAdmin = new User();
+				shopAdmin.setPhone(rs.getString(User.PHONE));
+				shopAdmin.setName(rs.getString(User.NAME));
+				shopAdmin.setUserID(rs.getInt(Shop.SHOP_ADMIN_ID));
+
 
 				shop.setShopAdminProfile(shopAdmin);
 

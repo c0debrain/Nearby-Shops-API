@@ -17,7 +17,7 @@ import javax.ws.rs.core.Response;
 import java.sql.Timestamp;
 
 
-
+import static org.nearbyshops.Globals.Globals.daoUserUtility;
 import static org.nearbyshops.Globals.Globals.getMailerInstance;
 
 /**
@@ -164,7 +164,7 @@ public class UserSignUpRESTEndpoint {
         // Roles allowed not used for this method due to performance and effeciency requirements. Also
         // this endpoint doesnt required to be secured as it does not expose any confidential information
 
-        boolean result = daoUser.checkUsernameExists(username);
+        boolean result = daoUserUtility.checkUsernameExists(username);
 
 //        System.out.println(username);
 

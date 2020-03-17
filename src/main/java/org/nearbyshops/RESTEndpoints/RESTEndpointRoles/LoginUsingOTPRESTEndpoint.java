@@ -151,129 +151,8 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
-    @PUT
-    @Path("/SendPhoneVerificationCode/{phone}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    public Response sendPhoneVerificationCode(@PathParam("phone")String phone)
-    {
-
-        int rowCount = 0;
 
 
-        PhoneVerificationCode verificationCode = Globals.daoPhoneVerificationCodes.checkPhoneVerificationCode(phone);
-
-        if(verificationCode==null)
-        {
-            // verification code not generated for this phone so generate one and send this to the user
-
-
-//            BigInteger phoneCode = new BigInteger(15, Globals.random);
-//            int phoneOTP = phoneCode.intValue();
-
-
-//            String emailVerificationCode = new BigInteger(30, Globals.random).toString(32);
-
-
-
-            char[] phoneOTP = generateOTP(4);
-
-            Timestamp timestampExpiry
-                    = new Timestamp(
-                    System.currentTimeMillis()
-                            + GlobalConstants.PHONE_OTP_EXPIRY_MINUTES *60*1000
-            );
-
-
-            rowCount = Globals.daoPhoneVerificationCodes.insertPhoneVerificationCode(
-                    phone,String.valueOf(phoneOTP),timestampExpiry,true
-            );
-
-
-            if(rowCount==1)
-            {
-                // saved successfully
-
-//                System.out.println("Phone Verification Code : " + phoneOTP);
-
-
-                SendSMS.sendOTP(String.valueOf(phoneOTP),phone);
-
-            }
-
-
-        }
-        else
-        {
-
-            // verification code already generated and has not expired so resend that same code
-
-//            System.out.println("Phone Verification Code : " + verificationCode.getVerificationCode());
-
-
-            SendSMS.sendOTP(verificationCode.getVerificationCode(),phone);
-
-
-            rowCount = 1;
-        }
-
-
-
-        if(rowCount >= 1)
-        {
-
-
-
-            return Response.status(Response.Status.OK)
-                    .build();
-        }
-        if(rowCount == 0)
-        {
-
-            return Response.status(Response.Status.NOT_MODIFIED)
-                    .build();
-        }
-
-        return null;
-    }
-
-
-
-
-
-    @GET
-    @Path("/CheckPhoneVerificationCode/{phone}")
-    @Produces(MediaType.APPLICATION_JSON)
-    public Response checkPhoneVerificationCode(
-            @PathParam("phone")String phone,
-            @QueryParam("VerificationCode")String verificationCode
-    )
-    {
-        // Roles allowed annotation not used for this method due to performance and efficiency requirements. Also
-        // this endpoint doesnt required to be secured as it does not expose any confidential information
-
-        boolean result = Globals.daoPhoneVerificationCodes.checkPhoneVerificationCode(phone,verificationCode);
-
-//        System.out.println(phone);
-//
-//
-//        try {
-//            Thread.sleep(1000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-
-
-        if(result)
-        {
-            return Response.status(Response.Status.OK)
-                    .build();
-
-        } else
-        {
-            return Response.status(Response.Status.NO_CONTENT)
-                    .build();
-        }
-    }
 
 
 
@@ -285,6 +164,8 @@ public class LoginUsingOTPRESTEndpoint {
             @HeaderParam("Authorization")String headerParam,
             @QueryParam("ServiceURLSDS")String serviceURLForSDS,
             @QueryParam("MarketID")int marketID,
+            @QueryParam("IsPasswordAnOTP")boolean isPasswordAnOTP,
+            @QueryParam("RegistrationMode")int registrationMode, // 1 for email and 2 for phone
             @QueryParam("GetServiceConfiguration")boolean getServiceConfig,
             @QueryParam("GetUserProfileGlobal")boolean getUserProfileGlobal
     ) throws IOException
@@ -327,8 +208,8 @@ public class LoginUsingOTPRESTEndpoint {
         final String password = tokenizer.nextToken();
 
         //Verifying Username and password
-//        System.out.println(username);
-//        System.out.println(password);
+        System.out.println(username);
+        System.out.println(password);
 
 
 //            try {
@@ -345,14 +226,18 @@ public class LoginUsingOTPRESTEndpoint {
 
         String credentials = Credentials.basic(username, password);
 
-        String url = serviceURLForSDS + "/api/v1/User/LoginGlobal/VerifyCredentials?GetUserProfile=true";
+        String url = "";
+
+        if(isPasswordAnOTP)
+        {
+            url = serviceURLForSDS + "/api/v1/User/LoginGlobal/VerifyCredentialsUsingOTP?RegistrationMode=" + registrationMode;
+        }
+        else
+        {
+            url = serviceURLForSDS + "/api/v1/User/LoginGlobal/VerifyCredentials?GetUserProfile=true";
+        }
 
 
-
-//        if(getUserProfileGlobal)
-//        {
-//            url = url + "?GetUserProfile=true";
-//        }
 
 
 
@@ -364,6 +249,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 
         User userProfileGlobal;
+        String generatedPasswordGlobal;
 
 
 
@@ -395,7 +281,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 //            System.out.println(response.body().string());
             userProfileGlobal = Globals.getGson().fromJson(response.body().string(),User.class);
-
+            generatedPasswordGlobal = userProfileGlobal.getPassword();
         }
 
 
@@ -403,7 +289,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
-        String generatedPassword = new BigInteger(130, Globals.random).toString(32);
+        String generatedPasswordLocal = new BigInteger(130, Globals.random).toString(32);
 
 
 //        User user = new User();
@@ -411,7 +297,8 @@ public class LoginUsingOTPRESTEndpoint {
 //        user.setPhone(phone);
 
 
-        userProfileGlobal.setPassword(generatedPassword);
+
+        userProfileGlobal.setPassword(generatedPasswordLocal);
 
 
 
@@ -429,7 +316,7 @@ public class LoginUsingOTPRESTEndpoint {
         {
 
 
-            //             check if user account has existing associations
+            // check if user account has existing associations
 
             if(daoLoginUsingOTP.checkUserExistsUsingAssociations(userProfileGlobal.getUserID(),serviceURLForSDS)!=null)
             {
@@ -451,49 +338,193 @@ public class LoginUsingOTPRESTEndpoint {
         }
 
 
+        System.out.println("Row Count : " + rowsUpdated);
+
+
 
 
 //        int rowsUpdated = daoLoginUsingOTP.upsertUserProfileNew(userProfileGlobal,true);
 
 
+        try {
 
-        // get profile information and send it to user
-        User userProfile = daoUser.getProfile(username,generatedPassword);
-        userProfile.setPassword(generatedPassword);
+
+            // get profile information and send it to user
+            User userProfile = daoUser.getProfile(username, generatedPasswordLocal);
+            userProfile.setPassword(generatedPasswordLocal);
 
 
 //        userProfile.setPhone(phone);
 
 
-
-        if(rowsUpdated==1)
-        {
+            if (rowsUpdated == 1) {
 
 
-            if(getServiceConfig)
-            {
-                userProfile.setServiceConfigurationLocal(Globals.serviceConfigDAO.getServiceConfiguration(0.0,0.0));
-            }
+                if (getServiceConfig) {
+                    userProfile.setServiceConfigurationLocal(Globals.serviceConfigDAO.getServiceConfiguration(0.0, 0.0));
+                }
 
-            if(getUserProfileGlobal)
-            {
-                userProfile.setUserProfileGlobal(userProfileGlobal);
-            }
+                if (getUserProfileGlobal) {
+
+                    userProfileGlobal.setPassword(generatedPasswordGlobal);
+                    userProfile.setUserProfileGlobal(userProfileGlobal);
+
+                }
 
 
 //                SendSMS.sendSMS("You are logged in successfully !",
 //                        user.getPhone());
 
-            return Response.status(Response.Status.OK)
-                    .entity(userProfile)
-                    .build();
+                return Response.status(Response.Status.OK)
+                        .entity(userProfile)
+                        .build();
+            } else {
+                return Response.status(Response.Status.NO_CONTENT)
+                        .build();
+            }
+
         }
-        else
+        catch (Exception ex)
         {
+            ex.printStackTrace();
+
             return Response.status(Response.Status.NO_CONTENT)
                     .build();
+
         }
     }
+
+
+
+
+
+
+//
+//
+//
+//    @PUT
+//    @Path("/SendPhoneVerificationCode/{phone}")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response sendPhoneVerificationCode(@PathParam("phone")String phone)
+//    {
+//
+//        int rowCount = 0;
+//
+//
+//        PhoneVerificationCode verificationCode = Globals.daoPhoneVerificationCodes.checkPhoneVerificationCode(phone);
+//
+//        if(verificationCode==null)
+//        {
+//            // verification code not generated for this phone so generate one and send this to the user
+//
+//
+////            BigInteger phoneCode = new BigInteger(15, Globals.random);
+////            int phoneOTP = phoneCode.intValue();
+//
+//
+////            String emailVerificationCode = new BigInteger(30, Globals.random).toString(32);
+//
+//
+//
+//            char[] phoneOTP = generateOTP(4);
+//
+//            Timestamp timestampExpiry
+//                    = new Timestamp(
+//                    System.currentTimeMillis()
+//                            + GlobalConstants.PHONE_OTP_EXPIRY_MINUTES *60*1000
+//            );
+//
+//
+//            rowCount = Globals.daoPhoneVerificationCodes.insertPhoneVerificationCode(
+//                    phone,String.valueOf(phoneOTP),timestampExpiry,true
+//            );
+//
+//
+//            if(rowCount==1)
+//            {
+//                // saved successfully
+//
+////                System.out.println("Phone Verification Code : " + phoneOTP);
+//
+//
+//                SendSMS.sendOTP(String.valueOf(phoneOTP),phone);
+//
+//            }
+//
+//
+//        }
+//        else
+//        {
+//
+//            // verification code already generated and has not expired so resend that same code
+//
+////            System.out.println("Phone Verification Code : " + verificationCode.getVerificationCode());
+//
+//
+//            SendSMS.sendOTP(verificationCode.getVerificationCode(),phone);
+//
+//
+//            rowCount = 1;
+//        }
+//
+//
+//
+//        if(rowCount >= 1)
+//        {
+//
+//
+//
+//            return Response.status(Response.Status.OK)
+//                    .build();
+//        }
+//        if(rowCount == 0)
+//        {
+//
+//            return Response.status(Response.Status.NOT_MODIFIED)
+//                    .build();
+//        }
+//
+//        return null;
+//    }
+//
+//
+//
+//
+//
+//    @GET
+//    @Path("/CheckPhoneVerificationCode/{phone}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response checkPhoneVerificationCode(
+//            @PathParam("phone")String phone,
+//            @QueryParam("VerificationCode")String verificationCode
+//    )
+//    {
+//        // Roles allowed annotation not used for this method due to performance and efficiency requirements. Also
+//        // this endpoint doesnt required to be secured as it does not expose any confidential information
+//
+//        boolean result = Globals.daoPhoneVerificationCodes.checkPhoneVerificationCode(phone,verificationCode);
+//
+////        System.out.println(phone);
+////
+////
+////        try {
+////            Thread.sleep(1000);
+////        } catch (InterruptedException e) {
+////            e.printStackTrace();
+////        }
+//
+//
+//        if(result)
+//        {
+//            return Response.status(Response.Status.OK)
+//                    .build();
+//
+//        } else
+//        {
+//            return Response.status(Response.Status.NO_CONTENT)
+//                    .build();
+//        }
+//    }
 
 
 
