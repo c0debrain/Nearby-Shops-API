@@ -6,5 +6,4 @@ services:
       - "80:80"
     container_name: nbs_api_container
     restart: always
-    #entrypoint: ["java", "-jar", "/root/nearbyshops/nearbyshops-api-latest.jar"]
     entrypoint: ["/root/nbs.sh"]
