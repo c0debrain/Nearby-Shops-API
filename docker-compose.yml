@@ -1,17 +1,10 @@
-version: '2'
+version: '3.6'
 services:
-  postgresdb:
-    image: postgres
+  nbs_api:
+    image: nearbyshops/nearbyshops
     ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_USER: "postgres_user"
-      POSTGRES_PASSWORD: "postgres_pass"
-      POSTGRES_DB: "nearbyshopsdb"
-  app:
-    build:
-      context: ./docker
-    volumes:
-      - "./docker/api_config.properties:/api_config.properties"
-    links:
-      - postgresdb
+      - "80:80"
+    container_name: nbs_api_container
+    restart: always
+    #entrypoint: ["java", "-jar", "/root/nearbyshops/nearbyshops-api-latest.jar"]
+    entrypoint: ["/root/nbs.sh"]

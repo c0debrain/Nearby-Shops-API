@@ -43,11 +43,6 @@ import java.sql.Statement;
 import java.util.Timer;
 import java.util.TimerTask;
 
-/**
- * Main__ class.
- *
- */
-
 
 
 
@@ -523,6 +518,8 @@ public class Main {
 
 
 
+
+
     private static void setupPing()
     {
 
@@ -545,11 +542,9 @@ public class Main {
 
         Timer timer = new Timer();
 
-        timer.scheduleAtFixedRate(timerTask,0,30*1000);
+        // send ping to the sds server at every 30 minutes
+        timer.scheduleAtFixedRate(timerTask,0,30*60*1000);
     }
-
-
-
 
 
     private static final OkHttpClient client = new OkHttpClient();
@@ -588,7 +583,7 @@ public class Main {
 
 
 
-//            System.out.println("Ping Response Code : " + response.code());
+            System.out.println("Ping Response Code : " + response.code());
 
 
         } catch (IOException e) {
