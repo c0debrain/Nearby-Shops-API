@@ -18,21 +18,15 @@ public class StaffPermissions {
     public static final String PERMIT_CREATE_UPDATE_ITEM_CATEGORIES = "PERMIT_CREATE_UPDATE_ITEM_CATEGORIES";
     public static final String PERMIT_CREATE_UPDATE_ITEMS = "PERMIT_CREATE_UPDATE_ITEMS";
     public static final String PERMIT_APPROVE_SHOPS = "PERMIT_APPROVE_SHOPS";
+    public static final String PERMIT_UPDATE_USER = "PERMIT_UPDATE_USER";
 
     public static final String STAFF_EARNINGS = "STAFF_EARNINGS";
     public static final String MAX_EARNINGS_LIMIT = "MAX_EARNINGS_LIMIT";
 
 
 
-//    public static final String PERMIT_TAXI_REGISTRATION_AND_RENEWAL = "PERMIT_TAXI_REGISTRATION_AND_RENEWAL";
-//    public static final String PERMIT_TAXI_PROFILE_UPDATE = "PERMIT_TAXI_PROFILE_UPDATE";
-//    public static final String PERMIT_ACCEPT_PAYMENTS = "PERMIT_ACCEPT_PAYMENTS";
-//    public static final String PERMIT_ADD_EDIT_TAXI_IMAGES = "PERMIT_ADD_EDIT_TAXI_IMAGES";
-//    public static final String PERMIT_APPROVE_TAXI_IMAGES = "PERMIT_APPROVE_TAXI_IMAGES";
 
-
-
-    // Create Table CurrentServiceConfiguration Provider
+    // Create Table
     public static final String createTablePostgres =
 
             "CREATE TABLE IF NOT EXISTS "
@@ -48,12 +42,6 @@ public class StaffPermissions {
 
                     + " " + StaffPermissions.STAFF_EARNINGS + " float NOT NULL default 0,"
                     + " " + StaffPermissions.MAX_EARNINGS_LIMIT + " float NOT NULL default 0,"
-
-
-//                    + " " + StaffPermissions.PERMIT_TAXI_PROFILE_UPDATE + " boolean NOT NULL default 'f',"
-//                    + " " + StaffPermissions.PERMIT_ACCEPT_PAYMENTS + " boolean NOT NULL default 'f',"
-//                    + " " + StaffPermissions.PERMIT_ADD_EDIT_TAXI_IMAGES + " boolean NOT NULL default 'f',"
-//                    + " " + StaffPermissions.PERMIT_APPROVE_TAXI_IMAGES + " boolean NOT NULL default 'f',"
 
                     + " FOREIGN KEY(" + StaffPermissions.STAFF_ID +") REFERENCES " + User.TABLE_NAME + "(" + User.USER_ID + ") ON DELETE CASCADE "
                     + ")";

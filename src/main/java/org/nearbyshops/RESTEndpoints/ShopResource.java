@@ -74,6 +74,22 @@ public class ShopResource {
 	@RolesAllowed({GlobalConstants.ROLE_ADMIN, GlobalConstants.ROLE_STAFF})
 	public Response updateShopByAdmin(Shop shop, @PathParam("ShopID")int ShopID)
 	{
+
+
+		User user = (User) Globals.accountApproved;
+
+		if(user.getRole()==GlobalConstants.ROLE_STAFF_CODE) {
+
+			StaffPermissions permissions = Globals.daoStaff.getStaffPermissions(user.getUserID());
+
+			if (!permissions.isPermitApproveShops())
+			{
+				// the staff member doesnt have persmission to update shop
+				throw new ForbiddenException("Not Permitted");
+			}
+		}
+
+
 		shop.setShopID(ShopID);
 		int rowCount = shopDAO.updateShopByAdmin(shop);
 
@@ -272,8 +288,42 @@ public class ShopResource {
 
 
 //		System.out.println("User Role " + user.getRole() + " User :" + user.getEmail());
-		Shop shop = Globals.daoShopStaff.getShopForShopAdmin(user.getUserID());
+		Shop shop = Globals.daoUserUtility.getShopForShopAdmin(user.getUserID());
 
+
+
+		if(shop!= null)
+		{
+			return Response.status(Status.OK)
+					.entity(shop)
+					.build();
+
+		} else
+		{
+
+			return Response.status(Status.NO_CONTENT)
+					.build();
+		}
+
+
+	}
+
+
+
+
+	@GET
+	@Path("/GetShopForShopStaff")
+	@Produces(MediaType.APPLICATION_JSON)
+	@RolesAllowed({GlobalConstants.ROLE_SHOP_STAFF})
+	public Response getShopForShopStaff()
+	{
+		User user = ((User) Globals.accountApproved);
+
+
+//		int shopID = Globals.daoUserUtility.getShopIDforShopStaff(user.getUserID());
+//		Shop shop = Globals.shopDAO.getShopDetails(shopID,0d,0d);
+
+		Shop shop = Globals.daoUserUtility.getShopForShopStaff(user.getUserID());
 
 
 		if(shop!= null)
@@ -297,32 +347,31 @@ public class ShopResource {
 
 
 
+
 	//	@PUT
 //	@Path("/BecomeASeller")
 //	@Consumes(MediaType.APPLICATION_JSON)
 //	@RolesAllowed({GlobalConstants.ROLE_END_USER})
-	public Response becomeASeller()
-	{
-		// this is deprecated and no longer required ... create shop method has replaced it
-
-		User user = (User) Globals.accountApproved;
-
-		int rowCount = Globals.daoShopStaff.becomeASeller(user.getUserID());
-
-
-		if(rowCount >= 1)
-		{
-			return Response.status(Response.Status.OK)
-					.build();
-		}
-		else {
-
-			return Response.status(Status.NOT_MODIFIED)
-					.build();
-		}
-
-
-	}
+//	public Response becomeASeller()
+//	{
+//		// this is deprecated and no longer required ... create shop method has replaced it
+//
+//		User user = (User) Globals.accountApproved;
+//
+//		int rowCount = Globals.daoShopStaff.becomeASeller(user.getUserID());
+//
+//
+//		if(rowCount >= 1)
+//		{
+//			return Response.status(Response.Status.OK)
+//					.build();
+//		}
+//		else {
+//
+//			return Response.status(Status.NOT_MODIFIED)
+//					.build();
+//		}
+//	}
 
 
 

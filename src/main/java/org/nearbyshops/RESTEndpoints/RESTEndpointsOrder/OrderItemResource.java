@@ -2,7 +2,6 @@ package org.nearbyshops.RESTEndpoints.RESTEndpointsOrder;
 
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.Model.OrderItem;
 import org.nearbyshops.Model.ModelEndpoint.OrderItemEndPoint;
 
 import javax.annotation.security.RolesAllowed;
@@ -10,7 +9,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.util.List;
 
 
 @Path("/api/OrderItem")
@@ -45,7 +43,7 @@ public class OrderItemResource {
 
 
 
-		endPoint.setOrderDetails(Globals.daoOrderUtility.getOrderDetailsForOrderDetailsScreen(orderID));
+		endPoint.setOrderDetails(Globals.daoOrderUtility.getExtraDetailsForOrderDetailsScreen(orderID));
 
 		if(shopID!=null)
 		{

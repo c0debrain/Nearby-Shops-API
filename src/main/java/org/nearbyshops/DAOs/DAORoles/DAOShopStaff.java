@@ -114,379 +114,13 @@ public class DAOShopStaff {
 
 
 
-	public ShopStaffPermissions getShopStaffPermissions(int staffID)
-	{
-
-		boolean isFirst = true;
-
-		String query = "SELECT "
-
-				+ ShopStaffPermissions.STAFF_ID + ","
-				+ ShopStaffPermissions.SHOP_ID + ","
-
-				+ ShopStaffPermissions.ADD_REMOVE_ITEMS_FROM_SHOP + ","
-				+ ShopStaffPermissions.UPDATE_STOCK + ","
-
-				+ ShopStaffPermissions.CANCEL_ORDERS + ","
-				+ ShopStaffPermissions.CONFIRM_ORDERS + ","
-				+ ShopStaffPermissions.SET_ORDERS_PACKED + ","
-				+ ShopStaffPermissions.HANDOVER_TO_DELIVERY + ","
-//				+ ShopStaffPermissions.MARK_ORDERS_DELIVERED + ","
-				+ ShopStaffPermissions.ACCEPT_PAYMENTS_FROM_DELIVERY + ","
-				+ ShopStaffPermissions.DESIGNATION + ","
-				+ ShopStaffPermissions.ACCEPT_RETURNS + ""
-
-				+ " FROM "  + ShopStaffPermissions.TABLE_NAME
-				+ " WHERE " + ShopStaffPermissions.STAFF_ID  + " = ? ";
-
-
-
-		Connection connection = null;
-		PreparedStatement statement = null;
-		ResultSet rs = null;
-
-
-		//Distributor distributor = null;
-		ShopStaffPermissions permissions = null;
-
-		try {
-
-			connection = dataSource.getConnection();
-			statement = connection.prepareStatement(query);
-
-			int i = 0;
-
-
-			statement.setObject(++i,staffID); // username
-
-
-			rs = statement.executeQuery();
-
-			while(rs.next())
-			{
-				permissions = new ShopStaffPermissions();
-
-				permissions.setStaffUserID(rs.getInt(ShopStaffPermissions.STAFF_ID));
-				permissions.setShopID(rs.getInt(ShopStaffPermissions.SHOP_ID));
-
-				permissions.setPermitAddRemoveItems(rs.getBoolean(ShopStaffPermissions.ADD_REMOVE_ITEMS_FROM_SHOP));
-				permissions.setPermitUpdateItemsInShop(rs.getBoolean(ShopStaffPermissions.UPDATE_STOCK));
-
-				permissions.setPermitCancelOrders(rs.getBoolean(ShopStaffPermissions.CANCEL_ORDERS));
-				permissions.setPermitConfirmOrders(rs.getBoolean(ShopStaffPermissions.CONFIRM_ORDERS));
-				permissions.setPermitSetOrdersPacked(rs.getBoolean(ShopStaffPermissions.SET_ORDERS_PACKED));
-				permissions.setPermitHandoverToDelivery(rs.getBoolean(ShopStaffPermissions.HANDOVER_TO_DELIVERY));
-//				permissions.setPermitMarkOrdersDelivered(rs.getBoolean(ShopStaffPermissions.MARK_ORDERS_DELIVERED));
-				permissions.setPermitAcceptPaymentsFromDelivery(rs.getBoolean(ShopStaffPermissions.ACCEPT_PAYMENTS_FROM_DELIVERY));
-				permissions.setPermitAcceptReturns(rs.getBoolean(ShopStaffPermissions.ACCEPT_RETURNS));
-
-				permissions.setDesignation(rs.getString(ShopStaffPermissions.DESIGNATION));
-
-			}
-
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally
-
-		{
-
-			try {
-				if(rs!=null)
-				{rs.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(statement!=null)
-				{statement.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(connection!=null)
-				{connection.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return permissions;
-	}
-
-
-
-
-
-	public Shop getShopForShopAdmin(int shopAdminID)
-	{
-		String query = " SELECT "
-				+ Shop.TABLE_NAME + "." + Shop.SHOP_ID + ","
-				+ Shop.SHOP_NAME + ","
-
-				+ Shop.DELIVERY_RANGE + ","
-				+ Shop.LAT_CENTER + ","
-				+ Shop.LON_CENTER + ","
-
-				+ Shop.DELIVERY_CHARGES + ","
-				+ Shop.BILL_AMOUNT_FOR_FREE_DELIVERY + ","
-				+ Shop.PICK_FROM_SHOP_AVAILABLE + ","
-				+ Shop.HOME_DELIVERY_AVAILABLE + ","
-
-				+ Shop.SHOP_ENABLED + ","
-
-				+ Shop.LOGO_IMAGE_PATH + ","
-
-				+ Shop.SHOP_ADDRESS + ","
-				+ Shop.CITY + ","
-				+ Shop.PINCODE + ","
-				+ Shop.LANDMARK + ","
-
-				+ Shop.CUSTOMER_HELPLINE_NUMBER + ","
-				+ Shop.DELIVERY_HELPLINE_NUMBER + ","
-
-				+ Shop.SHORT_DESCRIPTION + ","
-				+ Shop.LONG_DESCRIPTION + ","
-
-				+ Shop.TIMESTAMP_CREATED + ","
-				+ Shop.IS_OPEN + ","
-
-				+ Shop.ACCOUNT_BALANCE + ","
-				+ Shop.EXTENDED_CREDIT_LIMIT + "" +
-
-				" FROM " + Shop.TABLE_NAME +
-				" WHERE " + Shop.SHOP_ADMIN_ID + " = " + shopAdminID ;
-
-
-		Connection connection = null;
-		Statement statement = null;
-		ResultSet rs = null;
-		Shop shop = null;
-
-		try {
-
-			connection = dataSource.getConnection();
-			statement = connection.createStatement();
-
-			rs = statement.executeQuery(query);
-
-			while(rs.next())
-			{
-
-				shop = new Shop();
-
-				shop.setShopID(rs.getInt(Shop.SHOP_ID));
-				shop.setShopAdminID(shopAdminID);
-
-				shop.setShopName(rs.getString(Shop.SHOP_NAME));
-				shop.setDeliveryRange(rs.getDouble(Shop.DELIVERY_RANGE));
-				shop.setLatCenter(rs.getFloat(Shop.LAT_CENTER));
-				shop.setLonCenter(rs.getFloat(Shop.LON_CENTER));
-
-				shop.setDeliveryCharges(rs.getFloat(Shop.DELIVERY_CHARGES));
-				shop.setBillAmountForFreeDelivery(rs.getInt(Shop.BILL_AMOUNT_FOR_FREE_DELIVERY));
-				shop.setPickFromShopAvailable(rs.getBoolean(Shop.PICK_FROM_SHOP_AVAILABLE));
-				shop.setHomeDeliveryAvailable(rs.getBoolean(Shop.HOME_DELIVERY_AVAILABLE));
-
-				shop.setShopEnabled(rs.getBoolean(Shop.SHOP_ENABLED));
-//				shop.setShopWaitlisted(rs.getBoolean(Shop.SHOP_WAITLISTED));
-
-				shop.setLogoImagePath(rs.getString(Shop.LOGO_IMAGE_PATH));
-
-				shop.setShopAddress(rs.getString(Shop.SHOP_ADDRESS));
-				shop.setCity(rs.getString(Shop.CITY));
-				shop.setPincode(rs.getLong(Shop.PINCODE));
-				shop.setLandmark(rs.getString(Shop.LANDMARK));
-
-				shop.setCustomerHelplineNumber(rs.getString(Shop.CUSTOMER_HELPLINE_NUMBER));
-				shop.setDeliveryHelplineNumber(rs.getString(Shop.DELIVERY_HELPLINE_NUMBER));
-
-				shop.setShortDescription(rs.getString(Shop.SHORT_DESCRIPTION));
-				shop.setLongDescription(rs.getString(Shop.LONG_DESCRIPTION));
-
-				shop.setTimestampCreated(rs.getTimestamp(Shop.TIMESTAMP_CREATED));
-				shop.setOpen(rs.getBoolean(Shop.IS_OPEN));
-
-				shop.setAccountBalance(rs.getDouble(Shop.ACCOUNT_BALANCE));
-
-
-				shop.setRt_min_balance(GlobalConstants.min_account_balance_for_shop - rs.getDouble(Shop.EXTENDED_CREDIT_LIMIT));
-
-			}
-
-
-//			System.out.println("Total Shops queried " + shopList.size());
-
-
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-
-		finally
-
-		{
-
-			try {
-				if(rs!=null)
-				{rs.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(statement!=null)
-				{statement.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(connection!=null)
-				{connection.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return shop;
-	}
-
-
-
-
-
-
-
-	public int updateShopStaffPermissions(ShopStaffPermissions permissions)
-	{
-
-
-		String updatePermissions = "UPDATE " + ShopStaffPermissions.TABLE_NAME
-				+ " SET "
-				+ ShopStaffPermissions.DESIGNATION + "=?,"
-				+ ShopStaffPermissions.ADD_REMOVE_ITEMS_FROM_SHOP + "=?,"
-
-				+ ShopStaffPermissions.UPDATE_STOCK + "=?,"
-				+ ShopStaffPermissions.CANCEL_ORDERS + "=?,"
-				+ ShopStaffPermissions.CONFIRM_ORDERS + "=?,"
-
-				+ ShopStaffPermissions.SET_ORDERS_PACKED + "=?,"
-				+ ShopStaffPermissions.HANDOVER_TO_DELIVERY + "=?,"
-//				+ ShopStaffPermissions.MARK_ORDERS_DELIVERED + "=?,"
-
-				+ ShopStaffPermissions.ACCEPT_PAYMENTS_FROM_DELIVERY + "=?,"
-				+ ShopStaffPermissions.ACCEPT_RETURNS + "=?"
-
-				+ " WHERE " + ShopStaffPermissions.STAFF_ID + " = ?"
-				+ " AND " + ShopStaffPermissions.SHOP_ID + " = ?";
-
-
-
-		Connection connection = null;
-		PreparedStatement statement = null;
-
-		int rowCountUpdated = 0;
-
-		try {
-
-			connection = dataSource.getConnection();
-			connection.setAutoCommit(false);
-			int i = 0;
-
-			statement = connection.prepareStatement(updatePermissions,PreparedStatement.RETURN_GENERATED_KEYS);
-
-
-			statement.setString(++i,permissions.getDesignation());
-			statement.setObject(++i,permissions.isPermitAddRemoveItems());
-
-			statement.setObject(++i,permissions.isPermitUpdateItemsInShop());
-			statement.setObject(++i,permissions.isPermitCancelOrders());
-			statement.setObject(++i,permissions.isPermitConfirmOrders());
-
-			statement.setObject(++i,permissions.isPermitSetOrdersPacked());
-			statement.setObject(++i,permissions.isPermitHandoverToDelivery());
-//			statement.setObject(++i,permissions.isPermitMarkOrdersDelivered());
-
-			statement.setObject(++i,permissions.isPermitAcceptPaymentsFromDelivery());
-			statement.setObject(++i,permissions.isPermitAcceptReturns());
-
-			statement.setObject(++i,permissions.getStaffUserID());
-			statement.setObject(++i,permissions.getShopID());
-
-
-			rowCountUpdated = statement.executeUpdate();
-
-
-			connection.commit();
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-
-			if (connection != null) {
-				try {
-
-//                    idOfInsertedRow=-1;
-//                    rowCountItems = 0;
-
-					connection.rollback();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-				}
-			}
-		}
-		finally
-
-		{
-
-			try {
-
-				if(statement!=null)
-				{statement.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			try {
-
-				if(connection!=null)
-				{connection.close();}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return rowCountUpdated;
-	}
-
-
-
-
 	public int upgradeUserToStaff(int userID, int shopID, int secretCode, int role)
 	{
 
 		String updateStatement = "UPDATE " + User.TABLE_NAME
-						    	+ " SET " + User.ROLE + "=?"
-						    	+ " WHERE " + User.USER_ID + " = ?"
-								+ " AND " + User.SECRET_CODE + " = ?";
+				+ " SET " + User.ROLE + "=?"
+				+ " WHERE " + User.USER_ID + " = ?"
+				+ " AND " + User.SECRET_CODE + " = ?";
 
 //		+ " AND " + User.ROLE + " = " + GlobalConstants.ROLE_END_USER_CODE
 
@@ -601,8 +235,230 @@ public class DAOShopStaff {
 	}
 
 
+	public ShopStaffPermissions getShopStaffPermissions(int staffID)
+	{
+
+		boolean isFirst = true;
+
+		String query = "SELECT "
+
+				+ ShopStaffPermissions.STAFF_ID + ","
+				+ ShopStaffPermissions.SHOP_ID + ","
+
+				+ ShopStaffPermissions.ADD_REMOVE_ITEMS_FROM_SHOP + ","
+				+ ShopStaffPermissions.UPDATE_STOCK + ","
+
+				+ ShopStaffPermissions.CANCEL_ORDERS + ","
+				+ ShopStaffPermissions.CONFIRM_ORDERS + ","
+				+ ShopStaffPermissions.SET_ORDERS_PACKED + ","
+				+ ShopStaffPermissions.HANDOVER_TO_DELIVERY + ","
+//				+ ShopStaffPermissions.MARK_ORDERS_DELIVERED + ","
+				+ ShopStaffPermissions.ACCEPT_PAYMENTS_FROM_DELIVERY + ","
+				+ ShopStaffPermissions.DESIGNATION + ","
+				+ ShopStaffPermissions.ACCEPT_RETURNS + ""
+
+				+ " FROM "  + ShopStaffPermissions.TABLE_NAME
+				+ " WHERE " + ShopStaffPermissions.STAFF_ID  + " = ? ";
 
 
+
+		Connection connection = null;
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+
+
+		//Distributor distributor = null;
+		ShopStaffPermissions permissions = null;
+
+		try {
+
+			connection = dataSource.getConnection();
+			statement = connection.prepareStatement(query);
+
+			int i = 0;
+
+
+			statement.setObject(++i,staffID); // username
+
+
+			rs = statement.executeQuery();
+
+			while(rs.next())
+			{
+				permissions = new ShopStaffPermissions();
+
+				permissions.setStaffUserID(rs.getInt(ShopStaffPermissions.STAFF_ID));
+				permissions.setShopID(rs.getInt(ShopStaffPermissions.SHOP_ID));
+
+				permissions.setPermitAddRemoveItems(rs.getBoolean(ShopStaffPermissions.ADD_REMOVE_ITEMS_FROM_SHOP));
+				permissions.setPermitUpdateItemsInShop(rs.getBoolean(ShopStaffPermissions.UPDATE_STOCK));
+
+				permissions.setPermitCancelOrders(rs.getBoolean(ShopStaffPermissions.CANCEL_ORDERS));
+				permissions.setPermitConfirmOrders(rs.getBoolean(ShopStaffPermissions.CONFIRM_ORDERS));
+				permissions.setPermitSetOrdersPacked(rs.getBoolean(ShopStaffPermissions.SET_ORDERS_PACKED));
+				permissions.setPermitHandoverToDelivery(rs.getBoolean(ShopStaffPermissions.HANDOVER_TO_DELIVERY));
+//				permissions.setPermitMarkOrdersDelivered(rs.getBoolean(ShopStaffPermissions.MARK_ORDERS_DELIVERED));
+				permissions.setPermitAcceptPaymentsFromDelivery(rs.getBoolean(ShopStaffPermissions.ACCEPT_PAYMENTS_FROM_DELIVERY));
+				permissions.setPermitAcceptReturns(rs.getBoolean(ShopStaffPermissions.ACCEPT_RETURNS));
+
+				permissions.setDesignation(rs.getString(ShopStaffPermissions.DESIGNATION));
+
+			}
+
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally
+
+		{
+
+			try {
+				if(rs!=null)
+				{rs.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+
+				if(statement!=null)
+				{statement.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+
+				if(connection!=null)
+				{connection.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return permissions;
+	}
+
+
+
+	public int updateShopStaffPermissions(ShopStaffPermissions permissions)
+	{
+
+
+		String updatePermissions = "UPDATE " + ShopStaffPermissions.TABLE_NAME
+				+ " SET "
+				+ ShopStaffPermissions.DESIGNATION + "=?,"
+				+ ShopStaffPermissions.ADD_REMOVE_ITEMS_FROM_SHOP + "=?,"
+
+				+ ShopStaffPermissions.UPDATE_STOCK + "=?,"
+				+ ShopStaffPermissions.CANCEL_ORDERS + "=?,"
+				+ ShopStaffPermissions.CONFIRM_ORDERS + "=?,"
+
+				+ ShopStaffPermissions.SET_ORDERS_PACKED + "=?,"
+				+ ShopStaffPermissions.HANDOVER_TO_DELIVERY + "=?,"
+//				+ ShopStaffPermissions.MARK_ORDERS_DELIVERED + "=?,"
+
+				+ ShopStaffPermissions.ACCEPT_PAYMENTS_FROM_DELIVERY + "=?,"
+				+ ShopStaffPermissions.ACCEPT_RETURNS + "=?"
+
+				+ " WHERE " + ShopStaffPermissions.STAFF_ID + " = ?"
+				+ " AND " + ShopStaffPermissions.SHOP_ID + " = ?";
+
+
+
+		Connection connection = null;
+		PreparedStatement statement = null;
+
+		int rowCountUpdated = 0;
+
+		try {
+
+			connection = dataSource.getConnection();
+			connection.setAutoCommit(false);
+			int i = 0;
+
+			statement = connection.prepareStatement(updatePermissions,PreparedStatement.RETURN_GENERATED_KEYS);
+
+
+			statement.setString(++i,permissions.getDesignation());
+			statement.setObject(++i,permissions.isPermitAddRemoveItems());
+
+			statement.setObject(++i,permissions.isPermitUpdateItemsInShop());
+			statement.setObject(++i,permissions.isPermitCancelOrders());
+			statement.setObject(++i,permissions.isPermitConfirmOrders());
+
+			statement.setObject(++i,permissions.isPermitSetOrdersPacked());
+			statement.setObject(++i,permissions.isPermitHandoverToDelivery());
+
+			statement.setObject(++i,permissions.isPermitAcceptPaymentsFromDelivery());
+			statement.setObject(++i,permissions.isPermitAcceptReturns());
+
+			statement.setObject(++i,permissions.getStaffUserID());
+			statement.setObject(++i,permissions.getShopID());
+
+
+			rowCountUpdated = statement.executeUpdate();
+
+
+			connection.commit();
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+			if (connection != null) {
+				try {
+
+//                    idOfInsertedRow=-1;
+//                    rowCountItems = 0;
+
+					connection.rollback();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		finally
+
+		{
+
+			try {
+
+				if(statement!=null)
+				{statement.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			try {
+
+				if(connection!=null)
+				{connection.close();}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return rowCountUpdated;
+	}
+
+
+
+
+
+
+
+
+
+
+
+	/*Deprecated Method*/
 	public int becomeASeller(int userID)
 	{
 

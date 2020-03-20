@@ -67,7 +67,7 @@ public class ItemResource {
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
 
-			Shop shop = Globals.daoShopStaff.getShopForShopAdmin(user.getUserID());
+			Shop shop = Globals.daoUserUtility.getShopForShopAdmin(user.getUserID());
 
 			if(shop==null || !shop.getShopEnabled())
 			{
@@ -86,7 +86,6 @@ public class ItemResource {
 		{
 
 			return Response.status(Status.CREATED)
-					.location(URI.create("/api/Item/" + idOfInsertedRow))
 					.entity(item)
 					.build();
 			
@@ -236,7 +235,7 @@ public class ItemResource {
 		else if (user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
 		{
 
-			Shop shop = Globals.daoShopStaff.getShopForShopAdmin(user.getUserID());
+			Shop shop = Globals.daoUserUtility.getShopForShopAdmin(user.getUserID());
 
 			if(shop==null || !shop.getShopEnabled())
 			{

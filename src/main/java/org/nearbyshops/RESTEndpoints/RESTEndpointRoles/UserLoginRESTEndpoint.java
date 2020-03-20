@@ -70,9 +70,17 @@ public class UserLoginRESTEndpoint {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("/UpdateProfileByAdmin")
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN})
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN,GlobalConstants.ROLE_STAFF})
     public Response updateProfileByAdmin(User user)
     {
+        User userStaff = ((User)Globals.accountApproved);
+        StaffPermissions permissions = Globals.daoStaff.getStaffPermissions(userStaff.getUserID());
+
+        if(userStaff.getRole()==GlobalConstants.ROLE_STAFF_CODE)
+        {
+
+        }
+
 
         int rowCount = daoUser.updateUserByAdmin(user);
 
@@ -460,7 +468,7 @@ public class UserLoginRESTEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN,GlobalConstants.ROLE_SHOP_ADMIN})
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN,GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_SHOP_ADMIN})
     public Response getUsers(
             @QueryParam("UserRole") Integer userRole,
             @QueryParam("Gender") Boolean gender,
@@ -528,7 +536,7 @@ public class UserLoginRESTEndpoint {
     @GET
     @Path("/GetUserDetails/{UserID}")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN})
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN,GlobalConstants.ROLE_STAFF})
     public Response getUserDetails(@PathParam("UserID")int userID)
     {
 

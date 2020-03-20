@@ -104,7 +104,7 @@ public class DAOOrderUtility {
 
 
 
-    public Order getOrderDetailsForOrderDetailsScreen(int orderID)
+    public Order getExtraDetailsForOrderDetailsScreen(int orderID)
     {
 
         String query = "SELECT "

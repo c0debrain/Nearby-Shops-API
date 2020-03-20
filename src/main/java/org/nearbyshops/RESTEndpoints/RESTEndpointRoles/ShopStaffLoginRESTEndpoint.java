@@ -54,6 +54,41 @@ public class ShopStaffLoginRESTEndpoint {
 
 
     @PUT
+    @Path("/UpgradeUser/{emailorphone}/{Role}/{SecretCode}")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
+    public Response upgradeUserToShopStaff(@PathParam("emailorphone")String emailorphone,@PathParam("Role")int role,
+                                           @PathParam("SecretCode")int secretCode)
+    {
+
+        int shopAdminID = ((User)Globals.accountApproved).getUserID();
+        int shopID = daoUserUtility.getShopIDForShopAdmin(shopAdminID);
+
+
+        int userID = daoUserUtility.getUserID(emailorphone);
+        int rowCount = daoShopStaff.upgradeUserToStaff(userID,shopID,secretCode,role);
+
+
+
+        if(rowCount >= 1)
+        {
+            return Response.status(Response.Status.OK)
+                    .build();
+        }
+        if(rowCount == 0)
+        {
+
+            return Response.status(Response.Status.NOT_MODIFIED)
+                    .build();
+        }
+
+        return null;
+    }
+
+
+
+
+    @PUT
     @Path("/UpdateStaffPermissions")
     @Consumes(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
@@ -86,56 +121,12 @@ public class ShopStaffLoginRESTEndpoint {
 
 
 
-    @PUT
-    @Path("/UpgradeUser/{emailorphone}/{Role}/{SecretCode}")
-    @Consumes(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response upgradeUserToShopStaff(@PathParam("emailorphone")String emailorphone,@PathParam("Role")int role,
-                                           @PathParam("SecretCode")int secretCode)
-    {
-
-        int shopAdminID = ((User)Globals.accountApproved).getUserID();
-        int shopID = daoUserUtility.getShopIDForShopAdmin(shopAdminID);
-
-
-        int userID = daoUserUtility.getUserID(emailorphone);
-        int rowCount = daoShopStaff.upgradeUserToStaff(userID,shopID,secretCode,role);
-
-
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
-
-
-        if(rowCount >= 1)
-        {
-            return Response.status(Response.Status.OK)
-                    .build();
-        }
-        if(rowCount == 0)
-        {
-
-            return Response.status(Response.Status.NOT_MODIFIED)
-                    .build();
-        }
-
-        return null;
-    }
-
-
-
-
 
     @GET
-    @Path("/GetUserDetails/{UserID}")
+    @Path("/GetStaffPermissions/{UserID}")
     @Produces(MediaType.APPLICATION_JSON)
     @RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN})
-    public Response getUserDetails(@PathParam("UserID")int userID)
+    public Response getPermissionDetails(@PathParam("UserID")int userID)
     {
 
         ShopStaffPermissions permissions = daoShopStaff.getShopStaffPermissions(userID);

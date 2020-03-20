@@ -1,8 +1,12 @@
 package org.nearbyshops.DAOs.DAORoles;
 
 import com.zaxxer.hikari.HikariDataSource;
+import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
+import org.nearbyshops.Model.ModelRoles.DeliveryGuyData;
+import org.nearbyshops.Model.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.Model.ModelRoles.StaffPermissions;
+import org.nearbyshops.Model.ModelRoles.User;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,17 +19,6 @@ import java.sql.SQLException;
 public class DAOStaff {
 
     private HikariDataSource dataSource = Globals.getDataSource();
-
-
-    /*
-
-        saveStaffByAdmin(User staff)
-    *  getStaffPublic()
-    *  getStaffForAdmin()
-    *
-    *
-    *
-    * */
 
 
 
@@ -121,6 +114,103 @@ public class DAOStaff {
 
 
 
+    public int upgradeUserToStaff(int userID, int secretCode, int role)
+    {
+
+
+        String updateStatement = "UPDATE " + User.TABLE_NAME
+                + " SET " + User.ROLE + "=?"
+                + " WHERE " + User.USER_ID + " = ?"
+                + " AND " + User.SECRET_CODE + " = ?";
+
+//		+ " AND " + User.ROLE + " = " + GlobalConstants.ROLE_END_USER_CODE
+
+
+        String insertPermissions = "INSERT INTO " + StaffPermissions.TABLE_NAME
+                + "("
+                + ShopStaffPermissions.STAFF_ID + ""
+                + ") values(?)"
+                + " ON CONFLICT DO NOTHING ";
+
+
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        int rowCountUpdated = 0;
+
+        try {
+
+            connection = dataSource.getConnection();
+            connection.setAutoCommit(false);
+
+
+
+            statement = connection.prepareStatement(updateStatement);
+
+            int i = 0;
+
+            statement.setInt(++i,role);
+            statement.setObject(++i,userID);
+            statement.setObject(++i,secretCode);
+
+            rowCountUpdated = statement.executeUpdate();
+
+
+
+            statement = connection.prepareStatement(insertPermissions,PreparedStatement.RETURN_GENERATED_KEYS);
+            i = 0;
+
+            statement.setObject(++i,userID);
+            statement.executeUpdate();
+
+
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+            if (connection != null) {
+                try {
+
+//                    idOfInsertedRow=-1;
+//                    rowCountItems = 0;
+
+                    connection.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        finally
+
+        {
+
+            try {
+
+                if(statement!=null)
+                {statement.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return rowCountUpdated;
+    }
+
+
 
     public StaffPermissions getStaffPermissions(int staffID)
     {
@@ -208,6 +298,92 @@ public class DAOStaff {
         return permissions;
     }
 
+
+
+    public int updateStaffPermissions(StaffPermissions permissions)
+    {
+
+        String updatePermissions = "UPDATE " + StaffPermissions.TABLE_NAME
+                + " SET "
+                + StaffPermissions.DESIGNATION + "=?,"
+                + StaffPermissions.PERMIT_APPROVE_SHOPS + "=?,"
+
+                + StaffPermissions.PERMIT_CREATE_UPDATE_ITEM_CATEGORIES + "=?,"
+                + StaffPermissions.PERMIT_CREATE_UPDATE_ITEMS + "=?"
+
+                + " WHERE " + StaffPermissions.STAFF_ID + " = ?";
+
+
+
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+
+        int rowCountUpdated = 0;
+
+        try {
+
+            connection = dataSource.getConnection();
+            connection.setAutoCommit(false);
+            int i = 0;
+
+            statement = connection.prepareStatement(updatePermissions,PreparedStatement.RETURN_GENERATED_KEYS);
+
+
+            statement.setString(++i,permissions.getDesignation());
+            statement.setObject(++i,permissions.isPermitApproveShops());
+
+            statement.setObject(++i,permissions.isPermitCreateUpdateItemCat());
+            statement.setObject(++i,permissions.isPermitCreateUpdateItems());
+
+            statement.setObject(++i,permissions.getStaffUserID());
+
+            rowCountUpdated = statement.executeUpdate();
+
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+            if (connection != null) {
+                try {
+
+//                    idOfInsertedRow=-1;
+//                    rowCountItems = 0;
+
+                    connection.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
+        finally
+
+        {
+
+            try {
+
+                if(statement!=null)
+                {statement.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return rowCountUpdated;
+    }
 
 
 }

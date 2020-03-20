@@ -261,6 +261,7 @@ public class OrderItemService {
 				+ OrderItem.TABLE_NAME + "." + OrderItem.ITEM_PRICE_AT_ORDER + ","
 				+ OrderItem.TABLE_NAME + "." + OrderItem.ITEM_QUANTITY + ","
 
+				+ Item.TABLE_NAME + "." + Item.ITEM_ID + ","
 				+ Item.TABLE_NAME + "." + Item.QUANTITY_UNIT + ","
 				+ Item.TABLE_NAME + "." + Item.ITEM_NAME + ","
 				+ Item.TABLE_NAME + "." + Item.ITEM_IMAGE_URL + ""
@@ -335,13 +336,14 @@ public class OrderItemService {
 				{
 					Item item = new Item();
 
+					item.setItemID(rs.getInt(Item.ITEM_ID));
 					item.setItemName(rs.getString(Item.ITEM_NAME));
 					item.setQuantityUnit(rs.getString(Item.QUANTITY_UNIT));
 					item.setItemImageURL(rs.getString(Item.ITEM_IMAGE_URL));
 
 
 
-//					item.setItemID(rs.getInt(Item.ITEM_ID));
+
 //					item.setItemDescription(rs.getString(Item.ITEM_DESC));
 //					item.setItemCategoryID(rs.getInt(Item.ITEM_CATEGORY_ID));
 //					item.setItemDescriptionLong(rs.getString(Item.ITEM_DESCRIPTION_LONG));
