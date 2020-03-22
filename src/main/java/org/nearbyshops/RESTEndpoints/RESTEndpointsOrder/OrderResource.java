@@ -97,10 +97,11 @@ public class OrderResource {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	@RolesAllowed({GlobalConstants.ROLE_SHOP_ADMIN, GlobalConstants.ROLE_SHOP_STAFF,GlobalConstants.ROLE_END_USER,GlobalConstants.ROLE_ADMIN})
+	@RolesAllowed({GlobalConstants.ROLE_END_USER})
 	public Response getOrders(
 			@QueryParam("FilterOrdersByShopID") boolean filterOrdersByShopID,
 			@QueryParam("FilterOrdersByUserID") boolean filterOrdersByUserID,
+			@QueryParam("GetDeliveryProfile") boolean getDeliveryProfile,
 			@QueryParam("DeliveryGuyID")Integer deliveryGuyID,
 			@QueryParam("PickFromShop") Boolean pickFromShop,
 			@QueryParam("StatusHomeDelivery")Integer homeDeliveryStatus,
@@ -161,16 +162,37 @@ public class OrderResource {
 
 
 
+		OrderEndPoint endpoint  = null;
 
 
-		OrderEndPoint endpoint = Globals.orderService.getOrdersList(
-				userID,shopID, pickFromShop,
-				homeDeliveryStatus,pickFromShopStatus,
-				deliveryGuyID,
-				pendingOrders,
-				searchString,
-				sortBy,limit,offset,
-				getRowCount,getOnlyMetaData);
+		if(getDeliveryProfile)
+		{
+			endpoint = Globals.orderService.getOrdersListWithDeliveryProfile(
+					userID,shopID, pickFromShop,
+					homeDeliveryStatus,pickFromShopStatus,
+					deliveryGuyID,
+					latCenter,lonCenter,
+					pendingOrders,
+					searchString,
+					sortBy,limit,offset,
+					getRowCount,getOnlyMetaData);
+
+
+		}
+		else
+		{
+			endpoint = Globals.orderService.getOrdersList(
+					userID,shopID, pickFromShop,
+					homeDeliveryStatus,pickFromShopStatus,
+					deliveryGuyID,
+					pendingOrders,
+					searchString,
+					sortBy,limit,offset,
+					getRowCount,getOnlyMetaData);
+
+
+		}
+
 
 
 

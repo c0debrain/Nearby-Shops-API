@@ -542,8 +542,8 @@ public class Main {
 
         Timer timer = new Timer();
 
-        // send ping to the sds server at every 30 minutes
-        timer.scheduleAtFixedRate(timerTask,0,30*60*1000);
+        // send ping to the sds server at every 3 hours
+        timer.scheduleAtFixedRate(timerTask,0,3*60*60*1000);
     }
 
 

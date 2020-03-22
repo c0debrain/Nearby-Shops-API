@@ -468,7 +468,7 @@ public class UserLoginRESTEndpoint {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_ADMIN,GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_SHOP_ADMIN})
+    @RolesAllowed({GlobalConstants.ROLE_ADMIN,GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_SHOP_ADMIN,GlobalConstants.ROLE_SHOP_STAFF})
     public Response getUsers(
             @QueryParam("UserRole") Integer userRole,
             @QueryParam("Gender") Boolean gender,
@@ -487,6 +487,10 @@ public class UserLoginRESTEndpoint {
             if(user.getRole()==GlobalConstants.ROLE_SHOP_ADMIN_CODE)
             {
                 shopID = Globals.daoUserUtility.getShopIDForShopAdmin(user.getUserID());
+            }
+            else if(user.getRole()==GlobalConstants.ROLE_SHOP_STAFF_CODE)
+            {
+                shopID = Globals.daoUserUtility.getShopIDforShopStaff(user.getUserID());
             }
 
 

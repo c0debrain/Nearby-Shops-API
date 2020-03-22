@@ -707,6 +707,7 @@ public class OrderService {
                     address.setDeliveryAddress(rs.getString(DeliveryAddress.DELIVERY_ADDRESS));
                     address.setCity(rs.getString(DeliveryAddress.CITY));
                     address.setPincode(rs.getLong(DeliveryAddress.PINCODE));
+                    address.setRt_distance(rs.getDouble("distance"));
 
 
 
@@ -717,7 +718,7 @@ public class OrderService {
 
 //                    address.setLatitude(rs.getDouble(DeliveryAddress.LATITUDE));
 //                    address.setLongitude(rs.getDouble(DeliveryAddress.LONGITUDE));
-//                    address.setRt_distance(rs.getDouble("distance"));
+
 
 
                     order.setDeliveryAddress(address);

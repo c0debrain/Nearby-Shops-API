@@ -5,5 +5,13 @@ services:
     ports:
       - "80:80"
     container_name: nbs_api_container
+    volumes:
+      - db_data:/var/lib/postgresql/12/main
+      - api_data:/root/nearbyshops
     restart: always
     entrypoint: ["/root/nbs.sh"]
+
+
+volumes:
+    db_data:
+    api_data:

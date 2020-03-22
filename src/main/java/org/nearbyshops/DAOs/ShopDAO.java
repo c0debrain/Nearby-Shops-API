@@ -265,10 +265,6 @@ public class ShopDAO {
 
 
 
-
-
-
-
 	public int updateShop(Shop shop)
 	{
 		
