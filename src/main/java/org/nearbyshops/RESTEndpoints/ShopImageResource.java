@@ -348,7 +348,7 @@ public class ShopImageResource {
 
     // Image MEthods
 
-    private static final java.nio.file.Path BASE_DIR = Paths.get("./images/ShopImages");
+    private static final java.nio.file.Path BASE_DIR = Paths.get("./data/images/ShopImages");
     private static final double MAX_IMAGE_SIZE_MB = 2;
 
 

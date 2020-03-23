@@ -3,7 +3,6 @@ package org.nearbyshops;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
-import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import org.glassfish.jersey.jetty.JettyHttpContainerFactory;
@@ -29,7 +28,6 @@ import org.nearbyshops.Model.ModelReviewShop.ShopReviewThanks;
 import org.nearbyshops.Model.ModelRoles.*;
 import org.nearbyshops.Model.ModelSettings.ServiceConfigurationLocal;
 
-import javax.ws.rs.core.Response;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -308,7 +306,7 @@ public class Main {
 
             // create directory images
 
-            final java.nio.file.Path BASE_DIR = Paths.get("./images");
+            final java.nio.file.Path BASE_DIR = Paths.get("./data/images");
 
             File theDir = new File(BASE_DIR.toString());
 
@@ -557,7 +555,7 @@ public class Main {
 
 
         String url = "";
-        url = sdsURL + "/api/v1/ServiceConfiguration/Ping?ServiceURL=" + GlobalConstants.instanceURLSubmitted;
+        url = sdsURL + "/api/v1/ServiceConfiguration/Ping?ServiceURL=" + GlobalConstants.domain_name_for_api;
 
 
 //        System.out.println("Ping URL" + url);

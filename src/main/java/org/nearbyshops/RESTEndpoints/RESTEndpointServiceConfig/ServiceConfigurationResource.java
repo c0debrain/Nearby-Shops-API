@@ -25,8 +25,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 
 @Path("/api/ServiceConfiguration")
@@ -224,7 +222,7 @@ public class ServiceConfigurationResource {
 
 	// Image MEthods
 
-	private static final java.nio.file.Path BASE_DIR = Paths.get("./images/ServiceConfiguration");
+	private static final java.nio.file.Path BASE_DIR = Paths.get("./data/images/ServiceConfiguration");
 	private static final double MAX_IMAGE_SIZE_MB = 2;
 
 
@@ -421,7 +419,7 @@ public class ServiceConfigurationResource {
 
 
 		String url = "";
-		url = sdsURL + "/api/v1/ServiceConfiguration/UpdateService?ServiceURL=" + GlobalConstants.instanceURLSubmitted;
+		url = sdsURL + "/api/v1/ServiceConfiguration/UpdateService?ServiceURL=" + GlobalConstants.domain_name_for_api;
 
 
 //        System.out.println("Ping URL" + url);

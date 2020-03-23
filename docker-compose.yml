@@ -7,7 +7,7 @@ services:
     container_name: nbs_api_container
     volumes:
       - db_data:/var/lib/postgresql/12/main
-      - api_data:/root/nearbyshops
+      - api_data:/root/nearbyshops/data
     restart: always
     entrypoint: ["/root/nbs.sh"]
 

@@ -35,6 +35,8 @@ public class GlobalConfig {
 
 
         GlobalConstants.BASE_URI = configuration.getString("base.url");
+        GlobalConstants.domain_name_for_api = configuration.getString("domain_name");
+
         GlobalConstants.POSTGRES_CONNECTION_URL = configuration.getString("connection.url");
 
         GlobalConstants.POSTGRES_USERNAME = configuration.getString("postgres.username");
@@ -108,8 +110,6 @@ public class GlobalConfig {
         GlobalConstants.enable_login_using_otp_value = configuration.getBoolean("enable_login_using_otp");
 
         GlobalConstants.trusted_market_aggregators_value = configuration.getStringArray("trusted_market_aggregators");
-
-        GlobalConstants.instanceURLSubmitted = configuration.getString("instance_url_submitted");
 
         GlobalConstants.url_for_notification_icon_value = configuration.getString("url_for_notification_icon");
 
@@ -241,7 +241,7 @@ public class GlobalConfig {
                     new FileBasedConfigurationBuilder<FileBasedConfiguration>(PropertiesConfiguration.class)
                             .configure(params.properties()
                                     .setListDelimiterHandler(new DefaultListDelimiterHandler(','))
-                                    .setFileName("api_config.properties"));
+                                    .setFileName("./data/api_config.properties"));
 
 
 

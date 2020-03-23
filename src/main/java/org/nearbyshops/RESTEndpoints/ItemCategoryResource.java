@@ -192,14 +192,12 @@ public class ItemCategoryResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		if(rowCount == 0)
 		{
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -248,20 +246,17 @@ public class ItemCategoryResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		else if( rowCountSum < itemCategoryList.size() && rowCountSum > 0)
 		{
 
 			return Response.status(Status.PARTIAL_CONTENT)
-					.entity(null)
 					.build();
 		}
 		else if(rowCountSum == 0 ) {
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -298,8 +293,6 @@ public class ItemCategoryResource {
 
 		itemCategory.setItemCategoryID(itemCategoryID);
 
-//		System.out.println("ItemCategoryID: " + itemCategoryID + " " + itemCategory.getCategoryName()
-//				+ " " + itemCategory.getCategoryDescription() + " Parent DELIVERY_GUY_SELF_ID : " +  itemCategory.getParentCategoryID());
 
 		int rowCount = itemCategoryDAO.updateItemCategory(itemCategory);
 
@@ -307,14 +300,12 @@ public class ItemCategoryResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		if(rowCount == 0)
 		{
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -359,20 +350,17 @@ public class ItemCategoryResource {
 		{
 
 			return Response.status(Status.OK)
-					.entity(null)
 					.build();
 		}
 		else if( rowCountSum < itemCategoryList.size() && rowCountSum > 0)
 		{
 
 			return Response.status(Status.PARTIAL_CONTENT)
-					.entity(null)
 					.build();
 		}
 		else if(rowCountSum == 0 ) {
 
 			return Response.status(Status.NOT_MODIFIED)
-					.entity(null)
 					.build();
 		}
 
@@ -661,7 +649,7 @@ public class ItemCategoryResource {
 
 	// Image MEthods
 
-	private static final java.nio.file.Path BASE_DIR = Paths.get("./images/ItemCategory");
+	private static final java.nio.file.Path BASE_DIR = Paths.get("./data/images/ItemCategory");
 	private static final double MAX_IMAGE_SIZE_MB = 2;
 
 
