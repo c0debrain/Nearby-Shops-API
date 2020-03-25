@@ -8,12 +8,6 @@ public class ShopItem{
 	public static final String UNIT_KG = "Kg.";
 	public static final String UNIT_GRAMS = "Grams.";
 	
-	//int shopID;
-
-	public ShopItem() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
 
 	// Table Name
 	public static final String TABLE_NAME = "SHOP_ITEM";

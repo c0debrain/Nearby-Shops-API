@@ -1,4 +1,4 @@
-package org.nearbyshops.RESTEndpoints.RESTEndpointRoles;
+package org.nearbyshops.RESTEndpoints.RESTEndpointRoles.Backups;
 
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
@@ -8,8 +8,6 @@ import org.nearbyshops.DAOs.DAORoles.DAOPhoneVerificationCodes;
 import org.nearbyshops.DAOs.DAORoles.DAOUserNew;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
-import org.nearbyshops.Globals.SendSMS;
-import org.nearbyshops.Model.ModelRoles.PhoneVerificationCode;
 import org.nearbyshops.Model.ModelRoles.ShopStaffPermissions;
 import org.nearbyshops.Model.ModelRoles.StaffPermissions;
 import org.nearbyshops.Model.ModelRoles.User;
@@ -19,15 +17,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.sql.Timestamp;
 import java.util.Base64;
 import java.util.StringTokenizer;
 
-import static org.nearbyshops.Globals.Globals.generateOTP;
 
-
-@Path("/api/v1/User/LoginUsingOTP")
-public class LoginUsingOTPRESTEndpoint {
+//@Path("/api/v1/User/LoginUsingOTP")
+public class LoginUsingOTPRESTEndpoint24Mar20 {
 
 
     private DAOUserNew daoUser = Globals.daoUserNew;
@@ -153,6 +148,10 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
+
+
+
+
     @GET
     @Path("/LoginUsingGlobalCredentials")
     @Produces(MediaType.APPLICATION_JSON)
@@ -160,8 +159,7 @@ public class LoginUsingOTPRESTEndpoint {
             @HeaderParam("Authorization")String headerParam,
             @QueryParam("ServiceURLSDS")String serviceURLForSDS,
             @QueryParam("MarketID")int marketID,
-            @QueryParam("IsPasswordAnOTP")boolean isPasswordAnOTP, // indicates when you are trying to log in using OTP
-            @QueryParam("VerifyUsingPassword")boolean verifyUsingPassword, // indicates whether you are verifying using token or password
+            @QueryParam("IsPasswordAnOTP")boolean isPasswordAnOTP,
             @QueryParam("RegistrationMode")int registrationMode, // 1 for email and 2 for phone
             @QueryParam("GetServiceConfiguration")boolean getServiceConfig,
             @QueryParam("GetUserProfileGlobal")boolean getUserProfileGlobal
@@ -205,8 +203,8 @@ public class LoginUsingOTPRESTEndpoint {
         final String password = tokenizer.nextToken();
 
         //Verifying Username and password
-//        System.out.println(username);
-//        System.out.println(password);
+        System.out.println(username);
+        System.out.println(password);
 
 
 //            try {
@@ -231,7 +229,7 @@ public class LoginUsingOTPRESTEndpoint {
         }
         else
         {
-            url = serviceURLForSDS + "/api/v1/User/LoginGlobal/VerifyCredentials?VerifyUsingPassword=" + verifyUsingPassword;
+            url = serviceURLForSDS + "/api/v1/User/LoginGlobal/VerifyCredentials?GetUserProfile=true";
         }
 
 
@@ -246,7 +244,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 
         User userProfileGlobal;
-        String generatedTokenGlobal;
+        String generatedPasswordGlobal;
 
 
 
@@ -266,7 +264,6 @@ public class LoginUsingOTPRESTEndpoint {
 //            }
 
 
-//            System.out.println("Response Code : " + response.code());
 
             if(response.code()!=200)
             {
@@ -279,8 +276,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 //            System.out.println(response.body().string());
             userProfileGlobal = Globals.getGson().fromJson(response.body().string(),User.class);
-
-            generatedTokenGlobal = userProfileGlobal.getToken();
+            generatedPasswordGlobal = userProfileGlobal.getPassword();
         }
 
 
@@ -288,7 +284,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
-        String generatedTokenLocal = new BigInteger(130, Globals.random).toString(32);
+        String generatedPasswordLocal = new BigInteger(130, Globals.random).toString(32);
 
 
 //        User user = new User();
@@ -297,7 +293,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 
 
-        userProfileGlobal.setToken(generatedTokenLocal);
+        userProfileGlobal.setPassword(generatedPasswordLocal);
 
 
 
@@ -349,9 +345,11 @@ public class LoginUsingOTPRESTEndpoint {
 
 
             // get profile information and send it to user
-            User userProfile = daoUser.getProfile(username, generatedTokenLocal);
-            userProfile.setToken(generatedTokenLocal);
+            User userProfile = daoUser.getProfile(username, generatedPasswordLocal);
+            userProfile.setPassword(generatedPasswordLocal);
 
+
+//        userProfile.setPhone(phone);
 
 
             if (rowsUpdated == 1) {
@@ -363,7 +361,7 @@ public class LoginUsingOTPRESTEndpoint {
 
                 if (getUserProfileGlobal) {
 
-                    userProfileGlobal.setToken(generatedTokenGlobal);
+                    userProfileGlobal.setPassword(generatedPasswordGlobal);
                     userProfile.setUserProfileGlobal(userProfileGlobal);
 
                 }
@@ -390,6 +388,140 @@ public class LoginUsingOTPRESTEndpoint {
 
         }
     }
+
+
+
+
+
+
+//
+//
+//
+//    @PUT
+//    @Path("/SendPhoneVerificationCode/{phone}")
+//    @Consumes(MediaType.APPLICATION_JSON)
+//    public Response sendPhoneVerificationCode(@PathParam("phone")String phone)
+//    {
+//
+//        int rowCount = 0;
+//
+//
+//        PhoneVerificationCode verificationCode = Globals.daoPhoneVerificationCodes.checkPhoneVerificationCode(phone);
+//
+//        if(verificationCode==null)
+//        {
+//            // verification code not generated for this phone so generate one and send this to the user
+//
+//
+////            BigInteger phoneCode = new BigInteger(15, Globals.random);
+////            int phoneOTP = phoneCode.intValue();
+//
+//
+////            String emailVerificationCode = new BigInteger(30, Globals.random).toString(32);
+//
+//
+//
+//            char[] phoneOTP = generateOTP(4);
+//
+//            Timestamp timestampExpiry
+//                    = new Timestamp(
+//                    System.currentTimeMillis()
+//                            + GlobalConstants.PHONE_OTP_EXPIRY_MINUTES *60*1000
+//            );
+//
+//
+//            rowCount = Globals.daoPhoneVerificationCodes.insertPhoneVerificationCode(
+//                    phone,String.valueOf(phoneOTP),timestampExpiry,true
+//            );
+//
+//
+//            if(rowCount==1)
+//            {
+//                // saved successfully
+//
+////                System.out.println("Phone Verification Code : " + phoneOTP);
+//
+//
+//                SendSMS.sendOTP(String.valueOf(phoneOTP),phone);
+//
+//            }
+//
+//
+//        }
+//        else
+//        {
+//
+//            // verification code already generated and has not expired so resend that same code
+//
+////            System.out.println("Phone Verification Code : " + verificationCode.getVerificationCode());
+//
+//
+//            SendSMS.sendOTP(verificationCode.getVerificationCode(),phone);
+//
+//
+//            rowCount = 1;
+//        }
+//
+//
+//
+//        if(rowCount >= 1)
+//        {
+//
+//
+//
+//            return Response.status(Response.Status.OK)
+//                    .build();
+//        }
+//        if(rowCount == 0)
+//        {
+//
+//            return Response.status(Response.Status.NOT_MODIFIED)
+//                    .build();
+//        }
+//
+//        return null;
+//    }
+//
+//
+//
+//
+//
+//    @GET
+//    @Path("/CheckPhoneVerificationCode/{phone}")
+//    @Produces(MediaType.APPLICATION_JSON)
+//    public Response checkPhoneVerificationCode(
+//            @PathParam("phone")String phone,
+//            @QueryParam("VerificationCode")String verificationCode
+//    )
+//    {
+//        // Roles allowed annotation not used for this method due to performance and efficiency requirements. Also
+//        // this endpoint doesnt required to be secured as it does not expose any confidential information
+//
+//        boolean result = Globals.daoPhoneVerificationCodes.checkPhoneVerificationCode(phone,verificationCode);
+//
+////        System.out.println(phone);
+////
+////
+////        try {
+////            Thread.sleep(1000);
+////        } catch (InterruptedException e) {
+////            e.printStackTrace();
+////        }
+//
+//
+//        if(result)
+//        {
+//            return Response.status(Response.Status.OK)
+//                    .build();
+//
+//        } else
+//        {
+//            return Response.status(Response.Status.NO_CONTENT)
+//                    .build();
+//        }
+//    }
+
+
 
 
 

@@ -405,6 +405,9 @@ public class Main {
 
 
             statement.executeUpdate(User.upgradeTableSchema);
+            statement.executeUpdate(User.removeNotNullforPassword);
+
+
 //            statement.executeUpdate(Shop.removeNotNull);
 
 

@@ -1,4 +1,4 @@
-package org.nearbyshops.DAOs.DAORoles;
+package org.nearbyshops.DAOs.DAORoles.Backups;
 
 import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
@@ -6,9 +6,12 @@ import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.ModelRoles.User;
 import org.nearbyshops.Model.ModelRoles.UserMarkets;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-public class DAOLoginUsingOTP {
+public class DAOLoginUsingOTP24Mar20 {
 
     private HikariDataSource dataSource = Globals.getDataSource();
 
@@ -379,7 +382,7 @@ public class DAOLoginUsingOTP {
 
         String updateStatement = "UPDATE " + User.TABLE_NAME
 
-                + " SET " + User.TOKEN + "=?,"
+                + " SET " + User.PASSWORD + "=?,"
 
                 + User.E_MAIL + "=?,"
                 + User.PHONE + "=?,"
@@ -412,7 +415,7 @@ public class DAOLoginUsingOTP {
 //            statement.setString(++i,user.getToken());
 //            statement.setTimestamp(++i,user.getTimestampTokenExpires());
 
-            statement.setString(++i,user.getToken());
+            statement.setString(++i,user.getPassword());
             statement.setString(++i,user.getEmail());
             statement.setString(++i,user.getPhone());
             statement.setString(++i,user.getName());
@@ -576,7 +579,7 @@ public class DAOLoginUsingOTP {
                 + User.TABLE_NAME
                 + "("
                 + User.ROLE + ","
-                + User.TOKEN + ","
+                + User.PASSWORD + ","
 
                 + User.E_MAIL + ","
                 + User.PHONE + ","
@@ -612,7 +615,7 @@ public class DAOLoginUsingOTP {
             int i = 0;
 
             statement.setObject(++i,GlobalConstants.ROLE_END_USER_CODE);
-            statement.setString(++i,user.getToken());
+            statement.setString(++i,user.getPassword());
 
             statement.setString(++i,user.getEmail());
             statement.setString(++i,user.getPhone());
@@ -743,7 +746,7 @@ public class DAOLoginUsingOTP {
         String updateStatement = "UPDATE " + User.TABLE_NAME
 
                 + " SET "
-                + User.TOKEN + "=?,"
+                + User.PASSWORD + "=?,"
 
                 + User.E_MAIL + "=?,"
                 + User.PHONE + "=?,"
@@ -777,7 +780,7 @@ public class DAOLoginUsingOTP {
 //            statement.setString(++i,user.getToken());
 //            statement.setTimestamp(++i,user.getTimestampTokenExpires());
 
-            statement.setString(++i,user.getToken());
+            statement.setString(++i,user.getPassword());
             statement.setString(++i,user.getEmail());
             statement.setString(++i,user.getPhone());
             statement.setString(++i,user.getName());

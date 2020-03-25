@@ -777,8 +777,6 @@ public class DAOUserNew {
     public User verifyUser(String username, String token)
     {
 
-        boolean isFirst = true;
-
         String queryToken = "SELECT "
 
                 + User.USER_ID + ","
@@ -791,8 +789,9 @@ public class DAOUserNew {
                 + " OR " + " CAST ( " +  User.USER_ID + " AS text ) " + " = ? "
                 + " OR " + " ( " + User.E_MAIL + " = ?" + ")"
                 + " OR " + " ( " + User.PHONE + " = ?" + ")" + ")"
-                + " AND " + User.TOKEN + " = ? "
-                + " AND " + User.TIMESTAMP_TOKEN_EXPIRES + " > now()";
+                + " AND " + User.TOKEN + " = ? ";
+
+//        + " AND " + User.TIMESTAMP_TOKEN_EXPIRES + " > now()"
 
 
 
@@ -829,7 +828,7 @@ public class DAOUserNew {
 //            System.out.println(query);
 
             connection = dataSource.getConnection();
-            statement = connection.prepareStatement(queryPassword);
+            statement = connection.prepareStatement(queryToken);
 
             int i = 0;
             statement.setString(++i,username); // username
@@ -999,7 +998,8 @@ public class DAOUserNew {
 
 
 
-    public User getProfile(String username, String password)
+
+    public User getProfile(String username, String token)
     {
 
         boolean isFirst = true;
@@ -1031,7 +1031,7 @@ public class DAOUserNew {
                 + " OR " + " ( " + User.E_MAIL + " = ?" + ")"
                 + " OR " + " ( " + User.PHONE + " = ?" + ")"
                 + ")"
-                + " AND " + User.PASSWORD + " = ? ";
+                + " AND " + User.TOKEN + " = ? ";
 
 
 
@@ -1062,7 +1062,7 @@ public class DAOUserNew {
             statement.setString(++i,username); // userID
             statement.setString(++i,username); // email
             statement.setString(++i,username); // phone
-            statement.setString(++i,password); // password
+            statement.setString(++i,token); // password
 
 
 //            statement.setString(++i,username); // username
@@ -1132,8 +1132,6 @@ public class DAOUserNew {
 
         return user;
     }
-
-
 
 
 

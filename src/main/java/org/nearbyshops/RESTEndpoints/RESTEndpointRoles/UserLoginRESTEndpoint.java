@@ -235,7 +235,7 @@ public class UserLoginRESTEndpoint {
     @GET
     @Path("/GetProfile")
     @Produces(MediaType.APPLICATION_JSON)
-    @RolesAllowed({GlobalConstants.ROLE_END_USER,GlobalConstants.ROLE_SHOP_ADMIN,GlobalConstants.ROLE_STAFF,GlobalConstants.ROLE_ADMIN})
+    @RolesAllowed({GlobalConstants.ROLE_END_USER})
     public Response getProfile()
     {
 

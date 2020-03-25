@@ -68,7 +68,7 @@ public class User {
                     + User.TABLE_NAME + "("
                     + " " + User.USER_ID + " SERIAL PRIMARY KEY,"
                     + " " + User.USERNAME + " text UNIQUE ,"
-                    + " " + User.PASSWORD + " text NOT NULL,"
+                    + " " + User.PASSWORD + " text,"
 
                     + " " + User.PASSWORD_RESET_CODE + " text ,"
                     + " " + User.RESET_CODE_EXPIRES + " timestamp with time zone NOT NULL default now(),"
@@ -115,7 +115,10 @@ public class User {
 	public static final String upgradeTableSchema =
 			"ALTER TABLE IF EXISTS " + User.TABLE_NAME
 					+ " ADD COLUMN IF NOT EXISTS " + User.SECRET_CODE + " int not null default 123456";
-//                    + " DROP COLUMN IF EXISTS " + User.SECRET_CODE ;
+
+
+    public static final String removeNotNullforPassword =
+            "ALTER TABLE IF EXISTS " + User.TABLE_NAME +  " ALTER " + User.PASSWORD + " drop not null " ;
 
 
 
