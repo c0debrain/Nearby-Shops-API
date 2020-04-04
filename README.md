@@ -29,13 +29,6 @@ Full installation guide available at https://developer.nearbyshops.org/installat
 
 
 
-### Commercial Use Permitted under Single Market License
-
-Good news for you ... !! Now you can run your own commercial business with our free open - source software. 
-Please read more about about our Single Market License here https://blog.nearbyshops.org/single-market-license/
-
-
-
 About Nearby Shops
 --------------------
 
