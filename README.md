@@ -203,11 +203,6 @@ If you're interested please get in touch with us on https://forum.nearbyshops.or
 License
 =======
 
-Nearby Shops Single Market License
-
-Good news for you ... !! Now you can run your own commercial business with our free open - source software. 
-Please read more about about our Single Market License here https://blog.nearbyshops.org/single-market-license/
-
 Copyright (c) 2020 Nearby Shops
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
