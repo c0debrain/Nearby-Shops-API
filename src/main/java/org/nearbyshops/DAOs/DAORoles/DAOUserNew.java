@@ -1134,6 +1134,139 @@ public class DAOUserNew {
     }
 
 
+    public User getProfileUsingToken(String username, String token)
+    {
+
+        boolean isFirst = true;
+
+        String query = "SELECT "
+
+                + User.USER_ID + ","
+                + User.USERNAME + ","
+//                + User.PASSWORD + ","
+                + User.E_MAIL + ","
+                + User.PHONE + ","
+//                + User.IS_PHONE_VERIFIED + ","
+                + User.NAME + ","
+                + User.SECRET_CODE + ","
+
+                + User.GENDER + ","
+                + User.PROFILE_IMAGE_URL + ","
+                + User.ROLE + ","
+                + User.IS_ACCOUNT_PRIVATE + ","
+                + User.ABOUT + ","
+                + User.SERVICE_ACCOUNT_BALANCE + ","
+                + User.IS_ACCOUNT_PRIVATE + ""
+//                + User.TOKEN + ","
+//                + User.TIMESTAMP_TOKEN_EXPIRES + ""
+
+                + " FROM " + User.TABLE_NAME
+                + " WHERE "
+                + " ( " + User.USERNAME + " = ? "
+                + " OR " + " CAST ( " +  User.USER_ID + " AS text ) " + " = ? "
+                + " OR " + " ( " + User.E_MAIL + " = ?" + ")"
+                + " OR " + " ( " + User.PHONE + " = ?" + ")"
+                + ")"
+                + " AND " + User.TOKEN + " = ? ";
+
+
+
+//                + " ( " + User.USERNAME + " = ? "
+//                + " OR " + " CAST ( " +  User.USER_ID + " AS text ) " + " = ? )";
+
+//        CAST (" + User.TIMESTAMP_TOKEN_EXPIRES + " AS TIMESTAMP)"
+
+
+
+        Connection connection = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+
+
+        //Distributor distributor = null;
+        User user = null;
+
+        try {
+
+            connection = dataSource.getConnection();
+            statement = connection.prepareStatement(query);
+
+            int i = 0;
+
+
+            statement.setString(++i,username); // username
+            statement.setString(++i,username); // userID
+            statement.setString(++i,username); // email
+            statement.setString(++i,username); // phone
+            statement.setString(++i,token); // password
+
+
+            rs = statement.executeQuery();
+
+            while(rs.next())
+            {
+                user = new User();
+
+                user.setUserID(rs.getInt(User.USER_ID));
+                user.setUsername(rs.getString(User.USERNAME));
+//                user.setPassword(rs.getString(User.PASSWORD));
+                user.setEmail(rs.getString(User.E_MAIL));
+                user.setPhone(rs.getString(User.PHONE));
+//                user.setPhoneVerified(rs.getBoolean(User.IS_PHONE_VERIFIED));
+                user.setName(rs.getString(User.NAME));
+                user.setSecretCode(rs.getInt(User.SECRET_CODE));
+
+                user.setGender(rs.getBoolean(User.GENDER));
+                user.setProfileImagePath(rs.getString(User.PROFILE_IMAGE_URL));
+                user.setRole(rs.getInt(User.ROLE));
+                user.setAccountPrivate(rs.getBoolean(User.IS_ACCOUNT_PRIVATE));
+                user.setServiceAccountBalance(rs.getDouble(User.SERVICE_ACCOUNT_BALANCE));
+                user.setAbout(rs.getString(User.ABOUT));
+
+//                user.setToken(rs.getString(User.TOKEN));
+//                user.setTimestampTokenExpires(rs.getTimestamp(User.TIMESTAMP_TOKEN_EXPIRES));
+
+            }
+
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } finally
+
+        {
+
+            try {
+                if(rs!=null)
+                {rs.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(statement!=null)
+                {statement.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            try {
+
+                if(connection!=null)
+                {connection.close();}
+            } catch (SQLException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        return user;
+    }
+
+
 
 
     public UserEndpoint getUsers(

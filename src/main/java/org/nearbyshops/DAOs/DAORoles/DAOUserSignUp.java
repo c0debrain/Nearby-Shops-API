@@ -258,7 +258,7 @@ public class DAOUserSignUp {
 
                 statement.setString(++i,user.getName());
                 statement.setObject(++i,user.getGender());
-                statement.setObject(++i,Globals.generateOTP(5));
+                statement.setObject(++i,Integer.parseInt(String.valueOf(Globals.generateOTP(5))));
 
                 statement.setString(++i,user.getProfileImagePath());
                 statement.setObject(++i,user.getRole());
@@ -306,7 +306,7 @@ public class DAOUserSignUp {
 
                 statement.setString(++i, user.getName());
                 statement.setObject(++i, user.getGender());
-                statement.setObject(++i,Globals.generateOTP(5));
+                statement.setObject(++i,Integer.parseInt(String.valueOf(Globals.generateOTP(5))));
 
                 statement.setString(++i, user.getProfileImagePath());
                 statement.setObject(++i, user.getRole());

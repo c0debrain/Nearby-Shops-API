@@ -93,6 +93,10 @@ public class Globals {
     public static DAOPhoneVerificationCodes daoPhoneVerificationCodes=new DAOPhoneVerificationCodes();
 
 
+    public static DAOLoginUsingOTP daoLoginUsingOTP = new DAOLoginUsingOTP();
+    public static DAOLoginUsingOTPNew daoLoginUsingOTPNew = new DAOLoginUsingOTPNew();
+
+
     public static ServiceConfigurationDAO serviceConfigDAO = new ServiceConfigurationDAO();
 
     // static reference for holding security accountApproved

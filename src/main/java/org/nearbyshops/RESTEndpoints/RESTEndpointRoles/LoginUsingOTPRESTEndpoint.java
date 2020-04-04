@@ -3,9 +3,7 @@ package org.nearbyshops.RESTEndpoints.RESTEndpointRoles;
 import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import org.nearbyshops.DAOs.DAORoles.DAOLoginUsingOTP;
-import org.nearbyshops.DAOs.DAORoles.DAOPhoneVerificationCodes;
-import org.nearbyshops.DAOs.DAORoles.DAOUserNew;
+import org.nearbyshops.DAOs.DAORoles.*;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Globals.SendSMS;
@@ -31,8 +29,10 @@ public class LoginUsingOTPRESTEndpoint {
 
 
     private DAOUserNew daoUser = Globals.daoUserNew;
-    private DAOLoginUsingOTP daoLoginUsingOTP = new DAOLoginUsingOTP();
+    private DAOLoginUsingOTP daoLoginUsingOTP = Globals.daoLoginUsingOTP;
+    private DAOLoginUsingOTPNew daoLoginUsingOTPNew = Globals.daoLoginUsingOTPNew;
     private DAOPhoneVerificationCodes daoPhoneVerificationCodes = Globals.daoPhoneVerificationCodes;
+    private DAOEmailVerificationCodes daoEmailVerificationCodes = Globals.daoEmailVerificationCodes;
     private final OkHttpClient client = new OkHttpClient();
 
     private static final String AUTHENTICATION_SCHEME = "Basic";
@@ -75,7 +75,7 @@ public class LoginUsingOTPRESTEndpoint {
 
 
         User user = new User();
-        user.setPassword(generatedPassword);
+        user.setToken(generatedPassword);
         user.setPhone(phone);
 
 
@@ -93,7 +93,7 @@ public class LoginUsingOTPRESTEndpoint {
 
             // get profile information and send it to user
             User userProfile = daoUser.getProfile(phone,generatedPassword);
-            userProfile.setPassword(generatedPassword);
+            userProfile.setToken(generatedPassword);
             userProfile.setPhone(phone);
 
 
@@ -147,6 +147,119 @@ public class LoginUsingOTPRESTEndpoint {
         }
 
     }
+
+
+
+    @GET
+    @Path("/VerifyCredentialsUsingOTP")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response verifyCredentialsUsingOTP(
+            @HeaderParam("Authorization")String headerParam,
+            @QueryParam("RegistrationMode")int registrationMode // 1 for email and 2 for phone
+    )
+    {
+
+
+
+        final String encodedUserPassword = headerParam.replaceFirst(AUTHENTICATION_SCHEME + " ", "");
+
+        //Decode username and password
+        String usernameAndPassword = new String(Base64.getDecoder().decode(encodedUserPassword.getBytes()));
+
+        //Split username and password tokens
+        final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
+        final String emailOrPhone = tokenizer.nextToken();
+        final String emailOrPhoneOTP = tokenizer.nextToken();
+
+
+
+        boolean isOTPValid = false;
+
+
+        if(registrationMode==User.REGISTRATION_MODE_PHONE)
+        {
+            isOTPValid = daoPhoneVerificationCodes.checkPhoneVerificationCode(emailOrPhone,emailOrPhoneOTP);
+        }
+        else if(registrationMode==User.REGISTRATION_MODE_EMAIL)
+        {
+            isOTPValid = daoEmailVerificationCodes.checkEmailVerificationCode(emailOrPhone,emailOrPhoneOTP);
+        }
+
+
+
+
+        System.out.println("Log : " + emailOrPhone + " | " + emailOrPhoneOTP);
+        System.out.println("Log : Registration Mode - "  + registrationMode);
+
+
+        if(isOTPValid)
+        {
+
+
+            System.out.println("Log : OTP Valid");
+
+
+            String generatedToken = new BigInteger(130, Globals.random).toString(32);
+
+
+            User user = new User();
+            user.setToken(generatedToken);
+
+            int rowsUpdated = 0;
+
+
+
+            if(registrationMode==User.REGISTRATION_MODE_PHONE)
+            {
+                user.setPhone(emailOrPhone);
+                rowsUpdated = daoLoginUsingOTPNew.upsertUserProfilePhone(user,true);
+            }
+            else if(registrationMode==User.REGISTRATION_MODE_EMAIL) {
+
+                user.setEmail(emailOrPhone);
+                rowsUpdated = daoLoginUsingOTPNew.upsertUserProfileEmail(user,true);
+            }
+
+
+
+
+            System.out.println("Rows updated : " + rowsUpdated);
+
+
+
+
+
+            if(rowsUpdated==1)
+            {
+
+                // get profile information and send it to user
+                User userProfile = daoUser.getProfileUsingToken(emailOrPhone,generatedToken);
+                userProfile.setToken(generatedToken);
+
+                return Response.status(Response.Status.OK)
+                        .entity(userProfile)
+                        .build();
+
+            }
+            else
+            {
+                return Response.status(Response.Status.NOT_MODIFIED)
+                        .build();
+            }
+
+        }
+        else
+        {
+
+            System.out.println("Log : OTP Not Valid");
+
+            return Response.status(Response.Status.NOT_MODIFIED)
+                    .build();
+        }
+
+
+    }
+
 
 
 

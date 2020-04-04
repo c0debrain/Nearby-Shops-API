@@ -435,14 +435,18 @@ public class UserLoginRESTEndpoint {
 
         int rowsUpdated = daoUser.updateToken(user);
 
-        user.setPassword(null);
+
 
 
         if(rowsUpdated==1)
         {
 
+            User userProfile = daoUser.getProfileUsingToken(username,token);
+            userProfile.setToken(token);
+            userProfile.setPassword(null);
+
             return Response.status(Response.Status.OK)
-                    .entity(user)
+                    .entity(userProfile)
                     .build();
         }
         else if(rowsUpdated==0)

@@ -32,11 +32,11 @@ public class DAOLoginUsingOTP {
                 "INSERT INTO " + User.TABLE_NAME
                         + "(" + User.PHONE + ","
                         + User.ROLE + ","
-                        + User.PASSWORD + ""
+                        + User.TOKEN + ""
                         + ") values(?,?,?)"
                         + " ON CONFLICT (" + User.PHONE + ")"
                         + " DO UPDATE "
-                        + " SET " + User.PASSWORD + " = " + " excluded." + User.PASSWORD + "";
+                        + " SET " + User.TOKEN + " = " + " excluded." + User.TOKEN + "";
 
 
         //        + EmailVerificationCode.TABLE_NAME
@@ -55,7 +55,7 @@ public class DAOLoginUsingOTP {
 
             statement.setObject(++i,userProfile.getPhone());
             statement.setObject(++i, GlobalConstants.ROLE_END_USER_CODE);
-            statement.setObject(++i,userProfile.getPassword());
+            statement.setObject(++i,userProfile.getToken());
 
 
 
@@ -122,8 +122,6 @@ public class DAOLoginUsingOTP {
             return idOfInsertedRow;
         }
     }
-
-
 
 
 
@@ -239,10 +237,6 @@ public class DAOLoginUsingOTP {
             return idOfInsertedRow;
         }
     }
-
-
-
-
 
 
 
