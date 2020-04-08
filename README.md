@@ -10,7 +10,7 @@ width="120">
 
 How it works ? 
 -----------------
-Nearby Shops is a **free & Open Source**  Local Market Server. Anyone can self-host their local market Instance (server) & and create a free marketplace for food delivery and hyperlocal business in just 10 Minutes Installation. 
+Nearby Shops is a **Open Source**  Local Market Server. Anyone can self-host their local market Instance (server) & and create a free marketplace for food delivery and hyperlocal business in just 10 Minutes Installation. 
 
 Website :  https://nearbyshops.org | Developers Guide: http://developer.nearbyshops.org
 
