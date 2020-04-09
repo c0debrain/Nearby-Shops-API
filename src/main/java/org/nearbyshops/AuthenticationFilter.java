@@ -137,6 +137,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
         User user = daoUser.verifyUser(username,password);
 
+
         if(user == null)
         {
 //            System.out.println("User NULL ");
