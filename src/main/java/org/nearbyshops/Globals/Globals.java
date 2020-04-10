@@ -82,6 +82,7 @@ public class Globals {
 
 
     public static DAOUserNew daoUserNew = new DAOUserNew();
+    public static DAOUserTokens daoUserTokens = new DAOUserTokens();
     public static DAOStaff daoStaff = new DAOStaff();
     public static DAOShopStaff daoShopStaff = new DAOShopStaff();
     public static DAOUserUtility daoUserUtility = new DAOUserUtility();

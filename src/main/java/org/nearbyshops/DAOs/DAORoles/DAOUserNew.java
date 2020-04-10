@@ -687,8 +687,6 @@ public class DAOUserNew {
     {
 
 
-
-
         String updateStatement = "UPDATE " + User.TABLE_NAME
 
                 + " SET "
@@ -706,6 +704,31 @@ public class DAOUserNew {
 //        + " OR " + " CAST ( " +  User.USER_ID + " AS text ) " + " = ? "
 //                + User.USERNAME + " = ?"
 //                + " AND " + User.PASSWORD + " = ?";
+
+
+
+
+        String insertToken = "";
+
+        insertToken = "INSERT INTO "
+                + UserTokens.TABLE_NAME
+                + "("
+                + UserTokens.LOCAL_USER_ID + ","
+                + UserTokens.TOKEN_STRING + ""
+                + ") SELECT "
+                + User.USER_ID + ","
+                + " ? " + ""
+                + " FROM "  + User.TABLE_NAME
+                + " WHERE "
+                + " ( " + User.USERNAME + " = ? "
+                + " OR " +  User.USER_ID + " = ? "
+                + " OR " + " ( " + User.E_MAIL + " = ?" + ")"
+                + " OR " + " ( " + User.PHONE + " = ?" + ")"
+                + ")";
+
+
+
+
 
 
         Connection connection = null;
@@ -738,7 +761,23 @@ public class DAOUserNew {
 
             rowCountUpdated = statement.executeUpdate();
 
-            System.out.println("Total rows updated: " + rowCountUpdated);
+
+
+
+            statement = connection.prepareStatement(insertToken);
+
+            i = 0;
+
+            statement.setString(++i,user.getToken());
+            statement.setString(++i,user.getUsername());
+            statement.setObject(++i,user.getUserID());
+            statement.setString(++i,user.getEmail());
+            statement.setString(++i,user.getPhone());
+
+            statement.executeUpdate();
+
+
+//            System.out.println("Total rows updated: " + rowCountUpdated);
 
 
         } catch (SQLException e) {

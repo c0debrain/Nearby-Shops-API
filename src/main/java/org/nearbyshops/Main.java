@@ -105,6 +105,7 @@ public class Main {
             statement = connection.createStatement();
 
             statement.executeUpdate(User.createTable);
+            statement.executeUpdate(UserTokens.createTable);
             statement.executeUpdate(UserMarkets.createTable);
             statement.executeUpdate(OneSignalIDs.createTable);
             statement.executeUpdate(StaffPermissions.createTablePostgres);
