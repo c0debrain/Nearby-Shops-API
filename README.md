@@ -175,28 +175,10 @@ Code Review and Architecture
 Development Instructions
 -------------------------
 
-Use the latest stable version of android studio. 
+Use the latest stable community version of Intellij Idea
+Rename the api_config_example.properties to api_config.properties and set the appropriate values. 
 
-If you are running your own server and do not want multiple markets. Please set multi-market mode to false and set your server URL in the PrefGeneral.java file. 
-
-
-
-
-## Hiring Remote Workers - Be the part of Our International Community !
-
-Benefit from the flexible working hours and work from anywhere in the world. We are looking for Volunteers who can help us in the following areas
-
-1. Raise funds for the Project - Example : Create Kickstarter campaign and raise donations
-2. Content Creators 
-   - Create Images and Video for publicity purposes
-   - Write articles to create publicity
-3. Growth Hackers - help us grow the platform 
-4. Distribution Experts / Digital Marketing Experts / Social Media Experts
-5. Developers - Android, Web, PostgreSQL, Java
-6. Any other way you want to help – Suggestions and Ideas are Welcome !
-
-If you're interested please get in touch with us on https://forum.nearbyshops.org
-
+You can create a docker image with the instructions given in the docker_image_creation.odt file. 
 
 
 
