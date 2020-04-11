@@ -175,7 +175,8 @@ Code Review and Architecture
 Development Instructions
 -------------------------
 
-Use the latest stable community version of Intellij Idea
+Use the latest stable community version of Intellij Idea. 
+
 Rename the api_config_example.properties to api_config.properties and set the appropriate values. 
 
 You can create a docker image with the instructions given in the docker_image_creation.odt file. 
