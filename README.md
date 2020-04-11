@@ -49,9 +49,6 @@ Website :  https://nearbyshops.org | Developers Guide: http://developer.nearbysh
 
 ## 🚩 Table of Contents
 - [Concept](#concept)
-- [Tech Stack and App Architecture](#tech-stack-and-app-architecture)
-- [Features and highlights](#features-and-highlights)
-- [Libraries Used](#libraries-used)
 - [Third Party Integrations](#third-party-integrations)
 - [Connect with Us](#community---need-help-)
 - [Contributions Required](#contributions-welcome)
