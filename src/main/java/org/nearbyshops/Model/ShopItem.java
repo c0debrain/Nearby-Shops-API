@@ -19,6 +19,9 @@ public class ShopItem{
 	public static final String ITEM_ID = "ITEM_ID";
 	public static final String AVAILABLE_ITEM_QUANTITY = "AVAILABLE_ITEM_QUANTITY";
 	public static final String ITEM_PRICE = "ITEM_PRICE";
+	public static final String ALLOW_QUARTER_QUANTITY = "ALLOW_QUARTER_QUANTITY";
+	public static final String ALLOW_HALF_QUANTITY = "ALLOW_HALF_QUANTITY";
+
 
 	//public static final String QUANTITY_UNIT = "QUANTITY_UNIT";
 	//public static final String QUANTITY_MULTIPLE = "QUANTITY_MULTIPLE";
@@ -42,6 +45,8 @@ public class ShopItem{
 			+ " " + ShopItem.SHOP_ID + " INT,"
 			+ " " + ShopItem.AVAILABLE_ITEM_QUANTITY + " FLOAT NOT NULL default 0,"
 			+ " " + ShopItem.ITEM_PRICE + " FLOAT NOT NULL default 0,"
+			+ " " + ShopItem.ALLOW_QUARTER_QUANTITY + " boolean NOT NULL default false,"
+			+ " " + ShopItem.ALLOW_HALF_QUANTITY + " boolean NOT NULL default false,"
 			+ " " + ShopItem.LAST_UPDATE_DATE_TIME + " timestamp with time zone,"
 			+ " " + ShopItem.EXTRA_DELIVERY_CHARGE + " FLOAT NOT NULL default 0,"
 			+ " " + ShopItem.DATE_TIME_ADDED + " timestamp with time zone NOT NULL DEFAULT now(),"
@@ -68,6 +73,16 @@ public class ShopItem{
 
 
 
+
+	public static final String addColumns =
+			" ALTER TABLE IF EXISTS " + ShopItem.TABLE_NAME
+					+ "  ADD COLUMN IF NOT EXISTS  " + ShopItem.ALLOW_QUARTER_QUANTITY + "  boolean NOT NULL default false ,"
+					+ "  ADD COLUMN IF NOT EXISTS  " + ShopItem.ALLOW_HALF_QUANTITY + "  boolean NOT NULL default false ";
+
+
+
+
+
 	// Instance Variables
 
 
@@ -81,7 +96,10 @@ public class ShopItem{
 	private int itemID;
 	private double availableItemQuantity;
 	private double itemPrice;
-	
+	private boolean allowQuarterQuantity;
+	private boolean allowHalfQuantity;
+
+
 		
 	// put this into item
 	// the units of quantity for item. For Example if you are buying vegetables 
@@ -118,6 +136,22 @@ public class ShopItem{
 
 	// getter and setter
 
+
+	public boolean isAllowQuarterQuantity() {
+		return allowQuarterQuantity;
+	}
+
+	public void setAllowQuarterQuantity(boolean allowQuarterQuantity) {
+		this.allowQuarterQuantity = allowQuarterQuantity;
+	}
+
+	public boolean isAllowHalfQuantity() {
+		return allowHalfQuantity;
+	}
+
+	public void setAllowHalfQuantity(boolean allowHalfQuantity) {
+		this.allowHalfQuantity = allowHalfQuantity;
+	}
 
 	public Timestamp getDateTimeAdded() {
 		return dateTimeAdded;
