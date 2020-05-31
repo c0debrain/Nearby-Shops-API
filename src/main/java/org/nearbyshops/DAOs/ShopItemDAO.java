@@ -283,6 +283,8 @@ public class ShopItemDAO {
 				+ ShopItem.AVAILABLE_ITEM_QUANTITY + " = ?,"
 //				+ ShopItem.ITEM_ID + " = ?,"
 				+ ShopItem.ITEM_PRICE + " = ?,"
+				+ ShopItem.ALLOW_QUARTER_QUANTITY + " = ?,"
+				+ ShopItem.ALLOW_HALF_QUANTITY + " = ?,"
 
 //				+ ShopItem.SHOP_ID + " = ?,"
 				+ ShopItem.EXTRA_DELIVERY_CHARGE + " = ?,"
@@ -307,6 +309,8 @@ public class ShopItemDAO {
 			statement.setObject(++i,shopItem.getAvailableItemQuantity());
 //			statement.setObject(++i,shopItem.getItemID());
 			statement.setObject(++i,shopItem.getItemPrice());
+			statement.setBoolean(++i,shopItem.isAllowQuarterQuantity());
+			statement.setBoolean(++i,shopItem.isAllowHalfQuantity());
 
 //			statement.setObject(++i,shopItem.getShopID());
 			statement.setObject(++i,shopItem.getExtraDeliveryCharge());

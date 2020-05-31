@@ -401,7 +401,7 @@ public class UserLoginRESTEndpoint {
 
         //Decode username and password
         String usernameAndPassword = new String(Base64.getDecoder().decode(encodedUserPassword.getBytes()));
-        System.out.println("Username:Password" + usernameAndPassword);
+//        System.out.println("Username:Password" + usernameAndPassword);
 
         //Split username and password tokens
         final StringTokenizer tokenizer = new StringTokenizer(usernameAndPassword, ":");
@@ -409,8 +409,8 @@ public class UserLoginRESTEndpoint {
         final String password = tokenizer.nextToken();
 
         //Verifying Username and password
-        System.out.println(username);
-        System.out.println(password);
+//        System.out.println(username);
+//        System.out.println(password);
 
 
         String token = new BigInteger(130, Globals.random).toString(32);

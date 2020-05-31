@@ -4,6 +4,7 @@ package org.nearbyshops;
 
 
 import org.nearbyshops.DAOs.DAORoles.DAOUserNew;
+import org.nearbyshops.DAOs.DAORoles.DAOUserTokens;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.ModelRoles.User;
@@ -33,6 +34,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
 
 
     private DAOUserNew daoUser = Globals.daoUserNew;
+    private DAOUserTokens daoUserToken = Globals.daoUserTokens;
 
 
     @Context
@@ -135,7 +137,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     private Object isUserAllowed(final String username, final String password, final Set<String> rolesSet)
     {
 
-        User user = daoUser.verifyUser(username,password);
+        User user = daoUserToken.verifyUser(username,password);
+
 
         if(user == null)
         {

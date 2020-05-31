@@ -46,6 +46,8 @@ public class ShopItemByShopDAO {
 					+ ShopItem.TABLE_NAME + "." + ShopItem.SHOP_ID + ","
 					+ ShopItem.TABLE_NAME + "." + ShopItem.ITEM_PRICE + ","
 					+ ShopItem.TABLE_NAME + "." + ShopItem.AVAILABLE_ITEM_QUANTITY + ","
+					+ ShopItem.TABLE_NAME + "." + ShopItem.ALLOW_QUARTER_QUANTITY + ","
+					+ ShopItem.TABLE_NAME + "." + ShopItem.ALLOW_HALF_QUANTITY + ","
 
 //					+ ShopItem.TABLE_NAME + "." + ShopItem.EXTRA_DELIVERY_CHARGE + ","
 //					+ ShopItem.TABLE_NAME + "." + ShopItem.DATE_TIME_ADDED + ","
@@ -279,6 +281,10 @@ public class ShopItemByShopDAO {
 					shopItem.setShopID(rs.getInt(ShopItem.SHOP_ID));
 					shopItem.setItemID(rs.getInt(ShopItem.ITEM_ID));
 					shopItem.setAvailableItemQuantity(rs.getInt(ShopItem.AVAILABLE_ITEM_QUANTITY));
+
+					shopItem.setAllowQuarterQuantity(rs.getBoolean(ShopItem.ALLOW_QUARTER_QUANTITY));
+					shopItem.setAllowHalfQuantity(rs.getBoolean(ShopItem.ALLOW_HALF_QUANTITY));
+
 					shopItem.setItemPrice(rs.getDouble(ShopItem.ITEM_PRICE));
 
 //					shopItem.setDateTimeAdded(rs.getTimestamp(ShopItem.DATE_TIME_ADDED));

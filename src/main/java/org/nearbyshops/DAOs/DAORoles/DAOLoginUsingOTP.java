@@ -5,6 +5,7 @@ import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.ModelRoles.User;
 import org.nearbyshops.Model.ModelRoles.UserMarkets;
+import org.nearbyshops.Model.ModelRoles.UserTokens;
 
 import java.sql.*;
 
@@ -362,13 +363,6 @@ public class DAOLoginUsingOTP {
     public int updateUserProfile(User user)
     {
 
-//        + User.USERNAME + " = ?"
-
-
-
-
-//        Gson gson = new Gson();
-//        System.out.println(gson.toJson(user) + "\nOldPassword : " + oldPassword);
 
 
         String updateStatement = "UPDATE " + User.TABLE_NAME
@@ -389,6 +383,23 @@ public class DAOLoginUsingOTP {
 
 
 
+        String insertToken = "";
+
+        insertToken = "INSERT INTO "
+                + UserTokens.TABLE_NAME
+                + "("
+                + UserTokens.LOCAL_USER_ID + ","
+                + UserTokens.TOKEN_STRING + ""
+                + ") SELECT "
+                + User.USER_ID + ","
+                + " ? " + ""
+                + " FROM "  + User.TABLE_NAME
+                + " WHERE "
+                + " ( " + User.E_MAIL + " = ?" + ")"
+                + " OR " + " ( " + User.PHONE + " = ?" + ")";
+
+
+
 
 
         Connection connection = null;
@@ -402,9 +413,6 @@ public class DAOLoginUsingOTP {
             statement = connection.prepareStatement(updateStatement);
 
             int i = 0;
-
-//            statement.setString(++i,user.getToken());
-//            statement.setTimestamp(++i,user.getTimestampTokenExpires());
 
             statement.setString(++i,user.getToken());
             statement.setString(++i,user.getEmail());
@@ -424,7 +432,17 @@ public class DAOLoginUsingOTP {
 
             rowCountUpdated = statement.executeUpdate();
 
-//            System.out.println("Profile Updated Using GLobal : Total rows updated: " + rowCountUpdated);
+
+
+            statement = connection.prepareStatement(insertToken);
+
+            i = 0;
+
+            statement.setString(++i,user.getToken());
+            statement.setString(++i,user.getEmail());
+            statement.setString(++i,user.getPhone());
+
+            statement.executeUpdate();
 
 
         } catch (SQLException e) {
@@ -596,6 +614,18 @@ public class DAOLoginUsingOTP {
 
 
 
+
+        String insertToken = "";
+
+        insertToken = "INSERT INTO "
+                + UserTokens.TABLE_NAME
+                + "("
+                + UserTokens.LOCAL_USER_ID + ","
+                + UserTokens.TOKEN_STRING + ""
+                + ") VALUES(?,?)";
+
+
+
         try {
 
             connection = dataSource.getConnection();
@@ -654,13 +684,25 @@ public class DAOLoginUsingOTP {
 
 
 
+            statement = connection.prepareStatement(insertToken);
+
+            i = 0;
+            statement.setInt(++i,idOfInsertedRow);
+            statement.setString(++i,user.getToken());
+
+            statement.executeUpdate();
+
+
+
+
+
             connection.commit();
 
 
 
 
 
-            System.out.println("Profile Created using Global Profile : Row count : " + rowCountItems);
+//            System.out.println("Profile Created using Global Profile : Row count : " + rowCountItems);
 
 
         } catch (SQLException e) {
@@ -756,6 +798,25 @@ public class DAOLoginUsingOTP {
 
 
 
+        String insertToken = "";
+
+        insertToken = "INSERT INTO "
+                + UserTokens.TABLE_NAME
+                + "("
+                + UserTokens.LOCAL_USER_ID + ","
+                + UserTokens.TOKEN_STRING + ""
+                + ") SELECT "
+                + User.USER_ID + ","
+                + " ? " + ""
+                + " FROM "  + User.TABLE_NAME
+                + " WHERE "
+                + " ( " + User.E_MAIL + " = ?" + ")"
+                + " OR " + " ( " + User.PHONE + " = ?" + ")";
+
+
+
+
+
         Connection connection = null;
         PreparedStatement statement = null;
 
@@ -788,6 +849,21 @@ public class DAOLoginUsingOTP {
 
 
             rowCountUpdated = statement.executeUpdate();
+
+
+
+            statement = connection.prepareStatement(insertToken);
+
+            i = 0;
+
+            statement.setString(++i,user.getToken());
+            statement.setString(++i,user.getEmail());
+            statement.setString(++i,user.getPhone());
+
+            statement.executeUpdate();
+
+
+
 
 //            System.out.println("Profile Updated Using GLobal : Total rows updated: " + rowCountUpdated);
 

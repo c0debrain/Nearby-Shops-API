@@ -105,6 +105,7 @@ public class Main {
             statement = connection.createStatement();
 
             statement.executeUpdate(User.createTable);
+            statement.executeUpdate(UserTokens.createTable);
             statement.executeUpdate(UserMarkets.createTable);
             statement.executeUpdate(OneSignalIDs.createTable);
             statement.executeUpdate(StaffPermissions.createTablePostgres);
@@ -406,6 +407,7 @@ public class Main {
 
             statement.executeUpdate(User.upgradeTableSchema);
             statement.executeUpdate(User.removeNotNullforPassword);
+            statement.executeUpdate(ShopItem.addColumns);
 
 
 //            statement.executeUpdate(Shop.removeNotNull);

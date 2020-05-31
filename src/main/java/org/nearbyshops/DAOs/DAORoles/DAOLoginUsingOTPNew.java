@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import org.nearbyshops.Globals.GlobalConstants;
 import org.nearbyshops.Globals.Globals;
 import org.nearbyshops.Model.ModelRoles.User;
+import org.nearbyshops.Model.ModelRoles.UserTokens;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,6 +40,18 @@ public class DAOLoginUsingOTPNew {
 
 
 
+
+        String insertToken = "";
+
+        insertToken = "INSERT INTO "
+                + UserTokens.TABLE_NAME
+                + "("
+                + UserTokens.LOCAL_USER_ID + ","
+                + UserTokens.TOKEN_STRING + ""
+                + ") VALUES(?,?)";
+
+
+
         try {
 
             connection = dataSource.getConnection();
@@ -53,10 +66,6 @@ public class DAOLoginUsingOTPNew {
             statement.setObject(++i, Integer.parseInt(String.valueOf(Globals.generateOTP(5))));
             statement.setObject(++i,userProfile.getToken());
 
-
-
-
-
             rowCountItems = statement.executeUpdate();
 
 
@@ -67,6 +76,16 @@ public class DAOLoginUsingOTPNew {
                 idOfInsertedRow = rs.getInt(1);
             }
 
+
+
+
+            statement = connection.prepareStatement(insertToken);
+
+            i = 0;
+            statement.setInt(++i,idOfInsertedRow);
+            statement.setString(++i,userProfile.getToken());
+
+            statement.executeUpdate();
 
 
             connection.commit();
@@ -147,6 +166,16 @@ public class DAOLoginUsingOTPNew {
 
 
 
+        String insertToken = "";
+
+        insertToken = "INSERT INTO "
+                + UserTokens.TABLE_NAME
+                + "("
+                + UserTokens.LOCAL_USER_ID + ","
+                + UserTokens.TOKEN_STRING + ""
+                + ") VALUES(?,?)";
+
+
 
         try {
 
@@ -163,9 +192,6 @@ public class DAOLoginUsingOTPNew {
             statement.setObject(++i,userProfile.getToken());
 
 
-
-
-
             rowCountItems = statement.executeUpdate();
 
 
@@ -176,6 +202,17 @@ public class DAOLoginUsingOTPNew {
                 idOfInsertedRow = rs.getInt(1);
             }
 
+
+
+
+
+            statement = connection.prepareStatement(insertToken);
+
+            i = 0;
+            statement.setInt(++i,idOfInsertedRow);
+            statement.setString(++i,userProfile.getToken());
+
+            statement.executeUpdate();
 
 
             connection.commit();
